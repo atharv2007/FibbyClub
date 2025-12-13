@@ -134,10 +134,26 @@ async def get_transactions(user_id: str, limit: int = 100, offset: int = 0):
     return [serialize_doc(txn) for txn in transactions]
 
 @api_router.get("/transactions/category-breakdown")
-async def get_category_breakdown(user_id: str, months: int = 1, month: Optional[int] = None, year: Optional[int] = None):
+async def get_category_breakdown(
+    user_id: str, 
+    months: int = 1, 
+    month: Optional[int] = None, 
+    year: Optional[int] = None,
+    start_date_str: Optional[str] = None,
+    end_date_str: Optional[str] = None
+):
     """Get spending breakdown by category"""
+    # If start and end date strings provided (for daily/weekly filtering)
+    if start_date_str and end_date_str:
+        start_date = datetime.fromisoformat(start_date_str)
+        end_date = datetime.fromisoformat(end_date_str)
+        match_query = {
+            "user_id": user_id,
+            "transaction_type": "expense",
+            "date": {"$gte": start_date, "$lt": end_date}
+        }
     # If specific month and year provided, filter for that month only
-    if month and year:
+    elif month and year:
         start_date = datetime(year, month, 1)
         if month == 12:
             end_date = datetime(year + 1, 1, 1)
@@ -170,10 +186,26 @@ async def get_category_breakdown(user_id: str, months: int = 1, month: Optional[
     return results
 
 @api_router.get("/transactions/merchant-leaderboard")
-async def get_merchant_leaderboard(user_id: str, limit: int = 10, month: Optional[int] = None, year: Optional[int] = None):
+async def get_merchant_leaderboard(
+    user_id: str, 
+    limit: int = 10, 
+    month: Optional[int] = None, 
+    year: Optional[int] = None,
+    start_date_str: Optional[str] = None,
+    end_date_str: Optional[str] = None
+):
     """Get top merchants by spending"""
+    # If start and end date strings provided (for daily/weekly filtering)
+    if start_date_str and end_date_str:
+        start_date = datetime.fromisoformat(start_date_str)
+        end_date = datetime.fromisoformat(end_date_str)
+        match_query = {
+            "user_id": user_id,
+            "transaction_type": "expense",
+            "date": {"$gte": start_date, "$lt": end_date}
+        }
     # If specific month and year provided, filter for that month only
-    if month and year:
+    elif month and year:
         start_date = datetime(year, month, 1)
         if month == 12:
             end_date = datetime(year + 1, 1, 1)
