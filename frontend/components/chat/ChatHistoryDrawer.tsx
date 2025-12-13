@@ -1,176 +1,65 @@
-import { View, Text, StyleSheet, TouchableOpacity, TextInput, ScrollView, Modal, Animated, Dimensions } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import {
+  View,
+  Text,
+  StyleSheet,
+  Modal,
+  TouchableOpacity,
+  ScrollView,
+  TextInput,
+  Animated,
+  Dimensions,
+  TouchableWithoutFeedback,
+  ActivityIndicator,
+  Alert,
+} from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { COLORS, SPACING, RADIUS, TYPOGRAPHY } from '../../constants/theme';
-import { useState, useEffect, useRef } from 'react';
+import { useRouter } from 'expo-router';
+import { COLORS, SPACING, RADIUS, TYPOGRAPHY, SHADOWS } from '../../constants/theme';
+import { useAppStore } from '../../store/useAppStore';
+import { api } from '../../utils/api';
 
-const SCREEN_WIDTH = Dimensions.get('window').width;
-const DRAWER_WIDTH = Math.min(SCREEN_WIDTH * 0.85, 400);
-
-interface ChatHistoryItem {
-  id: string;
-  title: string;
-  preview: string;
-  timestamp: string;
-  category: 'Budget' | 'Spending' | 'Goals' | 'Investments' | 'General';
-  emoji: string;
-  date: Date;
-}
+const { width: SCREEN_WIDTH } = Dimensions.get('window');
+const DRAWER_WIDTH = SCREEN_WIDTH * 0.85;
 
 interface ChatHistoryDrawerProps {
   visible: boolean;
   onClose: () => void;
-  onNewChat: () => void;
-  onSelectChat: (chatId: string) => void;
 }
 
-const categories = [
-  { id: 'all', label: 'All Chats' },
-  { id: 'budget', label: 'Budget', emoji: '📊' },
-  { id: 'spending', label: 'Spending', emoji: '💰' },
-  { id: 'goals', label: 'Goals', emoji: '🎯' },
-  { id: 'investments', label: 'Invest', emoji: '💎' },
-];
+interface Conversation {
+  _id: string;
+  conversation_id: string;
+  title: string;
+  created_at: string;
+  updated_at: string;
+  messages: any[];
+}
 
-// Get realistic dates
-const getRealisticDates = () => {
-  const now = new Date();
-  const today = new Date(now);
-  const yesterday = new Date(now);
-  yesterday.setDate(yesterday.getDate() - 1);
-  
-  const threeDaysAgo = new Date(now);
-  threeDaysAgo.setDate(threeDaysAgo.getDate() - 3);
-  
-  const fiveDaysAgo = new Date(now);
-  fiveDaysAgo.setDate(fiveDaysAgo.getDate() - 5);
-  
-  const tenDaysAgo = new Date(now);
-  tenDaysAgo.setDate(tenDaysAgo.getDate() - 10);
-  
-  const twentyDaysAgo = new Date(now);
-  twentyDaysAgo.setDate(twentyDaysAgo.getDate() - 20);
-  
-  const oneMonthAgo = new Date(now);
-  oneMonthAgo.setMonth(oneMonthAgo.getMonth() - 1);
-  
-  const twoMonthsAgo = new Date(now);
-  twoMonthsAgo.setMonth(twoMonthsAgo.getMonth() - 2);
+interface GroupedConversations {
+  today: Conversation[];
+  this_week: Conversation[];
+  this_month: Conversation[];
+  older: Conversation[];
+}
 
-  return {
-    today,
-    yesterday,
-    threeDaysAgo,
-    fiveDaysAgo,
-    tenDaysAgo,
-    twentyDaysAgo,
-    oneMonthAgo,
-    twoMonthsAgo,
-  };
-};
-
-const dates = getRealisticDates();
-
-// Mock chat history data with realistic dates
-const mockChatHistory: ChatHistoryItem[] = [
-  {
-    id: '1',
-    title: 'Weekend Spending Analysis',
-    preview: "Your weekend spending was ₹8,200. Let me break it down by category for you.",
-    timestamp: '2:45 PM',
-    category: 'Spending',
-    emoji: '💰',
-    date: dates.today,
-  },
-  {
-    id: '2',
-    title: 'Budget Check for December',
-    preview: "You've used 68% of your December budget with 18 days remaining.",
-    timestamp: '10:30 AM',
-    category: 'Budget',
-    emoji: '📊',
-    date: dates.today,
-  },
-  {
-    id: '3',
-    title: 'Investment Portfolio Review',
-    preview: 'Your portfolio grew by ₹24,500 this month. Overall returns: +18.2%',
-    timestamp: '6:15 PM',
-    category: 'Investments',
-    emoji: '💎',
-    date: dates.yesterday,
-  },
-  {
-    id: '4',
-    title: 'Goa Trip Savings Goal',
-    preview: "You're 72% towards your Goa trip goal! Just ₹18,000 more to go.",
-    timestamp: '4:20 PM',
-    category: 'Goals',
-    emoji: '🎯',
-    date: dates.yesterday,
-  },
-  {
-    id: '5',
-    title: 'Subscription Audit',
-    preview: 'Found 7 active subscriptions totaling ₹3,200/month. Want to optimize?',
-    timestamp: '11:30 AM',
-    category: 'Spending',
-    emoji: '🔄',
-    date: dates.threeDaysAgo,
-  },
-  {
-    id: '6',
-    title: 'SIP Performance Update',
-    preview: 'Your mutual fund SIPs have generated 14.5% returns over 6 months.',
-    timestamp: '3:45 PM',
-    category: 'Investments',
-    emoji: '📈',
-    date: dates.fiveDaysAgo,
-  },
-  {
-    id: '7',
-    title: 'Credit Card Bill Reminder',
-    preview: 'HDFC Card bill of ₹28,400 is due in 3 days. Pay now to avoid charges?',
-    timestamp: '9:00 AM',
-    category: 'General',
-    emoji: '💳',
-    date: dates.tenDaysAgo,
-  },
-  {
-    id: '8',
-    title: 'Monthly Expense Report',
-    preview: 'November expenses: ₹45,200. Top category: Food & Dining (₹12,800)',
-    timestamp: '7:20 PM',
-    category: 'Spending',
-    emoji: '📊',
-    date: dates.twentyDaysAgo,
-  },
-  {
-    id: '9',
-    title: 'Emergency Fund Goal',
-    preview: 'Great progress! Your emergency fund now covers 4 months of expenses.',
-    timestamp: '1:15 PM',
-    category: 'Goals',
-    emoji: '🎯',
-    date: dates.oneMonthAgo,
-  },
-  {
-    id: '10',
-    title: 'Tax Saving Options',
-    preview: 'Here are 5 tax-saving investments to maximize your 80C deductions.',
-    timestamp: '5:30 PM',
-    category: 'Investments',
-    emoji: '📄',
-    date: dates.twoMonthsAgo,
-  },
-];
-
-export default function ChatHistoryDrawer({ visible, onClose, onNewChat, onSelectChat }: ChatHistoryDrawerProps) {
+export default function ChatHistoryDrawer({ visible, onClose }: ChatHistoryDrawerProps) {
+  const router = useRouter();
+  const { user } = useAppStore();
+  const [slideAnim] = useState(new Animated.Value(-DRAWER_WIDTH));
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState('all');
-  const slideAnim = useRef(new Animated.Value(-DRAWER_WIDTH)).current;
+  const [loading, setLoading] = useState(false);
+  const [conversations, setConversations] = useState<GroupedConversations>({
+    today: [],
+    this_week: [],
+    this_month: [],
+    older: [],
+  });
 
   useEffect(() => {
     if (visible) {
+      loadChatHistory();
+      // Slide in animation
       Animated.spring(slideAnim, {
         toValue: 0,
         useNativeDriver: true,
@@ -178,6 +67,7 @@ export default function ChatHistoryDrawer({ visible, onClose, onNewChat, onSelec
         friction: 11,
       }).start();
     } else {
+      // Slide out animation
       Animated.timing(slideAnim, {
         toValue: -DRAWER_WIDTH,
         duration: 250,
@@ -186,198 +76,194 @@ export default function ChatHistoryDrawer({ visible, onClose, onNewChat, onSelec
     }
   }, [visible]);
 
-  // Filter chats based on search and category
-  const filteredChats = mockChatHistory.filter((chat) => {
-    const matchesSearch = chat.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                         chat.preview.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesCategory = selectedCategory === 'all' || 
-                           chat.category.toLowerCase() === selectedCategory;
-    return matchesSearch && matchesCategory;
-  });
-
-  // Group chats by time period with realistic labels
-  const groupChatsByDate = (chats: ChatHistoryItem[]) => {
-    const now = new Date();
-    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-    const yesterday = new Date(today);
-    yesterday.setDate(yesterday.getDate() - 1);
+  const loadChatHistory = async () => {
+    if (!user?._id) return;
     
-    const startOfWeek = new Date(today);
-    startOfWeek.setDate(today.getDate() - today.getDay()); // Start of this week (Sunday)
-    
-    const startOfLastWeek = new Date(startOfWeek);
-    startOfLastWeek.setDate(startOfLastWeek.getDate() - 7);
-    
-    const startOfThisMonth = new Date(now.getFullYear(), now.getMonth(), 1);
-    const startOfLastMonth = new Date(now.getFullYear(), now.getMonth() - 1, 1);
-    const startOfTwoMonthsAgo = new Date(now.getFullYear(), now.getMonth() - 2, 1);
-
-    const groups: { [key: string]: ChatHistoryItem[] } = {
-      'Today': [],
-      'Yesterday': [],
-      'This Week': [],
-      'Last Week': [],
-      'This Month': [],
-      'Last Month': [],
-      'Older': [],
-    };
-
-    chats.forEach((chat) => {
-      const chatDate = new Date(chat.date.getFullYear(), chat.date.getMonth(), chat.date.getDate());
-      
-      if (chatDate.getTime() === today.getTime()) {
-        groups['Today'].push(chat);
-      } else if (chatDate.getTime() === yesterday.getTime()) {
-        groups['Yesterday'].push(chat);
-      } else if (chatDate >= startOfWeek && chatDate < yesterday) {
-        groups['This Week'].push(chat);
-      } else if (chatDate >= startOfLastWeek && chatDate < startOfWeek) {
-        groups['Last Week'].push(chat);
-      } else if (chatDate >= startOfThisMonth && chatDate < startOfWeek) {
-        groups['This Month'].push(chat);
-      } else if (chatDate >= startOfLastMonth && chatDate < startOfThisMonth) {
-        groups['Last Month'].push(chat);
-      } else {
-        groups['Older'].push(chat);
-      }
-    });
-
-    return groups;
+    try {
+      setLoading(true);
+      const data = await api.getChatHistory(user._id);
+      setConversations(data);
+    } catch (error) {
+      console.error('Error loading chat history:', error);
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const groupedChats = groupChatsByDate(filteredChats);
+  const handleConversationPress = (conversationId: string) => {
+    onClose();
+    router.push({
+      pathname: '/chat-conversation',
+      params: { conversationId },
+    });
+  };
+
+  const handleDeleteConversation = (conversationId: string, title: string) => {
+    Alert.alert(
+      'Delete Chat',
+      `Are you sure you want to delete "${title}"?`,
+      [
+        { text: 'Cancel', style: 'cancel' },
+        {
+          text: 'Delete',
+          style: 'destructive',
+          onPress: async () => {
+            try {
+              await api.deleteConversation(user?._id!, conversationId);
+              await loadChatHistory(); // Reload after deletion
+            } catch (error) {
+              console.error('Error deleting conversation:', error);
+              Alert.alert('Error', 'Failed to delete conversation');
+            }
+          },
+        },
+      ]
+    );
+  };
+
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    const now = new Date();
+    const diff = now.getTime() - date.getTime();
+    const hours = Math.floor(diff / (1000 * 60 * 60));
+    
+    if (hours < 1) {
+      const minutes = Math.floor(diff / (1000 * 60));
+      return `${minutes}m ago`;
+    } else if (hours < 24) {
+      return `${hours}h ago`;
+    } else {
+      return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+    }
+  };
+
+  const filterConversations = (convs: Conversation[]) => {
+    if (!searchQuery.trim()) return convs;
+    
+    return convs.filter(conv =>
+      conv.title.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+  };
+
+  const renderConversationItem = (conversation: Conversation) => (
+    <TouchableOpacity
+      key={conversation.conversation_id}
+      style={styles.conversationItem}
+      onPress={() => handleConversationPress(conversation.conversation_id)}
+      onLongPress={() => handleDeleteConversation(conversation.conversation_id, conversation.title)}
+      activeOpacity={0.7}
+    >
+      <View style={styles.conversationIcon}>
+        <Ionicons name="chatbubble" size={20} color={COLORS.primary} />
+      </View>
+      <View style={styles.conversationContent}>
+        <Text style={styles.conversationTitle} numberOfLines={1}>
+          {conversation.title}
+        </Text>
+        <Text style={styles.conversationMeta}>
+          {conversation.messages.length} messages • {formatDate(conversation.updated_at)}
+        </Text>
+      </View>
+      <Ionicons name="chevron-forward" size={20} color={COLORS.textSecondary} />
+    </TouchableOpacity>
+  );
+
+  const renderSection = (title: string, convs: Conversation[]) => {
+    const filtered = filterConversations(convs);
+    if (filtered.length === 0) return null;
+
+    return (
+      <View style={styles.section}>
+        <Text style={styles.sectionTitle}>{title}</Text>
+        {filtered.map(renderConversationItem)}
+      </View>
+    );
+  };
+
+  const totalConversations = 
+    conversations.today.length +
+    conversations.this_week.length +
+    conversations.this_month.length +
+    conversations.older.length;
 
   return (
     <Modal
       visible={visible}
+      transparent
       animationType="none"
-      transparent={true}
       onRequestClose={onClose}
     >
-      <TouchableOpacity 
-        style={styles.overlay} 
-        activeOpacity={1} 
-        onPress={onClose}
-      >
-        <Animated.View 
+      <View style={styles.overlay}>
+        <TouchableWithoutFeedback onPress={onClose}>
+          <View style={styles.backdrop} />
+        </TouchableWithoutFeedback>
+        
+        <Animated.View
           style={[
             styles.drawer,
-            { transform: [{ translateX: slideAnim }] }
+            { transform: [{ translateX: slideAnim }] },
           ]}
-          onStartShouldSetResponder={() => true}
         >
-          {/* Header with close button */}
+          {/* Header */}
           <View style={styles.header}>
             <View>
-              <Text style={styles.headerTitle}>Conversations</Text>
-              <Text style={styles.headerSubtitle}>{filteredChats.length} chats</Text>
+              <Text style={styles.headerTitle}>Chat History</Text>
+              <Text style={styles.headerSubtitle}>
+                {totalConversations} {totalConversations === 1 ? 'conversation' : 'conversations'}
+              </Text>
             </View>
             <TouchableOpacity onPress={onClose} style={styles.closeButton}>
-              <Ionicons name="close-circle" size={32} color={COLORS.textSecondary} />
+              <Ionicons name="close" size={24} color={COLORS.text} />
             </TouchableOpacity>
           </View>
 
-          {/* Sticky Section */}
-          <View style={styles.stickySection}>
-            {/* New Chat Button */}
-            <TouchableOpacity style={styles.newChatButton} onPress={onNewChat}>
-              <Ionicons name="add" size={20} color={COLORS.surface} />
-              <Text style={styles.newChatButtonText}>New Chat</Text>
-            </TouchableOpacity>
-
-            {/* Search Bar */}
-            <View style={styles.searchContainer}>
-              <Ionicons name="search" size={20} color={COLORS.textSecondary} />
-              <TextInput
-                style={styles.searchInput}
-                placeholder="Search conversations..."
-                placeholderTextColor={COLORS.textSecondary}
-                value={searchQuery}
-                onChangeText={setSearchQuery}
-              />
-            </View>
-
-            {/* Category Filters */}
-            <ScrollView
-              horizontal
-              showsHorizontalScrollIndicator={false}
-              style={styles.categoriesScrollView}
-              contentContainerStyle={styles.categoriesContainer}
-            >
-              {categories.map((category) => (
-                <TouchableOpacity
-                  key={category.id}
-                  style={[
-                    styles.categoryChip,
-                    selectedCategory === category.id && styles.categoryChipActive,
-                  ]}
-                  onPress={() => setSelectedCategory(category.id)}
-                >
-                  {category.emoji && <Text style={styles.categoryEmoji}>{category.emoji}</Text>}
-                  <Text
-                    style={[
-                      styles.categoryLabel,
-                      selectedCategory === category.id && styles.categoryLabelActive,
-                    ]}
-                  >
-                    {category.label}
-                  </Text>
-                </TouchableOpacity>
-              ))}
-            </ScrollView>
+          {/* Search Bar */}
+          <View style={styles.searchContainer}>
+            <Ionicons name="search" size={20} color={COLORS.textSecondary} style={styles.searchIcon} />
+            <TextInput
+              style={styles.searchInput}
+              placeholder="Search conversations..."
+              placeholderTextColor={COLORS.textSecondary}
+              value={searchQuery}
+              onChangeText={setSearchQuery}
+            />
+            {searchQuery.length > 0 && (
+              <TouchableOpacity onPress={() => setSearchQuery('')} style={styles.clearButton}>
+                <Ionicons name="close-circle" size={20} color={COLORS.textSecondary} />
+              </TouchableOpacity>
+            )}
           </View>
 
-          {/* Scrollable Chat History */}
-          <ScrollView style={styles.chatListContainer} showsVerticalScrollIndicator={true}>
-            {Object.entries(groupedChats).map(([period, chats]) => {
-              if (chats.length === 0) return null;
-              
-              return (
-                <View key={period} style={styles.periodSection}>
-                  <View style={styles.periodHeader}>
-                    <Ionicons name="calendar-outline" size={16} color={COLORS.textSecondary} />
-                    <Text style={styles.periodTitle}>{period}</Text>
-                  </View>
-
-                  {chats.map((chat) => (
-                    <TouchableOpacity
-                      key={chat.id}
-                      style={styles.chatItem}
-                      onPress={() => {
-                        onSelectChat(chat.id);
-                        onClose();
-                      }}
-                    >
-                      <View style={styles.chatIconContainer}>
-                        <Text style={styles.chatIcon}>{chat.emoji}</Text>
-                      </View>
-                      <View style={styles.chatContent}>
-                        <Text style={styles.chatTitle} numberOfLines={1}>
-                          {chat.title}
-                        </Text>
-                        <Text style={styles.chatPreview} numberOfLines={2}>
-                          {chat.preview}
-                        </Text>
-                        <Text style={styles.chatTimestamp}>{chat.timestamp}</Text>
-                      </View>
-                    </TouchableOpacity>
-                  ))}
-                </View>
-              );
-            })}
-
-            {filteredChats.length === 0 && (
+          {/* Conversations List */}
+          <ScrollView
+            style={styles.scrollView}
+            contentContainerStyle={styles.scrollContent}
+            showsVerticalScrollIndicator={false}
+          >
+            {loading ? (
+              <View style={styles.loadingContainer}>
+                <ActivityIndicator size="large" color={COLORS.primary} />
+                <Text style={styles.loadingText}>Loading conversations...</Text>
+              </View>
+            ) : totalConversations === 0 ? (
               <View style={styles.emptyState}>
-                <Ionicons name="chatbubbles-outline" size={64} color={COLORS.disabled} />
-                <Text style={styles.emptyStateText}>No conversations found</Text>
-                <Text style={styles.emptyStateSubtext}>
-                  {searchQuery ? 'Try a different search term' : 'Start a new chat to begin'}
+                <Ionicons name="chatbubbles-outline" size={64} color={COLORS.border} />
+                <Text style={styles.emptyTitle}>No conversations yet</Text>
+                <Text style={styles.emptySubtitle}>
+                  Start chatting with Fibby to see your history here
                 </Text>
               </View>
+            ) : (
+              <>
+                {renderSection('Today', conversations.today)}
+                {renderSection('This Week', conversations.this_week)}
+                {renderSection('This Month', conversations.this_month)}
+                {renderSection('Older', conversations.older)}
+              </>
             )}
           </ScrollView>
         </Animated.View>
-      </TouchableOpacity>
+      </View>
     </Modal>
   );
 }
@@ -385,204 +271,140 @@ export default function ChatHistoryDrawer({ visible, onClose, onNewChat, onSelec
 const styles = StyleSheet.create({
   overlay: {
     flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.6)',
-    justifyContent: 'flex-start',
-    alignItems: 'flex-start',
+    flexDirection: 'row',
+  },
+  backdrop: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
   },
   drawer: {
     width: DRAWER_WIDTH,
-    height: '100%',
     backgroundColor: COLORS.background,
-    shadowColor: '#000',
-    shadowOffset: { width: 2, height: 0 },
-    shadowOpacity: 0.3,
-    shadowRadius: 10,
-    elevation: 10,
+    ...SHADOWS.elevated,
   },
   header: {
     flexDirection: 'row',
-    alignItems: 'center',
     justifyContent: 'space-between',
-    paddingHorizontal: SPACING.xl,
-    paddingTop: SPACING.xxl,
-    paddingBottom: SPACING.lg,
+    alignItems: 'flex-start',
+    paddingHorizontal: SPACING.md,
+    paddingTop: SPACING.lg,
+    paddingBottom: SPACING.md,
+    backgroundColor: COLORS.surface,
     borderBottomWidth: 1,
     borderBottomColor: COLORS.border,
   },
   headerTitle: {
-    fontSize: 28,
+    fontSize: TYPOGRAPHY.h2,
     fontWeight: '700',
     color: COLORS.text,
-    fontFamily: TYPOGRAPHY.heading,
-    marginBottom: SPACING.xs / 2,
+    marginBottom: 4,
   },
   headerSubtitle: {
-    fontSize: TYPOGRAPHY.caption,
+    fontSize: TYPOGRAPHY.bodySmall,
     color: COLORS.textSecondary,
-    fontFamily: TYPOGRAPHY.body,
   },
   closeButton: {
     padding: SPACING.xs,
-  },
-  stickySection: {
-    backgroundColor: COLORS.background,
-    paddingHorizontal: SPACING.xl,
-    paddingTop: SPACING.lg,
-    paddingBottom: SPACING.md,
-  },
-  newChatButton: {
-    backgroundColor: COLORS.primary,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingVertical: 16,
-    borderRadius: RADIUS.card,
-    marginBottom: SPACING.lg,
-    gap: SPACING.sm,
-  },
-  newChatButtonText: {
-    color: COLORS.surface,
-    fontSize: 17,
-    fontWeight: '600',
-    fontFamily: TYPOGRAPHY.heading,
   },
   searchContainer: {
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: COLORS.surface,
-    borderRadius: RADIUS.card,
-    paddingHorizontal: SPACING.md,
-    paddingVertical: 14,
-    marginBottom: SPACING.lg,
+    borderRadius: RADIUS.md,
+    marginHorizontal: SPACING.md,
+    marginVertical: SPACING.md,
+    paddingHorizontal: SPACING.sm,
     borderWidth: 1,
     borderColor: COLORS.border,
-    gap: SPACING.md,
+  },
+  searchIcon: {
+    marginRight: SPACING.xs,
   },
   searchInput: {
     flex: 1,
-    fontSize: 16,
+    paddingVertical: SPACING.sm,
+    fontSize: TYPOGRAPHY.bodySmall,
     color: COLORS.text,
-    fontFamily: TYPOGRAPHY.body,
   },
-  categoriesScrollView: {
-    marginBottom: SPACING.md,
+  clearButton: {
+    padding: SPACING.xs,
   },
-  categoriesContainer: {
-    gap: SPACING.md,
-  },
-  categoryChip: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: COLORS.surface,
-    paddingHorizontal: SPACING.lg,
-    paddingVertical: SPACING.md,
-    borderRadius: RADIUS.button * 2,
-    borderWidth: 1,
-    borderColor: COLORS.border,
-    gap: SPACING.sm,
-  },
-  categoryChipActive: {
-    backgroundColor: COLORS.primary,
-    borderColor: COLORS.primary,
-  },
-  categoryEmoji: {
-    fontSize: 18,
-  },
-  categoryLabel: {
-    fontSize: 15,
-    color: COLORS.text,
-    fontWeight: '600',
-    fontFamily: TYPOGRAPHY.body,
-  },
-  categoryLabelActive: {
-    color: COLORS.surface,
-  },
-  chatListContainer: {
+  scrollView: {
     flex: 1,
   },
-  periodSection: {
-    marginBottom: SPACING.xl,
+  scrollContent: {
+    paddingBottom: SPACING.xl,
   },
-  periodHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: SPACING.sm,
-    paddingHorizontal: SPACING.xl,
-    paddingVertical: SPACING.md,
-    paddingTop: SPACING.lg,
-  },
-  periodTitle: {
-    fontSize: 13,
-    fontWeight: '700',
-    color: COLORS.textSecondary,
-    fontFamily: TYPOGRAPHY.heading,
-    letterSpacing: 1,
-    textTransform: 'uppercase',
-  },
-  chatItem: {
-    flexDirection: 'row',
-    paddingHorizontal: SPACING.xl,
-    paddingVertical: SPACING.lg,
-    gap: SPACING.lg,
-    backgroundColor: COLORS.background,
-  },
-  chatIconContainer: {
-    width: 48,
-    height: 48,
-    borderRadius: 24,
-    backgroundColor: COLORS.surface,
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderWidth: 1,
-    borderColor: COLORS.border,
-  },
-  chatIcon: {
-    fontSize: 24,
-  },
-  chatContent: {
+  loadingContainer: {
     flex: 1,
     justifyContent: 'center',
-  },
-  chatTitle: {
-    fontSize: 17,
-    fontWeight: '600',
-    color: COLORS.text,
-    fontFamily: TYPOGRAPHY.heading,
-    marginBottom: SPACING.xs,
-    lineHeight: 22,
-  },
-  chatPreview: {
-    fontSize: 14,
-    color: COLORS.textSecondary,
-    fontFamily: TYPOGRAPHY.body,
-    marginBottom: SPACING.xs,
-    lineHeight: 20,
-  },
-  chatTimestamp: {
-    fontSize: 13,
-    color: COLORS.textSecondary,
-    fontFamily: TYPOGRAPHY.body,
-    fontWeight: '500',
-  },
-  emptyState: {
-    flex: 1,
     alignItems: 'center',
-    justifyContent: 'center',
-    paddingVertical: SPACING.xxl * 2,
-    paddingHorizontal: SPACING.lg,
+    paddingTop: SPACING.xl * 3,
   },
-  emptyStateText: {
-    fontSize: TYPOGRAPHY.h4,
-    fontWeight: '600',
-    color: COLORS.text,
-    fontFamily: TYPOGRAPHY.heading,
+  loadingText: {
     marginTop: SPACING.md,
-  },
-  emptyStateSubtext: {
     fontSize: TYPOGRAPHY.bodySmall,
     color: COLORS.textSecondary,
-    fontFamily: TYPOGRAPHY.body,
-    marginTop: SPACING.xs,
+  },
+  emptyState: {
+    alignItems: 'center',
+    paddingTop: SPACING.xl * 3,
+    paddingHorizontal: SPACING.xl,
+  },
+  emptyTitle: {
+    fontSize: TYPOGRAPHY.h3,
+    fontWeight: '600',
+    color: COLORS.text,
+    marginTop: SPACING.md,
+    marginBottom: SPACING.xs,
+  },
+  emptySubtitle: {
+    fontSize: TYPOGRAPHY.bodySmall,
+    color: COLORS.textSecondary,
     textAlign: 'center',
+    lineHeight: 20,
+  },
+  section: {
+    marginTop: SPACING.md,
+  },
+  sectionTitle: {
+    fontSize: TYPOGRAPHY.bodySmall,
+    fontWeight: '600',
+    color: COLORS.textSecondary,
+    paddingHorizontal: SPACING.md,
+    marginBottom: SPACING.xs,
+    textTransform: 'uppercase',
+    letterSpacing: 0.5,
+  },
+  conversationItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: SPACING.md,
+    paddingVertical: SPACING.sm + 4,
+    backgroundColor: COLORS.surface,
+    borderBottomWidth: 1,
+    borderBottomColor: COLORS.border,
+  },
+  conversationIcon: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: COLORS.primaryLight + '20',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: SPACING.sm,
+  },
+  conversationContent: {
+    flex: 1,
+  },
+  conversationTitle: {
+    fontSize: TYPOGRAPHY.bodySmall,
+    fontWeight: '600',
+    color: COLORS.text,
+    marginBottom: 2,
+  },
+  conversationMeta: {
+    fontSize: 12,
+    color: COLORS.textSecondary,
   },
 });
