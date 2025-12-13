@@ -138,12 +138,20 @@ export default function TrackScreen() {
         start_date_str: startDate.toISOString(),
         end_date_str: endDate.toISOString()
       };
-    } else if (timePeriod === '1mnth' && item.week_num) {
-      // Weekly filter: would need week start/end dates from backend
-      // For now, use month filter as approximation
-      filterParams = { months: 1 };
-    } else if (item.month_num && item.year) {
-      // Monthly filter
+    } else if (timePeriod === '1mnth' && item.week_start && item.week_end) {
+      // Weekly filter: use week start/end dates from backend
+      filterParams = {
+        start_date_str: item.week_start,
+        end_date_str: item.week_end
+      };
+    } else if (timePeriod === '1yr' && item.period_start && item.period_end) {
+      // Bi-monthly filter: use period start/end dates from backend
+      filterParams = {
+        start_date_str: item.period_start,
+        end_date_str: item.period_end
+      };
+    } else if (timePeriod === '6mnth' && item.month_num && item.year) {
+      // Monthly filter for 6-month view
       filterParams = {
         month: item.month_num,
         year: item.year
