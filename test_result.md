@@ -165,11 +165,14 @@ backend:
     file: "backend/server.py"
     stuck_count: 0
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
       - working: "NA"
         agent: "main"
         comment: "Already supports start_date_str and end_date_str query parameters for filtering by date range."
+      - working: true
+        agent: "testing"
+        comment: "✅ TESTED SUCCESSFULLY: API correctly filters transactions by date range (2025-12-01 to 2025-12-08). Returns 3 categories with proper structure: _id (category name like 'Travel'), total (1644.06), and count (1). Date filtering works as expected."
   
   - task: "Merchant leaderboard API with date range filtering"
     implemented: true
