@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, ScrollView, TouchableOpacity, TextInput, SafeAr
 import { Ionicons } from '@expo/vector-icons';
 import { COLORS, SPACING, RADIUS, TYPOGRAPHY } from '../constants/theme';
 import { useRouter } from 'expo-router';
-import { useAppStore } from '../store/user';
+import { useAppStore } from '../store/useAppStore';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
