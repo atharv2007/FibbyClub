@@ -121,16 +121,16 @@ MOCK_CRYPTO = [
     {
         "type": "crypto",
         "name": "Bitcoin (BTC)",
-        "amount_invested": 50000,
-        "current_value": 62500,
-        "metadata": {"units": 0.0012, "platform": "WazirX"}
+        "amount_invested": 250000,
+        "current_value": 312500,
+        "metadata": {"units": 0.006, "platform": "WazirX"}
     },
     {
         "type": "crypto",
         "name": "Ethereum (ETH)",
-        "amount_invested": 30000,
-        "current_value": 34500,
-        "metadata": {"units": 0.18, "platform": "CoinDCX"}
+        "amount_invested": 150000,
+        "current_value": 172500,
+        "metadata": {"units": 0.9, "platform": "CoinDCX"}
     },
 ]
 
@@ -138,8 +138,8 @@ MOCK_FDS = [
     {
         "type": "fd",
         "name": "HDFC Bank FD",
-        "amount_invested": 100000,
-        "current_value": 108500,
+        "amount_invested": 500000,
+        "current_value": 542500,
         "interest_rate": 6.8,
         "maturity_date": datetime.utcnow() + timedelta(days=365),
         "metadata": {"tenure_months": 12, "bank": "HDFC Bank"}
@@ -147,8 +147,8 @@ MOCK_FDS = [
     {
         "type": "fd",
         "name": "SBI FD",
-        "amount_invested": 50000,
-        "current_value": 54250,
+        "amount_invested": 250000,
+        "current_value": 271250,
         "interest_rate": 7.0,
         "maturity_date": datetime.utcnow() + timedelta(days=730),
         "metadata": {"tenure_months": 24, "bank": "State Bank of India"}
