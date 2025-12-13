@@ -60,7 +60,7 @@ export default function ChatConversationScreen() {
     setIsLoading(true);
 
     try {
-      const response = await fetch(`${process.env.EXPO_PUBLIC_API_URL}/api/chat/message`, {
+      const response = await fetch(`${process.env.EXPO_PUBLIC_BACKEND_URL}/api/chat/message`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -70,6 +70,10 @@ export default function ChatConversationScreen() {
           message: message,
         }),
       });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
 
       const data = await response.json();
 
