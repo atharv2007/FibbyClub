@@ -98,28 +98,30 @@ export default function TrackScreen() {
         // Load category and merchant data based on selected month
         await loadFilteredData(selectedMonthNum, selectedYear);
       } else if (activeTab === 'invest') {
-        // Load investment data
+        // Progressive Loading: Load fast data first, recommendations separately
         const baseUrl = process.env.EXPO_PUBLIC_BACKEND_URL;
         
-        const [portfolioRes, holdingsRes, sipsRes, otherRes, recsRes] = await Promise.all([
+        // STEP 1: Load fast data in parallel (portfolio, holdings, SIPs, other)
+        const [portfolioRes, holdingsRes, sipsRes, otherRes] = await Promise.all([
           fetch(`${baseUrl}/api/investments/portfolio?user_id=${user._id}`),
           fetch(`${baseUrl}/api/investments/holdings?user_id=${user._id}`),
           fetch(`${baseUrl}/api/investments/sips?user_id=${user._id}`),
           fetch(`${baseUrl}/api/investments/other?user_id=${user._id}`),
-          fetch(`${baseUrl}/api/investments/recommendations?user_id=${user._id}`),
         ]);
         
         const portfolioData = await portfolioRes.json();
         const holdingsData = await holdingsRes.json();
         const sipsData = await sipsRes.json();
         const otherData = await otherRes.json();
-        const recsData = await recsRes.json();
         
+        // Update UI immediately with fast data
         setPortfolio(portfolioData);
         setHoldings(holdingsData);
         setSips(sipsData);
         setOtherInvestments(otherData);
-        setRecommendations(recsData);
+        
+        // STEP 2: Load AI recommendations separately (non-blocking)
+        loadRecommendations(user._id, baseUrl);
       }
     } catch (error) {
       console.error('Error loading track data:', error);
