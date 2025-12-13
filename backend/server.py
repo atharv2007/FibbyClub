@@ -244,41 +244,155 @@ async def get_monthly_spending(user_id: str, months: int = 6):
     
     return formatted
 
-@api_router.get("/analytics/monthly-income")
-async def get_monthly_income(user_id: str, months: int = 6):
-    """Get monthly income aggregation"""
-    start_date = datetime.utcnow() - timedelta(days=30 * months)
+@api_router.get("/analytics/spending-by-period")
+async def get_spending_by_period(user_id: str, period: str = "6mnth"):
+    """Get spending data based on selected time period"""
+    now = datetime.utcnow()
     
-    pipeline = [
-        {"$match": {
-            "user_id": user_id,
-            "transaction_type": "income",
-            "date": {"$gte": start_date}
-        }},
-        {"$group": {
-            "_id": {
-                "year": {"$year": "$date"},
-                "month": {"$month": "$date"}
-            },
-            "total": {"$sum": "$amount"}
-        }},
-        {"$sort": {"_id.year": 1, "_id.month": 1}}
-    ]
+    if period == "1wk":
+        # Last 7 days (daily breakdown)
+        results = []
+        day_names = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
+        
+        for i in range(6, -1, -1):
+            day_date = now - timedelta(days=i)
+            start_of_day = datetime(day_date.year, day_date.month, day_date.day)
+            end_of_day = start_of_day + timedelta(days=1)
+            
+            pipeline = [
+                {"$match": {
+                    "user_id": user_id,
+                    "transaction_type": "expense",
+                    "date": {"$gte": start_of_day, "$lt": end_of_day}
+                }},
+                {"$group": {"_id": None, "total": {"$sum": "$amount"}}}
+            ]
+            
+            result = await db.transactions.aggregate(pipeline).to_list(1)
+            amount = result[0]["total"] if result else 0
+            
+            results.append({
+                "month": day_names[day_date.weekday()],
+                "amount": amount,
+                "date": day_date.strftime("%d %b"),
+                "day": day_date.day,
+                "month_num": day_date.month,
+                "year": day_date.year
+            })
+        
+        return results
     
-    results = await db.transactions.aggregate(pipeline).to_list(100)
+    elif period == "1mnth":
+        # Last 5 weeks (weekly breakdown)
+        results = []
+        
+        for i in range(4, -1, -1):
+            week_start = now - timedelta(days=now.weekday() + (i * 7))
+            week_end = week_start + timedelta(days=7)
+            
+            pipeline = [
+                {"$match": {
+                    "user_id": user_id,
+                    "transaction_type": "expense",
+                    "date": {"$gte": week_start, "$lt": week_end}
+                }},
+                {"$group": {"_id": None, "total": {"$sum": "$amount"}}}
+            ]
+            
+            result = await db.transactions.aggregate(pipeline).to_list(1)
+            amount = result[0]["total"] if result else 0
+            
+            results.append({
+                "month": f"W{5-i}",
+                "amount": amount,
+                "date": f"{week_start.strftime('%d')}-{week_end.strftime('%d %b')}",
+                "week_num": 5-i
+            })
+        
+        return results
     
-    month_names = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
-    formatted = []
-    for item in results:
-        month_num = item["_id"]["month"]
-        formatted.append({
-            "month": month_names[month_num - 1],
-            "amount": item["total"],
-            "year": item["_id"]["year"],
-            "month_num": month_num
-        })
+    elif period == "6mnth":
+        # Last 6 months (monthly breakdown)
+        month_names = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+        results = []
+        
+        for i in range(5, -1, -1):
+            target_date = now - timedelta(days=30*i)
+            start_of_month = datetime(target_date.year, target_date.month, 1)
+            
+            if target_date.month == 12:
+                end_of_month = datetime(target_date.year + 1, 1, 1)
+            else:
+                end_of_month = datetime(target_date.year, target_date.month + 1, 1)
+            
+            pipeline = [
+                {"$match": {
+                    "user_id": user_id,
+                    "transaction_type": "expense",
+                    "date": {"$gte": start_of_month, "$lt": end_of_month}
+                }},
+                {"$group": {"_id": None, "total": {"$sum": "$amount"}}}
+            ]
+            
+            result = await db.transactions.aggregate(pipeline).to_list(1)
+            amount = result[0]["total"] if result else 0
+            
+            results.append({
+                "month": month_names[target_date.month - 1],
+                "amount": amount,
+                "year": target_date.year,
+                "month_num": target_date.month
+            })
+        
+        return results
     
-    return formatted
+    elif period == "1yr":
+        # Last 12 months in 6 bi-monthly pairs
+        month_names = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+        results = []
+        
+        for i in range(5, -1, -1):
+            # Each bar represents 2 months
+            target_date = now - timedelta(days=60*i)
+            start_month = target_date.month
+            start_year = target_date.year
+            
+            # Calculate end month (2 months later)
+            end_month = start_month + 2
+            end_year = start_year
+            if end_month > 12:
+                end_month -= 12
+                end_year += 1
+            
+            start_of_period = datetime(start_year, start_month, 1)
+            end_of_period = datetime(end_year, end_month, 1)
+            
+            pipeline = [
+                {"$match": {
+                    "user_id": user_id,
+                    "transaction_type": "expense",
+                    "date": {"$gte": start_of_period, "$lt": end_of_period}
+                }},
+                {"$group": {"_id": None, "total": {"$sum": "$amount"}}}
+            ]
+            
+            result = await db.transactions.aggregate(pipeline).to_list(1)
+            amount = result[0]["total"] if result else 0
+            
+            # Format: "Dec 24 - Jan 25"
+            label = f"{month_names[start_month-1]} {str(start_year)[-2:]}"
+            
+            results.append({
+                "month": label,
+                "amount": amount,
+                "period": f"{month_names[start_month-1]}-{month_names[(end_month-1)%12]}",
+                "year": start_year
+            })
+        
+        return results
+    
+    # Default to 6 months
+    return await get_monthly_spending(user_id, 6)
 
 @api_router.get("/analytics/spend-velocity")
 async def get_spend_velocity(user_id: str):
