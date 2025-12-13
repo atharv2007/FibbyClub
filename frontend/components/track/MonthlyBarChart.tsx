@@ -195,10 +195,9 @@ const styles = StyleSheet.create({
     height: 200,
     paddingTop: SPACING.md,
     gap: SPACING.md,
-    minWidth: '100%',
   },
   barWrapper: {
-    width: 60,
+    width: 70,
     alignItems: 'center',
     gap: SPACING.xs,
   },
