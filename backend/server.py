@@ -99,7 +99,12 @@ async def initialize_user():
 @api_router.get("/users/{user_id}")
 async def get_user(user_id: str):
     """Get user by ID"""
-    user = await db.users.find_one({"_id": user_id})
+    from bson import ObjectId
+    try:
+        user = await db.users.find_one({"_id": ObjectId(user_id)})
+    except:
+        user = await db.users.find_one({"_id": user_id})
+    
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
     return serialize_doc(user)
@@ -295,8 +300,13 @@ Examples:
 async def get_dashboard_data(user_id: str):
     """Get all data for the home dashboard"""
     try:
+        from bson import ObjectId
         # Get user
-        user = await db.users.find_one({"_id": user_id})
+        try:
+            user = await db.users.find_one({"_id": ObjectId(user_id)})
+        except:
+            user = await db.users.find_one({"_id": user_id})
+            
         if not user:
             raise HTTPException(status_code=404, detail="User not found")
         
