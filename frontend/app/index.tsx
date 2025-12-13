@@ -8,11 +8,8 @@ import {
   Text,
   SafeAreaView,
   StatusBar,
-  TouchableOpacity,
 } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
-import { useRouter } from 'expo-router';
-import { COLORS, SPACING, RADIUS } from '../constants/theme';
+import { COLORS, SPACING } from '../constants/theme';
 import { useDashboard } from '../hooks/useDashboard';
 import { Header } from '../components/home/Header';
 import { BankStack } from '../components/home/BankStack';
@@ -21,7 +18,6 @@ import { CategoryDonutChart } from '../components/home/CategoryDonutChart';
 import { InsightsFeed } from '../components/home/InsightsFeed';
 
 export default function HomeScreen() {
-  const router = useRouter();
   const {
     user,
     accounts,
@@ -80,21 +76,6 @@ export default function HomeScreen() {
         {primaryAccount && (
           <BankStack account={primaryAccount} />
         )}
-
-        {/* Quick Action: View Analytics */}
-        <TouchableOpacity
-          style={styles.trackButton}
-          onPress={() => router.push('/track')}
-        >
-          <View style={styles.trackButtonContent}>
-            <Ionicons name="analytics" size={24} color={COLORS.primary} />
-            <View style={styles.trackButtonText}>
-              <Text style={styles.trackButtonTitle}>View Detailed Analytics</Text>
-              <Text style={styles.trackButtonSubtitle}>Track spending, income & more</Text>
-            </View>
-            <Ionicons name="chevron-forward" size={20} color={COLORS.textSecondary} />
-          </View>
-        </TouchableOpacity>
 
         {/* Agent Chips */}
         <AgentChips
@@ -163,33 +144,6 @@ const styles = StyleSheet.create({
     marginBottom: SPACING.md,
   },
   bottomPadding: {
-    height: SPACING.xxl,
-  },
-  trackButton: {
-    marginHorizontal: SPACING.md,
-    marginVertical: SPACING.sm,
-    backgroundColor: COLORS.surface,
-    borderRadius: RADIUS.lg,
-    padding: SPACING.md,
-    borderWidth: 1,
-    borderColor: COLORS.primary + '30',
-  },
-  trackButtonContent: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: SPACING.sm,
-  },
-  trackButtonText: {
-    flex: 1,
-  },
-  trackButtonTitle: {
-    fontSize: 15,
-    fontWeight: '600',
-    color: COLORS.text,
-    marginBottom: 2,
-  },
-  trackButtonSubtitle: {
-    fontSize: 12,
-    color: COLORS.textSecondary,
+    height: 100,
   },
 });
