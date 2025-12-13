@@ -220,72 +220,78 @@ export default function GoalsScreen() {
               </View>
             </View>
 
-            {/* Goals List */}
+            {/* Add Goal CTA Button */}
+            <TouchableOpacity style={styles.addGoalCTA} onPress={handleAddNew} activeOpacity={0.8}>
+              <Ionicons name="add-circle" size={24} color={COLORS.primary} />
+              <Text style={styles.addGoalCTAText}>Add New Goal</Text>
+            </TouchableOpacity>
+
+            {/* Section Header */}
             <View style={styles.sectionHeader}>
               <Text style={styles.sectionTitle}>All Goals</Text>
             </View>
 
-            {goals.map((goal) => {
-              const progress = Math.min((goal.saved_amount / goal.target_amount) * 100, 100);
+            {/* Goals Grid */}
+            <View style={styles.goalsGrid}>
+              {goals.map((goal) => {
+                const progress = Math.min((goal.saved_amount / goal.target_amount) * 100, 100);
+                const circumference = 2 * Math.PI * 50;
+                const strokeDashoffset = circumference - (progress / 100) * circumference;
 
-              return (
-                <TouchableOpacity
-                  key={goal._id}
-                  style={styles.goalCard}
-                  onPress={() => handleEditGoal(goal)}
-                  activeOpacity={0.7}
-                >
-                  {/* Icon Container */}
-                  <View style={styles.iconContainer}>
-                    <Ionicons name={getIconName(goal.icon)} size={32} color={COLORS.success} />
-                  </View>
-
-                  {/* Goal Info */}
-                  <View style={styles.goalInfo}>
-                    <View style={styles.goalHeader}>
-                      <View style={styles.goalTitleRow}>
-                        <Text style={styles.goalName} numberOfLines={1}>
-                          {goal.name}
-                        </Text>
-                        <Text style={styles.goalProgress}>{Math.round(progress)}%</Text>
+                return (
+                  <TouchableOpacity
+                    key={goal._id}
+                    style={styles.goalCard}
+                    onPress={() => handleEditGoal(goal)}
+                    activeOpacity={0.7}
+                  >
+                    {/* Progress Ring */}
+                    <View style={styles.progressRing}>
+                      <Svg width={120} height={120}>
+                        <Circle
+                          cx="60"
+                          cy="60"
+                          r="50"
+                          stroke={COLORS.border}
+                          strokeWidth="8"
+                          fill="transparent"
+                        />
+                        <Circle
+                          cx="60"
+                          cy="60"
+                          r="50"
+                          stroke={COLORS.success}
+                          strokeWidth="8"
+                          fill="transparent"
+                          strokeDasharray={circumference}
+                          strokeDashoffset={strokeDashoffset}
+                          strokeLinecap="round"
+                          transform="rotate(-90 60 60)"
+                        />
+                      </Svg>
+                      <View style={styles.progressContent}>
+                        <Ionicons name={getIconName(goal.icon)} size={32} color={COLORS.success} />
+                        <Text style={styles.progressPercent}>{Math.round(progress)}%</Text>
                       </View>
-                      <Text style={styles.goalAmount}>
-                        {formatINRFull(goal.saved_amount)} of {formatINRFull(goal.target_amount)}
-                      </Text>
                     </View>
 
-                    {/* Progress Bar */}
-                    <View style={styles.miniProgressBar}>
-                      <View
-                        style={[
-                          styles.miniProgressFill,
-                          { width: `${Math.round(progress)}%` },
-                        ]}
-                      />
+                    {/* Goal Info */}
+                    <Text style={styles.goalName} numberOfLines={2}>
+                      {goal.name}
+                    </Text>
+                    <View style={styles.goalAmounts}>
+                      <Text style={styles.savedAmount}>{formatINRFull(goal.saved_amount)}</Text>
+                      <Text style={styles.targetAmount}>of {formatINRFull(goal.target_amount)}</Text>
                     </View>
-                  </View>
-                </TouchableOpacity>
-              );
-            })}
+                  </TouchableOpacity>
+                );
+              })}
+            </View>
           </>
         )}
 
         <View style={styles.bottomPadding} />
       </ScrollView>
-
-      {/* Floating Add Button */}
-      <Animated.View style={[styles.fab, { transform: [{ scale: fabScale }] }]}>
-        <TouchableOpacity
-          style={styles.fabButton}
-          onPress={() => {
-            animateFab();
-            handleAddNew();
-          }}
-          activeOpacity={0.8}
-        >
-          <Ionicons name="add" size={32} color={COLORS.surface} />
-        </TouchableOpacity>
-      </Animated.View>
 
       {/* Add/Edit Goal Modal */}
       <AddGoalModal
