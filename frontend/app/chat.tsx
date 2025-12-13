@@ -19,20 +19,32 @@ const suggestionChipsRow1: SuggestionChip[] = [
   { id: '2', emoji: '✈️', label: 'Can I afford a Goa trip?' },
   { id: '3', emoji: '📈', label: 'Show my SIPs' },
   { id: '4', emoji: '💰', label: 'How is my budget?' },
+  { id: '5', emoji: '🎯', label: 'Track my savings goal' },
+  { id: '6', emoji: '💳', label: 'Review my credit cards' },
+  { id: '7', emoji: '🏡', label: 'Check home loan status' },
+  { id: '8', emoji: '📉', label: 'Analyze spending trends' },
 ];
 
 const suggestionChipsRow2: SuggestionChip[] = [
-  { id: '5', emoji: '🔍', label: 'Where did my money go?' },
-  { id: '6', emoji: '🛑', label: 'Set a spending limit' },
-  { id: '7', emoji: '🔄', label: 'Check my subscriptions' },
-  { id: '8', emoji: '💎', label: 'Show my portfolio' },
+  { id: '9', emoji: '💰', label: 'How is my budget?' },
+  { id: '10', emoji: '🛑', label: 'Set a spending limit' },
+  { id: '11', emoji: '🔍', label: 'Where did my money go?' },
+  { id: '12', emoji: '💸', label: 'Forecast my balance' },
+  { id: '13', emoji: '🔔', label: 'Set bill reminders' },
+  { id: '14', emoji: '🎁', label: 'Split an expense' },
+  { id: '15', emoji: '📊', label: 'Show category breakdown' },
+  { id: '16', emoji: '💎', label: 'Investment recommendations' },
 ];
 
 const suggestionChipsRow3: SuggestionChip[] = [
-  { id: '9', emoji: '🎯', label: 'Track my savings goal' },
-  { id: '10', emoji: '💎', label: 'Review my investments' },
-  { id: '11', emoji: '📱', label: 'Bill payment reminders' },
-  { id: '12', emoji: '🏦', label: 'Account summary' },
+  { id: '17', emoji: '🔄', label: 'Check my subscriptions' },
+  { id: '18', emoji: '💎', label: 'Show my portfolio' },
+  { id: '19', emoji: '💎', label: 'Review my investments' },
+  { id: '20', emoji: '📱', label: 'Bill payment reminders' },
+  { id: '21', emoji: '🏦', label: 'Account summary' },
+  { id: '22', emoji: '🎓', label: 'Education fund progress' },
+  { id: '23', emoji: '🚗', label: 'Car loan EMI details' },
+  { id: '24', emoji: '⚡', label: 'Quick expense entry' },
 ];
 
 export default function ChatScreen() {
