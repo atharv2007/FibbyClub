@@ -21,7 +21,7 @@ type TabType = 'spend' | 'income' | 'networth';
 
 export default function TrackScreen() {
   const router = useRouter();
-  const { user } = useAppStore();
+  const { user, setUser } = useAppStore();
   const [activeTab, setActiveTab] = useState<TabType>('spend');
   const [loading, setLoading] = useState(true);
   const [monthlyData, setMonthlyData] = useState([]);
@@ -29,9 +29,30 @@ export default function TrackScreen() {
   const [merchants, setMerchants] = useState([]);
   const [selectedMonth, setSelectedMonth] = useState('');
 
+  // Initialize user if not exists
+  useEffect(() => {
+    const initUser = async () => {
+      if (!user) {
+        try {
+          const initResult = await api.initializeUser();
+          if (initResult.user_id) {
+            const dashboardData = await api.getDashboard(initResult.user_id);
+            setUser(dashboardData.user);
+          }
+        } catch (error) {
+          console.error('Error initializing user:', error);
+        }
+      }
+    };
+    
+    initUser();
+  }, []);
+
   useEffect(() => {
     if (user?._id) {
       loadData();
+    } else {
+      setLoading(false);
     }
   }, [user, activeTab]);
 
