@@ -1162,6 +1162,105 @@ async def delete_conversation(conversation_id: str, user_id: str):
         logger.error(f"Error deleting conversation: {str(e)}")
         raise HTTPException(status_code=500, detail=str(e))
 
+# ============= EMBEDDER ROUTES =============
+from embedder_service import EmbedderAgent
+
+# Global embedder agent instance
+embedder_agent: EmbedderAgent = None
+
+@api_router.on_event("startup")
+async def startup_embedder():
+    """Initialize embedder agent on startup"""
+    global embedder_agent
+    embedder_agent = EmbedderAgent()
+    logger.info("Embedder agent initialized")
+
+@api_router.post("/embeddings/update/{user_id}")
+async def update_user_embeddings(user_id: str):
+    """Manually trigger embedding update for a specific user"""
+    try:
+        transaction_id = await embedder_agent.update_user_embeddings(user_id)
+        if transaction_id:
+            return {
+                "status": "success",
+                "user_id": user_id,
+                "transaction_id": transaction_id,
+                "message": "Embeddings updated successfully"
+            }
+        else:
+            raise HTTPException(status_code=500, detail="Failed to update embeddings")
+    except Exception as e:
+        logger.error(f"Error updating embeddings: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@api_router.post("/embeddings/update-all")
+async def update_all_user_embeddings():
+    """Update embeddings for all users"""
+    try:
+        await embedder_agent.update_all_users()
+        return {
+            "status": "success",
+            "message": "All user embeddings updated",
+            "user_count": len(embedder_agent.get_user_transactions())
+        }
+    except Exception as e:
+        logger.error(f"Error updating all embeddings: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@api_router.get("/embeddings/transactions")
+async def get_transaction_ids():
+    """Get all users and their transaction IDs"""
+    try:
+        transactions = embedder_agent.get_user_transactions()
+        return {
+            "total_users": len(transactions),
+            "total_documents": embedder_agent.collection.count(),
+            "embedding_model": "all-MiniLM-L6-v2",
+            "vector_db": "ChromaDB",
+            "transactions": [
+                {
+                    "user_id": user_id,
+                    "transaction_id": txn_id
+                }
+                for user_id, txn_id in transactions.items()
+            ]
+        }
+    except Exception as e:
+        logger.error(f"Error fetching transactions: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@api_router.get("/embeddings/search")
+async def search_embeddings(query: str, user_id: str = None, limit: int = 5):
+    """Search vector database with a query"""
+    try:
+        # Generate query embedding
+        query_embedding = embedder_agent.model.encode([query])[0].tolist()
+        
+        # Search with optional user filter
+        where_filter = {"user_id": user_id} if user_id else None
+        
+        results = embedder_agent.collection.query(
+            query_embeddings=[query_embedding],
+            n_results=limit,
+            where=where_filter
+        )
+        
+        return {
+            "query": query,
+            "results": [
+                {
+                    "id": results["ids"][0][i],
+                    "text": results["documents"][0][i],
+                    "metadata": results["metadatas"][0][i],
+                    "distance": results["distances"][0][i]
+                }
+                for i in range(len(results["ids"][0]))
+            ]
+        }
+    except Exception as e:
+        logger.error(f"Error searching embeddings: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
+
 # ============= DASHBOARD ROUTES =============
 @api_router.get("/dashboard")
 async def get_dashboard_data(user_id: str):
