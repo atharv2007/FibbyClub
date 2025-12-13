@@ -572,6 +572,109 @@ Examples:
         logger.error(f"Chat error: {str(e)}")
         raise HTTPException(status_code=500, detail=str(e))
 
+async def get_user_context(user_id: str, query: str) -> str:
+    """Fetch and summarize relevant user data based on the query"""
+    try:
+        # Keywords to determine what data to fetch
+        query_lower = query.lower()
+        context_parts = []
+        
+        # Fetch user basic info
+        user = await db.users.find_one({"_id": ObjectId(user_id)})
+        if user:
+            context_parts.append(f"User: {user.get('name', 'User')}")
+        
+        # Budget-related queries
+        if any(word in query_lower for word in ['budget', 'spending', 'expense', 'spend', 'money']):
+            # Get current month transactions
+            from datetime import datetime, timedelta
+            current_month_start = datetime.now().replace(day=1, hour=0, minute=0, second=0, microsecond=0)
+            
+            transactions = list(await db.transactions.find({
+                "user_id": user_id,
+                "date": {"$gte": current_month_start}
+            }).to_list(length=100))
+            
+            if transactions:
+                total_spent = sum(t.get('amount', 0) for t in transactions if t.get('amount', 0) > 0)
+                
+                # Category breakdown
+                category_spending = {}
+                for t in transactions:
+                    cat = t.get('category', 'Other')
+                    category_spending[cat] = category_spending.get(cat, 0) + t.get('amount', 0)
+                
+                top_categories = sorted(category_spending.items(), key=lambda x: x[1], reverse=True)[:3]
+                
+                context_parts.append(f"This Month Spending: ₹{total_spent:,.0f}")
+                context_parts.append(f"Top Categories: {', '.join([f'{cat} ₹{amt:,.0f}' for cat, amt in top_categories])}")
+                context_parts.append(f"Monthly Budget: ₹45,000")
+                context_parts.append(f"Budget Used: {(total_spent/45000)*100:.0f}%")
+        
+        # Investment-related queries
+        if any(word in query_lower for word in ['invest', 'portfolio', 'sip', 'stock', 'mutual', 'fund', 'return']):
+            # Get investment data
+            holdings = list(await db.investment_holdings.find({"user_id": user_id}).to_list(length=50))
+            mutual_funds = list(await db.mutual_funds.find({"user_id": user_id}).to_list(length=50))
+            
+            if holdings or mutual_funds:
+                total_investment = 0
+                total_current = 0
+                
+                for h in holdings:
+                    total_investment += h.get('average_price', 0) * h.get('quantity', 0)
+                    total_current += h.get('last_price', 0) * h.get('quantity', 0)
+                
+                for mf in mutual_funds:
+                    total_investment += mf.get('invested_value', 0)
+                    total_current += mf.get('current_value', 0)
+                
+                returns_pct = ((total_current - total_investment) / total_investment * 100) if total_investment > 0 else 0
+                
+                context_parts.append(f"Total Portfolio Value: ₹{total_current:,.0f}")
+                context_parts.append(f"Total Invested: ₹{total_investment:,.0f}")
+                context_parts.append(f"Overall Returns: {returns_pct:+.1f}%")
+                context_parts.append(f"Holdings: {len(holdings)} stocks, {len(mutual_funds)} mutual funds")
+                
+                # SIP info
+                active_sips = [mf for mf in mutual_funds if mf.get('sip_amount', 0) > 0]
+                if active_sips:
+                    total_sip = sum(mf.get('sip_amount', 0) for mf in active_sips)
+                    context_parts.append(f"Active SIPs: {len(active_sips)} ({₹{total_sip:,.0f}/month)")
+        
+        # Goal-related queries
+        if any(word in query_lower for word in ['goal', 'save', 'saving', 'target']):
+            goals = list(await db.goals.find({"user_id": user_id}).to_list(length=10))
+            if goals:
+                context_parts.append(f"Active Goals: {len(goals)}")
+                for goal in goals[:2]:  # Top 2 goals
+                    progress = (goal.get('current_amount', 0) / goal.get('target_amount', 1)) * 100
+                    context_parts.append(f"- {goal.get('name')}: {progress:.0f}% (₹{goal.get('current_amount', 0):,.0f}/₹{goal.get('target_amount', 0):,.0f})")
+        
+        # Weekend/recent spending
+        if any(word in query_lower for word in ['weekend', 'week', 'recent', 'today', 'yesterday']):
+            from datetime import datetime, timedelta
+            last_7_days = datetime.now() - timedelta(days=7)
+            
+            recent_txns = list(await db.transactions.find({
+                "user_id": user_id,
+                "date": {"$gte": last_7_days}
+            }).to_list(length=50))
+            
+            if recent_txns:
+                total_recent = sum(t.get('amount', 0) for t in recent_txns if t.get('amount', 0) > 0)
+                context_parts.append(f"Last 7 Days Spending: ₹{total_recent:,.0f}")
+                context_parts.append(f"Transactions: {len(recent_txns)}")
+        
+        if not context_parts:
+            context_parts.append("No specific financial data found for this query.")
+        
+        return "\n".join(context_parts)
+    
+    except Exception as e:
+        logger.error(f"Error fetching user context: {str(e)}")
+        return "Unable to fetch user data at the moment."
+
 @api_router.post("/chat/message")
 async def chat_message(request: dict):
     """Chat endpoint with contextual responses using GPT-4o-mini"""
