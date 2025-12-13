@@ -10,7 +10,7 @@ import sys
 from datetime import datetime
 
 # Configuration
-BACKEND_URL = "https://genz-money-1.preview.emergentagent.com/api"
+BACKEND_URL = "https://fintech-buddy-6.preview.emergentagent.com/api"
 USER_ID = "693d2626a878e575aaf43c0a"
 
 def test_chat_endpoint():
