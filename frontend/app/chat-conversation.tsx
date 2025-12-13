@@ -40,13 +40,50 @@ export default function ChatConversationScreen() {
   const [inputText, setInputText] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const scrollViewRef = useRef<ScrollView>(null);
+  
+  // Track conversation ID for this chat session
+  const conversationIdRef = useRef<string | null>(null);
 
   useEffect(() => {
+    // Check if we're resuming an existing conversation
+    if (params.conversationId && typeof params.conversationId === 'string') {
+      conversationIdRef.current = params.conversationId;
+      loadConversation(params.conversationId);
+    } else {
+      // Generate new conversation ID for fresh chat
+      conversationIdRef.current = `conv_${user?._id || 'guest'}_${Date.now()}`;
+    }
+    
     // If there's an initial prompt from params, start conversation
-    if (params.prompt && typeof params.prompt === 'string') {
+    if (params.prompt && typeof params.prompt === 'string' && !params.conversationId) {
       handleSendMessage(params.prompt);
     }
-  }, [params.prompt]);
+  }, [params.prompt, params.conversationId]);
+  
+  const loadConversation = async (conversationId: string) => {
+    try {
+      const response = await fetch(
+        `${process.env.EXPO_PUBLIC_BACKEND_URL}/api/chat/conversations/${conversationId}?user_id=${user?._id}`
+      );
+      
+      if (response.ok) {
+        const data = await response.json();
+        
+        // Convert stored messages to UI format
+        const loadedMessages: Message[] = data.messages.map((msg: any, index: number) => ({
+          id: `${msg.timestamp}_${index}`,
+          type: msg.role === 'user' ? 'user' : 'bot',
+          content: msg.content,
+          timestamp: new Date(msg.timestamp),
+          card: msg.metrics ? { type: msg.card_type, metrics: msg.metrics } : undefined,
+        }));
+        
+        setMessages(loadedMessages);
+      }
+    } catch (error) {
+      console.error('Error loading conversation:', error);
+    }
+  };
 
   const handleSendMessage = async (message: string) => {
     if (!message.trim() || isLoading) return;
