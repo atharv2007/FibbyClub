@@ -17,12 +17,12 @@ import { MonthlyBarChart } from '../components/track/MonthlyBarChart';
 import { CategoryList } from '../components/track/CategoryList';
 import { MerchantLeaderboard } from '../components/track/MerchantLeaderboard';
 
-type TabType = 'spend' | 'income' | 'networth';
+type TabType = 'budget' | 'spend' | 'credit';
 
 export default function TrackScreen() {
   const router = useRouter();
   const { user, setUser } = useAppStore();
-  const [activeTab, setActiveTab] = useState<TabType>('spend');
+  const [activeTab, setActiveTab] = useState<TabType>('budget');
   const [loading, setLoading] = useState(true);
   const [monthlyData, setMonthlyData] = useState([]);
   const [categories, setCategories] = useState([]);
