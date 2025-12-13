@@ -257,38 +257,35 @@ export default function ChatHistoryDrawer({ visible, onClose }: ChatHistoryDrawe
           </View>
 
           {/* Category Filters */}
-          <ScrollView 
-            horizontal 
-            showsHorizontalScrollIndicator={false}
-            style={styles.filtersContainer}
-            contentContainerStyle={styles.filtersContent}
-          >
-            {categories.map((category) => (
-              <TouchableOpacity
-                key={category.id}
-                style={[
-                  styles.filterPill,
-                  selectedCategory === category.id && styles.filterPillActive,
-                ]}
-                onPress={() => setSelectedCategory(category.id)}
-              >
-                <Ionicons
-                  name={category.icon as any}
-                  size={16}
-                  color={selectedCategory === category.id ? COLORS.surface : COLORS.textSecondary}
-                  style={styles.filterIcon}
-                />
-                <Text
+          <View style={styles.filtersContainer}>
+            <View style={styles.filtersGrid}>
+              {categories.map((category) => (
+                <TouchableOpacity
+                  key={category.id}
                   style={[
-                    styles.filterText,
-                    selectedCategory === category.id && styles.filterTextActive,
+                    styles.filterChip,
+                    selectedCategory === category.id && styles.filterChipActive,
                   ]}
+                  onPress={() => setSelectedCategory(category.id)}
+                  activeOpacity={0.7}
                 >
-                  {category.label}
-                </Text>
-              </TouchableOpacity>
-            ))}
-          </ScrollView>
+                  <Ionicons
+                    name={category.icon as any}
+                    size={20}
+                    color={selectedCategory === category.id ? COLORS.primary : COLORS.textSecondary}
+                  />
+                  <Text
+                    style={[
+                      styles.filterLabel,
+                      selectedCategory === category.id && styles.filterLabelActive,
+                    ]}
+                  >
+                    {category.label}
+                  </Text>
+                </TouchableOpacity>
+              ))}
+            </View>
+          </View>
 
           {/* Conversations List */}
           <ScrollView
