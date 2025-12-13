@@ -73,7 +73,6 @@ const styles = StyleSheet.create({
     marginRight: SPACING.md,
     borderWidth: 1,
     borderColor: COLORS.glassBorder,
-    ...SHADOWS.card,
   },
   header: {
     flexDirection: 'row',
