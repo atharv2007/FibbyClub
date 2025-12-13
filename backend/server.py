@@ -772,7 +772,7 @@ OPTIONS:
 - Review individual holdings
 - Rebalance my portfolio
 - Increase SIP amounts"""
-        ).with_model("openai", "gpt-4o-mini")
+        ).with_model("openai", "gpt-5.1")
         
         # Send message with context
         user_message = UserMessage(text=context_prompt)
