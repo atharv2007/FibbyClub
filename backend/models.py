@@ -167,3 +167,87 @@ class ChatResponse(BaseModel):
     message: str
     widget_data: Optional[dict] = None
     session_id: str
+
+
+# Investment Models (Zerodha Kite Structure)
+
+class InvestmentHolding(BaseModel):
+    """Stock/Equity Holdings"""
+    id: Optional[PyObjectId] = Field(alias="_id", default=None)
+    user_id: str
+    tradingsymbol: str
+    exchange: str
+    instrument_token: int
+    isin: str
+    product: str
+    quantity: int
+    average_price: float
+    last_price: float
+    close_price: float
+    pnl: float
+    day_change: float
+    day_change_percentage: float
+    
+    class Config:
+        populate_by_name = True
+        arbitrary_types_allowed = True
+        json_encoders = {ObjectId: str}
+
+
+class MutualFund(BaseModel):
+    """Mutual Fund Holdings"""
+    id: Optional[PyObjectId] = Field(alias="_id", default=None)
+    user_id: str
+    folio: str
+    fund: str
+    tradingsymbol: str  # ISIN
+    quantity: float
+    average_price: float
+    last_price: float
+    pnl: float
+    is_sip: bool = False
+    sip_amount: Optional[float] = None
+    sip_date: Optional[int] = None  # Day of month
+    
+    class Config:
+        populate_by_name = True
+        arbitrary_types_allowed = True
+        json_encoders = {ObjectId: str}
+
+
+class OtherInvestment(BaseModel):
+    """Other Investment Types (FD, Bonds, Crypto, etc.)"""
+    id: Optional[PyObjectId] = Field(alias="_id", default=None)
+    user_id: str
+    type: Literal["crypto", "fd", "bond", "real_estate", "nps", "ppf", "insurance"]
+    name: str
+    amount_invested: float
+    current_value: float
+    returns: float
+    returns_percentage: float
+    maturity_date: Optional[datetime] = None
+    interest_rate: Optional[float] = None
+    metadata: Optional[dict] = None  # For type-specific data
+    
+    class Config:
+        populate_by_name = True
+        arbitrary_types_allowed = True
+        json_encoders = {ObjectId: str}
+
+
+class InvestmentRecommendation(BaseModel):
+    """Investment Recommendations"""
+    id: Optional[PyObjectId] = Field(alias="_id", default=None)
+    user_id: str
+    type: Literal["ai", "rule"]
+    title: str
+    description: str
+    asset_class: str
+    priority: int = 0  # Higher = more important
+    reasoning: Optional[str] = None
+    created_at: datetime = Field(default_factory=datetime.utcnow)
+    
+    class Config:
+        populate_by_name = True
+        arbitrary_types_allowed = True
+        json_encoders = {ObjectId: str}
