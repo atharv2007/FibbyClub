@@ -376,8 +376,8 @@ export default function ChatHistoryDrawer({ visible, onClose, onNewChat, onSelec
               </View>
             )}
           </ScrollView>
-        </View>
-      </View>
+        </Animated.View>
+      </TouchableOpacity>
     </Modal>
   );
 }
