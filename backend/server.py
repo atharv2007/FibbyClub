@@ -134,16 +134,30 @@ async def get_transactions(user_id: str, limit: int = 100, offset: int = 0):
     return [serialize_doc(txn) for txn in transactions]
 
 @api_router.get("/transactions/category-breakdown")
-async def get_category_breakdown(user_id: str, months: int = 1):
+async def get_category_breakdown(user_id: str, months: int = 1, month: Optional[int] = None, year: Optional[int] = None):
     """Get spending breakdown by category"""
-    start_date = datetime.utcnow() - timedelta(days=30 * months)
-    
-    pipeline = [
-        {"$match": {
+    # If specific month and year provided, filter for that month only
+    if month and year:
+        start_date = datetime(year, month, 1)
+        if month == 12:
+            end_date = datetime(year + 1, 1, 1)
+        else:
+            end_date = datetime(year, month + 1, 1)
+        match_query = {
+            "user_id": user_id,
+            "transaction_type": "expense",
+            "date": {"$gte": start_date, "$lt": end_date}
+        }
+    else:
+        start_date = datetime.utcnow() - timedelta(days=30 * months)
+        match_query = {
             "user_id": user_id,
             "transaction_type": "expense",
             "date": {"$gte": start_date}
-        }},
+        }
+    
+    pipeline = [
+        {"$match": match_query},
         {"$group": {
             "_id": "$category",
             "total": {"$sum": "$amount"},
@@ -156,16 +170,30 @@ async def get_category_breakdown(user_id: str, months: int = 1):
     return results
 
 @api_router.get("/transactions/merchant-leaderboard")
-async def get_merchant_leaderboard(user_id: str, limit: int = 10):
+async def get_merchant_leaderboard(user_id: str, limit: int = 10, month: Optional[int] = None, year: Optional[int] = None):
     """Get top merchants by spending"""
-    start_date = datetime.utcnow() - timedelta(days=30)
-    
-    pipeline = [
-        {"$match": {
+    # If specific month and year provided, filter for that month only
+    if month and year:
+        start_date = datetime(year, month, 1)
+        if month == 12:
+            end_date = datetime(year + 1, 1, 1)
+        else:
+            end_date = datetime(year, month + 1, 1)
+        match_query = {
+            "user_id": user_id,
+            "transaction_type": "expense",
+            "date": {"$gte": start_date, "$lt": end_date}
+        }
+    else:
+        start_date = datetime.utcnow() - timedelta(days=30)
+        match_query = {
             "user_id": user_id,
             "transaction_type": "expense",
             "date": {"$gte": start_date}
-        }},
+        }
+    
+    pipeline = [
+        {"$match": match_query},
         {"$group": {
             "_id": "$merchant",
             "total": {"$sum": "$amount"},
