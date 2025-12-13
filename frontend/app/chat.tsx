@@ -177,9 +177,14 @@ export default function ChatScreen() {
                     { transform: [{ translateX: scrollAnim1 }] },
                   ]}
                 >
-                  {[...suggestionChipsRow1, ...suggestionChipsRow1].map((chip, index) => (
+                  {[
+                    ...suggestionChipsRow1,
+                    ...suggestionChipsRow1,
+                    ...suggestionChipsRow1,
+                    ...suggestionChipsRow1,
+                  ].map((chip, index) => (
                     <TouchableOpacity
-                      key={`${chip.id}-${index}`}
+                      key={`row1-${chip.id}-${index}`}
                       style={styles.chip}
                       onPress={() => handleChipPress(chip)}
                       activeOpacity={0.7}
@@ -199,9 +204,14 @@ export default function ChatScreen() {
                     { transform: [{ translateX: scrollAnim2 }] },
                   ]}
                 >
-                  {[...suggestionChipsRow2, ...suggestionChipsRow2, ...suggestionChipsRow2].map((chip, index) => (
+                  {[
+                    ...suggestionChipsRow2,
+                    ...suggestionChipsRow2,
+                    ...suggestionChipsRow2,
+                    ...suggestionChipsRow2,
+                  ].map((chip, index) => (
                     <TouchableOpacity
-                      key={`${chip.id}-${index}`}
+                      key={`row2-${chip.id}-${index}`}
                       style={styles.chip}
                       onPress={() => handleChipPress(chip)}
                       activeOpacity={0.7}
@@ -221,9 +231,14 @@ export default function ChatScreen() {
                     { transform: [{ translateX: scrollAnim3 }] },
                   ]}
                 >
-                  {[...suggestionChipsRow3, ...suggestionChipsRow3].map((chip, index) => (
+                  {[
+                    ...suggestionChipsRow3,
+                    ...suggestionChipsRow3,
+                    ...suggestionChipsRow3,
+                    ...suggestionChipsRow3,
+                  ].map((chip, index) => (
                     <TouchableOpacity
-                      key={`${chip.id}-${index}`}
+                      key={`row3-${chip.id}-${index}`}
                       style={styles.chip}
                       onPress={() => handleChipPress(chip)}
                       activeOpacity={0.7}
