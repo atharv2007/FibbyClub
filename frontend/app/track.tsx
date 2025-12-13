@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
-import { COLORS, SPACING } from '../constants/theme';
+import { COLORS, SPACING, RADIUS, TYPOGRAPHY } from '../constants/theme';
 import { useAppStore } from '../store/useAppStore';
 import { api } from '../utils/api';
 import { MonthlyBarChart } from '../components/track/MonthlyBarChart';
