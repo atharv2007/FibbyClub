@@ -124,6 +124,28 @@ export const api = {
     return response.json();
   },
   
+  // Bank Accounts
+  getBankAccounts: async (userId: string) => {
+    const response = await fetch(`${API_URL}/api/bank-accounts?user_id=${userId}`);
+    return response.json();
+  },
+  
+  addBankAccount: async (userId: string, accountData: any) => {
+    const response = await fetch(`${API_URL}/api/bank-accounts`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ user_id: userId, ...accountData }),
+    });
+    return response.json();
+  },
+  
+  deleteBankAccount: async (userId: string, accountId: string) => {
+    const response = await fetch(`${API_URL}/api/bank-accounts/${accountId}?user_id=${userId}`, {
+      method: 'DELETE',
+    });
+    return response.json();
+  },
+  
   // Get monthly spending
   getMonthlySpending: async (userId: string, months = 6) => {
     const response = await fetch(`${API_URL}/api/analytics/monthly-spending?user_id=${userId}&months=${months}`);
