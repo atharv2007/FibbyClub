@@ -248,6 +248,15 @@ export default function TrackScreen() {
         </TouchableOpacity>
         
         <TouchableOpacity
+          style={[styles.tab, activeTab === 'invest' && styles.activeTab]}
+          onPress={() => setActiveTab('invest')}
+        >
+          <Text style={[styles.tabText, activeTab === 'invest' && styles.activeTabText]}>
+            Invest
+          </Text>
+        </TouchableOpacity>
+        
+        <TouchableOpacity
           style={[styles.tab, activeTab === 'credit' && styles.activeTab]}
           onPress={() => setActiveTab('credit')}
         >
