@@ -108,76 +108,45 @@ export function AddBankModal({ visible, onClose, onAdd }: AddBankModalProps) {
             showsVerticalScrollIndicator={false}
             keyboardShouldPersistTaps="handled"
           >
-            {/* Bank Selection */}
-            <Text style={styles.label}>Select Your Bank</Text>
-            <View style={styles.bankGrid}>
-              {POPULAR_BANKS.map((bank) => (
-                <TouchableOpacity
-                  key={bank.id}
-                  style={[
-                    styles.bankChip,
-                    selectedBank === bank.id && styles.bankChipActive,
-                  ]}
-                  onPress={() => handleSelectBank(bank)}
-                >
-                  <Ionicons
-                    name={bank.icon as any}
-                    size={24}
-                    color={selectedBank === bank.id ? COLORS.primary : COLORS.textSecondary}
-                  />
-                  <Text
-                    style={[
-                      styles.bankChipText,
-                      selectedBank === bank.id && styles.bankChipTextActive,
-                    ]}
-                  >
-                    {bank.name}
-                  </Text>
-                </TouchableOpacity>
-              ))}
+            {/* Info Card */}
+            <View style={styles.infoCard}>
+              <Ionicons name="shield-checkmark" size={40} color={COLORS.primary} />
+              <Text style={styles.infoTitle}>Secure Account Linking</Text>
+              <Text style={styles.infoText}>
+                We use Account Aggregator (AA) service to securely fetch your bank accounts using your PAN card number.
+              </Text>
             </View>
 
-            {/* Bank Name (if other selected) */}
-            {selectedBank === 'other' && (
-              <View style={styles.inputGroup}>
-                <Text style={styles.label}>Bank Name</Text>
-                <TextInput
-                  style={styles.input}
-                  placeholder="Enter bank name"
-                  placeholderTextColor={COLORS.textSecondary}
-                  value={bankName}
-                  onChangeText={setBankName}
-                />
-              </View>
-            )}
-
-            {/* Account Number */}
+            {/* PAN Input */}
             <View style={styles.inputGroup}>
-              <Text style={styles.label}>Account Number</Text>
+              <Text style={styles.label}>PAN Card Number</Text>
               <TextInput
                 style={styles.input}
-                placeholder="Enter account number"
+                placeholder="ABCDE1234F"
                 placeholderTextColor={COLORS.textSecondary}
-                value={accountNumber}
-                onChangeText={setAccountNumber}
-                keyboardType="number-pad"
-                maxLength={20}
+                value={panNumber}
+                onChangeText={(text) => setPanNumber(text.toUpperCase())}
+                autoCapitalize="characters"
+                maxLength={10}
               />
+              <Text style={styles.helpText}>
+                Enter your 10-character PAN card number
+              </Text>
             </View>
 
-            {/* Current Balance */}
-            <View style={styles.inputGroup}>
-              <Text style={styles.label}>Current Balance</Text>
-              <View style={styles.balanceInputWrapper}>
-                <Text style={styles.currencySymbol}>₹</Text>
-                <TextInput
-                  style={styles.balanceInput}
-                  placeholder="0"
-                  placeholderTextColor={COLORS.textSecondary}
-                  value={balance}
-                  onChangeText={setBalance}
-                  keyboardType="decimal-pad"
-                />
+            {/* Features */}
+            <View style={styles.featuresContainer}>
+              <View style={styles.featureItem}>
+                <Ionicons name="checkmark-circle" size={20} color={COLORS.success} />
+                <Text style={styles.featureText}>100% Secure & Encrypted</Text>
+              </View>
+              <View style={styles.featureItem}>
+                <Ionicons name="checkmark-circle" size={20} color={COLORS.success} />
+                <Text style={styles.featureText}>RBI Approved AA Service</Text>
+              </View>
+              <View style={styles.featureItem}>
+                <Ionicons name="checkmark-circle" size={20} color={COLORS.success} />
+                <Text style={styles.featureText}>Auto-fetch All Accounts</Text>
               </View>
             </View>
 
