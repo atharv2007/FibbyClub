@@ -1,7 +1,7 @@
 import asyncio
 import os
 from dotenv import load_dotenv
-from emergentintegrations import LlmChat, UserMessage
+from emergentintegrations.llm.chat import LlmChat, UserMessage
 
 load_dotenv()
 
