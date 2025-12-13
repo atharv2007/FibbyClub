@@ -597,6 +597,234 @@ async def get_dashboard_data(user_id: str):
         logger.error(f"Dashboard error: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
+# ============= INVESTMENT ROUTES =============
+@api_router.get("/investments/portfolio")
+async def get_portfolio_summary(user_id: str):
+    """Get complete portfolio summary"""
+    try:
+        # Get all investments
+        holdings = await db.investment_holdings.find({"user_id": user_id}).to_list(100)
+        mutual_funds = await db.mutual_funds.find({"user_id": user_id}).to_list(100)
+        other_investments = await db.other_investments.find({"user_id": user_id}).to_list(100)
+        
+        # Calculate totals
+        holdings_value = sum(h["last_price"] * h["quantity"] for h in holdings)
+        holdings_invested = sum(h["average_price"] * h["quantity"] for h in holdings)
+        holdings_pnl = holdings_value - holdings_invested
+        
+        mf_value = sum(m["last_price"] * m["quantity"] for m in mutual_funds)
+        mf_invested = sum(m["average_price"] * m["quantity"] for m in mutual_funds)
+        mf_pnl = mf_value - mf_invested
+        
+        other_value = sum(i["current_value"] for i in other_investments)
+        other_invested = sum(i["amount_invested"] for i in other_investments)
+        other_pnl = other_value - other_invested
+        
+        total_value = holdings_value + mf_value + other_value
+        total_invested = holdings_invested + mf_invested + other_invested
+        total_pnl = total_value - total_invested
+        total_returns_pct = (total_pnl / total_invested * 100) if total_invested > 0 else 0
+        
+        # Asset allocation
+        asset_allocation = {
+            "equity": round(holdings_value, 2),
+            "mutual_funds": round(mf_value, 2),
+            "crypto": sum(i["current_value"] for i in other_investments if i["type"] == "crypto"),
+            "fixed_income": sum(i["current_value"] for i in other_investments if i["type"] in ["fd", "bond", "ppf"]),
+            "real_estate": sum(i["current_value"] for i in other_investments if i["type"] == "real_estate"),
+            "insurance": sum(i["current_value"] for i in other_investments if i["type"] == "insurance"),
+            "nps": sum(i["current_value"] for i in other_investments if i["type"] == "nps"),
+        }
+        
+        return {
+            "total_value": round(total_value, 2),
+            "total_invested": round(total_invested, 2),
+            "total_pnl": round(total_pnl, 2),
+            "total_returns_percentage": round(total_returns_pct, 2),
+            "asset_allocation": asset_allocation,
+            "holdings_count": len(holdings),
+            "mf_count": len(mutual_funds),
+            "other_count": len(other_investments),
+        }
+    except Exception as e:
+        logger.error(f"Portfolio summary error: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@api_router.get("/investments/holdings")
+async def get_holdings(user_id: str):
+    """Get all stock holdings"""
+    holdings = await db.investment_holdings.find({"user_id": user_id}).to_list(100)
+    return [serialize_doc(h) for h in holdings]
+
+
+@api_router.get("/investments/mutual-funds")
+async def get_mutual_funds(user_id: str):
+    """Get all mutual fund holdings"""
+    funds = await db.mutual_funds.find({"user_id": user_id}).to_list(100)
+    return [serialize_doc(f) for f in funds]
+
+
+@api_router.get("/investments/sips")
+async def get_active_sips(user_id: str):
+    """Get active SIP investments"""
+    sips = await db.mutual_funds.find({"user_id": user_id, "is_sip": True}).to_list(100)
+    return [serialize_doc(s) for s in sips]
+
+
+@api_router.get("/investments/other")
+async def get_other_investments(user_id: str, investment_type: Optional[str] = None):
+    """Get other investments (FD, Bonds, Crypto, etc.)"""
+    query = {"user_id": user_id}
+    if investment_type:
+        query["type"] = investment_type
+    
+    investments = await db.other_investments.find(query).to_list(100)
+    return [serialize_doc(i) for i in investments]
+
+
+@api_router.get("/investments/recommendations")
+async def get_investment_recommendations(user_id: str):
+    """Get investment recommendations (AI + Rule-based ensemble)"""
+    try:
+        recommendations = []
+        
+        # Get portfolio data for analysis
+        holdings = await db.investment_holdings.find({"user_id": user_id}).to_list(100)
+        mutual_funds = await db.mutual_funds.find({"user_id": user_id}).to_list(100)
+        other_investments = await db.other_investments.find({"user_id": user_id}).to_list(100)
+        
+        # Calculate current allocation
+        total_equity = sum(h["last_price"] * h["quantity"] for h in holdings)
+        total_mf = sum(m["last_price"] * m["quantity"] for m in mutual_funds)
+        total_other = sum(i["current_value"] for i in other_investments)
+        total_portfolio = total_equity + total_mf + total_other
+        
+        # Rule-based recommendations
+        rule_based = []
+        
+        # Check for missing asset classes
+        crypto_invested = sum(i["current_value"] for i in other_investments if i["type"] == "crypto")
+        if crypto_invested == 0 or crypto_invested < total_portfolio * 0.05:
+            rule_based.append({
+                "type": "rule",
+                "title": "Consider Crypto Allocation",
+                "description": "Allocate 5-10% to crypto for portfolio diversification",
+                "asset_class": "Cryptocurrency",
+                "priority": 3,
+                "reasoning": "You have minimal/no crypto exposure. Consider starting small."
+            })
+        
+        gold_invested = sum(i["current_value"] for i in other_investments if "gold" in i["name"].lower())
+        if gold_invested == 0:
+            rule_based.append({
+                "type": "rule",
+                "title": "Add Gold to Portfolio",
+                "description": "Invest in Gold ETF or Sovereign Gold Bonds",
+                "asset_class": "Gold",
+                "priority": 4,
+                "reasoning": "Gold provides hedge against inflation and market volatility."
+            })
+        
+        # Check equity concentration
+        if total_equity > total_portfolio * 0.7:
+            rule_based.append({
+                "type": "rule",
+                "title": "High Equity Concentration",
+                "description": "Consider adding debt/fixed income for stability",
+                "asset_class": "Debt",
+                "priority": 5,
+                "reasoning": "Your portfolio has >70% equity exposure, increasing risk."
+            })
+        
+        # AI-powered recommendations using GPT
+        try:
+            portfolio_summary = {
+                "total_value": total_portfolio,
+                "equity_pct": (total_equity / total_portfolio * 100) if total_portfolio > 0 else 0,
+                "mf_pct": (total_mf / total_portfolio * 100) if total_portfolio > 0 else 0,
+                "other_pct": (total_other / total_portfolio * 100) if total_portfolio > 0 else 0,
+                "holdings_count": len(holdings),
+                "age_group": "25-30",  # Mock data
+            }
+            
+            chat = LlmChat(
+                api_key=os.environ.get("EMERGENT_LLM_KEY"),
+                system_message="""You are a financial advisor specializing in Indian investments. 
+                Analyze the portfolio and provide 2-3 specific, actionable investment recommendations.
+                Focus on:
+                - Asset allocation balance
+                - Diversification opportunities  
+                - Tax-saving instruments (80C, NPS)
+                - Risk-adjusted returns
+                
+                Return recommendations in this JSON format:
+                [
+                    {
+                        "title": "Short title",
+                        "description": "1-2 sentence description",
+                        "asset_class": "Asset class name",
+                        "priority": 1-10 (higher is more important),
+                        "reasoning": "Why this is recommended"
+                    }
+                ]
+                
+                Keep it practical and specific to Indian market."""
+            ).with_model("openai", "gpt-5.1")
+            
+            prompt = f"""Analyze this investment portfolio and provide recommendations:
+            
+            Portfolio Summary:
+            - Total Value: ₹{portfolio_summary['total_value']:,.2f}
+            - Equity: {portfolio_summary['equity_pct']:.1f}%
+            - Mutual Funds: {portfolio_summary['mf_pct']:.1f}%
+            - Other (FD/Bonds/Crypto): {portfolio_summary['other_pct']:.1f}%
+            - Number of Holdings: {portfolio_summary['holdings_count']}
+            - Investor Age: {portfolio_summary['age_group']}
+            
+            Provide 2-3 specific recommendations."""
+            
+            from emergentintegrations.llm.chat import UserMessage
+            response = await chat.send_message(UserMessage(text=prompt))
+            
+            # Parse AI response
+            import json
+            try:
+                ai_recommendations = json.loads(response)
+                for rec in ai_recommendations:
+                    rec["type"] = "ai"
+                    recommendations.append(rec)
+            except:
+                # If JSON parsing fails, create a default AI recommendation
+                recommendations.append({
+                    "type": "ai",
+                    "title": "Portfolio Review",
+                    "description": response[:150] + "...",
+                    "asset_class": "General",
+                    "priority": 8,
+                    "reasoning": "AI-powered analysis"
+                })
+        
+        except Exception as ai_error:
+            logger.error(f"AI recommendation error: {ai_error}")
+            # Continue with rule-based only
+        
+        # Merge recommendations (AI gets higher priority)
+        recommendations.extend(rule_based)
+        
+        # Sort by priority (AI recommendations get +2 bonus)
+        for rec in recommendations:
+            if rec["type"] == "ai":
+                rec["priority"] += 2
+        
+        recommendations.sort(key=lambda x: x["priority"], reverse=True)
+        
+        return recommendations[:5]  # Return top 5
+        
+    except Exception as e:
+        logger.error(f"Recommendations error: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
 # Include the router in the main app
 app.include_router(api_router)
 
