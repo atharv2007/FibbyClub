@@ -85,12 +85,12 @@ export default function HomeScreen() {
           }}
         />
 
-        {/* Category Breakdown Chart */}
-        {categoryBreakdown && categoryBreakdown.length > 0 && (
+        {/* Category Breakdown - Coming soon! */}
+        {/* {categoryBreakdown && categoryBreakdown.length > 0 && (
           <View style={styles.section}>
             <CategoryDonutChart data={categoryBreakdown} />
           </View>
-        )}
+        )} */}
 
         {/* Insights Feed */}
         {insights && insights.length > 0 && (
