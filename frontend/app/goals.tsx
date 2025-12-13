@@ -238,7 +238,7 @@ export default function GoalsScreen() {
                           cx="50"
                           cy="50"
                           r="45"
-                          stroke={COLORS.success}
+                          stroke={COLORS.primary}
                           strokeWidth="6"
                           fill="transparent"
                           strokeDasharray={circumference}
@@ -248,7 +248,7 @@ export default function GoalsScreen() {
                         />
                       </Svg>
                       <View style={styles.progressContent}>
-                        <Ionicons name={getIconName(goal.icon)} size={28} color={COLORS.success} />
+                        <Ionicons name={getIconName(goal.icon)} size={28} color={COLORS.primary} />
                         <Text style={styles.progressPercent}>{Math.round(progress)}%</Text>
                       </View>
                     </View>
