@@ -647,4 +647,36 @@ const styles = StyleSheet.create({
     paddingHorizontal: SPACING.md,
     paddingRight: SPACING.xxl,
   },
+  loadingRecommendations: {
+    marginHorizontal: SPACING.md,
+    marginTop: SPACING.lg,
+  },
+  loadingHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: SPACING.sm,
+    marginBottom: SPACING.md,
+  },
+  loadingTitle: {
+    fontSize: TYPOGRAPHY.h3,
+    fontWeight: '700',
+    color: COLORS.text,
+    fontFamily: TYPOGRAPHY.heading,
+  },
+  loadingCard: {
+    backgroundColor: COLORS.surface,
+    borderRadius: RADIUS.card,
+    padding: SPACING.xl,
+    alignItems: 'center',
+    gap: SPACING.md,
+    borderWidth: 1,
+    borderColor: COLORS.glassBorder,
+  },
+  loadingText: {
+    fontSize: TYPOGRAPHY.bodySmall,
+    color: COLORS.textSecondary,
+    textAlign: 'center',
+    fontFamily: TYPOGRAPHY.body,
+    lineHeight: 20,
+  },
 });
