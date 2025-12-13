@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import {
   View,
   Text,
@@ -7,13 +7,16 @@ import {
   TouchableOpacity,
   SafeAreaView,
   ActivityIndicator,
+  Alert,
+  Animated,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import Svg, { Circle } from 'react-native-svg';
-import { COLORS, SPACING, RADIUS } from '../constants/theme';
+import { COLORS, SPACING, RADIUS, SHADOWS } from '../constants/theme';
 import { useAppStore } from '../store/useAppStore';
 import { api } from '../utils/api';
 import { formatINRFull } from '../utils/format';
+import AddGoalModal from '../components/goals/AddGoalModal';
 
 interface Goal {
   _id: string;
@@ -22,12 +25,16 @@ interface Goal {
   target_amount: number;
   saved_amount: number;
   auto_save_enabled: boolean;
+  deadline?: string;
 }
 
 export default function GoalsScreen() {
   const { user } = useAppStore();
   const [goals, setGoals] = useState<Goal[]>([]);
   const [loading, setLoading] = useState(true);
+  const [showAddModal, setShowAddModal] = useState(false);
+  const [editingGoal, setEditingGoal] = useState<Goal | null>(null);
+  const fabScale = useRef(new Animated.Value(1)).current;
 
   useEffect(() => {
     if (user?._id) {
@@ -49,13 +56,104 @@ export default function GoalsScreen() {
     }
   };
 
+  const handleSaveGoal = async (goalData: any) => {
+    if (!user?._id) return;
+    
+    try {
+      if (editingGoal?._id) {
+        // Update existing goal
+        await api.updateGoal(user._id, editingGoal._id, goalData);
+      } else {
+        // Create new goal
+        await api.createGoal(user._id, goalData);
+      }
+      
+      // Reload goals
+      await loadGoals();
+      setShowAddModal(false);
+      setEditingGoal(null);
+    } catch (error) {
+      console.error('Error saving goal:', error);
+      Alert.alert('Error', 'Failed to save goal. Please try again.');
+    }
+  };
+
+  const handleEditGoal = (goal: Goal) => {
+    setEditingGoal(goal);
+    setShowAddModal(true);
+  };
+
+  const handleDeleteGoal = (goal: Goal) => {
+    Alert.alert(
+      'Delete Goal',
+      `Are you sure you want to delete "${goal.name}"?`,
+      [
+        { text: 'Cancel', style: 'cancel' },
+        {
+          text: 'Delete',
+          style: 'destructive',
+          onPress: async () => {
+            if (!user?._id) return;
+            
+            try {
+              await api.deleteGoal(user._id, goal._id);
+              await loadGoals();
+            } catch (error) {
+              console.error('Error deleting goal:', error);
+              Alert.alert('Error', 'Failed to delete goal. Please try again.');
+            }
+          },
+        },
+      ]
+    );
+  };
+
+  const handleAddNew = () => {
+    setEditingGoal(null);
+    setShowAddModal(true);
+  };
+
+  const handleCloseModal = () => {
+    setShowAddModal(false);
+    setEditingGoal(null);
+  };
+
+  const animateFab = () => {
+    Animated.sequence([
+      Animated.timing(fabScale, {
+        toValue: 0.9,
+        duration: 100,
+        useNativeDriver: true,
+      }),
+      Animated.timing(fabScale, {
+        toValue: 1,
+        duration: 100,
+        useNativeDriver: true,
+      }),
+    ]).start();
+  };
+
   const getIconName = (icon: string): keyof typeof Ionicons.glyphMap => {
-    const iconMap: Record<string, keyof typeof Ionicons.glyphMap> = {
-      beach: 'sunny',
+    // Direct mapping - use the icon name as-is if it's valid
+    const validIcons: Record<string, keyof typeof Ionicons.glyphMap> = {
+      airplane: 'airplane',
       laptop: 'laptop',
+      'shield-checkmark': 'shield-checkmark',
+      'car-sport': 'car-sport',
+      home: 'home',
+      school: 'school',
+      heart: 'heart',
+      'phone-portrait': 'phone-portrait',
+      bicycle: 'bicycle',
+      'game-controller': 'game-controller',
+      fitness: 'fitness',
+      medical: 'medical',
+      // Legacy mappings
+      beach: 'airplane',
       shield: 'shield-checkmark',
+      car: 'car-sport',
     };
-    return iconMap[icon] || 'star';
+    return validIcons[icon] || 'star';
   };
 
   if (loading) {
