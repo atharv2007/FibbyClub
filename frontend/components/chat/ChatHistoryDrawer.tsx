@@ -49,12 +49,21 @@ export default function ChatHistoryDrawer({ visible, onClose }: ChatHistoryDrawe
   const [slideAnim] = useState(new Animated.Value(-DRAWER_WIDTH));
   const [searchQuery, setSearchQuery] = useState('');
   const [loading, setLoading] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState('all');
   const [conversations, setConversations] = useState<GroupedConversations>({
     today: [],
     this_week: [],
     this_month: [],
     older: [],
   });
+
+  const categories = [
+    { id: 'all', label: 'All', icon: 'apps' },
+    { id: 'budget', label: 'Budget', icon: 'wallet' },
+    { id: 'goals', label: 'Goals', icon: 'trophy' },
+    { id: 'investments', label: 'Investments', icon: 'trending-up' },
+    { id: 'status', label: 'Status', icon: 'information-circle' },
+  ];
 
   useEffect(() => {
     if (visible) {
