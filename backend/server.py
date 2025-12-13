@@ -627,8 +627,8 @@ async def get_user_context(user_id: str, query: str) -> str:
                     total_current += h.get('last_price', 0) * h.get('quantity', 0)
                 
                 for mf in mutual_funds:
-                    total_investment += mf.get('invested_value', 0)
-                    total_current += mf.get('current_value', 0)
+                    total_investment += mf.get('average_price', 0) * mf.get('quantity', 0)
+                    total_current += mf.get('last_price', 0) * mf.get('quantity', 0)
                 
                 returns_pct = ((total_current - total_investment) / total_investment * 100) if total_investment > 0 else 0
                 
