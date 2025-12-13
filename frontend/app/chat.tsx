@@ -160,9 +160,11 @@ export default function ChatScreen() {
           <View style={styles.welcomeContainer}>
             {/* Large Fibby Icon */}
             <View style={styles.fibbyIconLarge}>
-              <View style={styles.fibbyIconInner}>
-                <Text style={styles.fibbyIconText}>F</Text>
-              </View>
+              <Image 
+                source={require('../assets/fibbylogo.png')} 
+                style={styles.fibbyIconImage}
+                resizeMode="contain"
+              />
             </View>
 
             {/* Welcome Text */}
