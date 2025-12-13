@@ -12,6 +12,7 @@ import {
   Animated,
   Dimensions,
   TouchableWithoutFeedback,
+  Alert,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { COLORS, SPACING, RADIUS, TYPOGRAPHY } from '../../constants/theme';
@@ -30,6 +31,7 @@ interface AddGoalModalProps {
   visible: boolean;
   onClose: () => void;
   onSave: (goal: Goal) => void;
+  onDelete: (goalId: string) => void;
   editGoal?: Goal | null;
 }
 
@@ -48,7 +50,7 @@ const GOAL_ICONS = [
   { id: 'medical', name: 'medical', label: 'Medical' },
 ];
 
-export default function AddGoalModal({ visible, onClose, onSave, editGoal }: AddGoalModalProps) {
+export default function AddGoalModal({ visible, onClose, onSave, onDelete, editGoal }: AddGoalModalProps) {
   const [slideAnim] = useState(new Animated.Value(SCREEN_HEIGHT));
   const [name, setName] = useState('');
   const [targetAmount, setTargetAmount] = useState('');
@@ -104,6 +106,26 @@ export default function AddGoalModal({ visible, onClose, onSave, editGoal }: Add
 
     onSave(goal);
     onClose();
+  };
+
+  const handleDelete = () => {
+    if (!editGoal?._id) return;
+
+    Alert.alert(
+      'Delete Goal',
+      `Are you sure you want to delete "${editGoal.name}"?`,
+      [
+        { text: 'Cancel', style: 'cancel' },
+        {
+          text: 'Delete',
+          style: 'destructive',
+          onPress: () => {
+            onDelete(editGoal._id!);
+            onClose();
+          },
+        },
+      ]
+    );
   };
 
   const formatAmount = (value: string) => {
@@ -233,12 +255,23 @@ export default function AddGoalModal({ visible, onClose, onSave, editGoal }: Add
                   <View style={styles.bottomSpacing} />
                 </ScrollView>
 
-                {/* Save Button */}
+                {/* Footer with Action Buttons */}
                 <View style={styles.footer}>
+                  {editGoal && (
+                    <TouchableOpacity
+                      style={styles.deleteButton}
+                      onPress={handleDelete}
+                    >
+                      <Ionicons name="trash" size={20} color={COLORS.danger} />
+                      <Text style={styles.deleteButtonText}>Delete</Text>
+                    </TouchableOpacity>
+                  )}
+                  
                   <TouchableOpacity
                     style={[
                       styles.saveButton,
                       (!name.trim() || !targetAmount) && styles.saveButtonDisabled,
+                      editGoal && styles.saveButtonWithDelete,
                     ]}
                     onPress={handleSave}
                     disabled={!name.trim() || !targetAmount}
@@ -382,17 +415,39 @@ const styles = StyleSheet.create({
     height: 120,
   },
   footer: {
+    flexDirection: 'row',
+    gap: SPACING.sm,
     paddingHorizontal: SPACING.md,
     paddingTop: SPACING.md,
     paddingBottom: SPACING.sm,
     borderTopWidth: 1,
     borderTopColor: COLORS.border,
   },
+  deleteButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: SPACING.xs,
+    backgroundColor: COLORS.danger + '15',
+    borderRadius: RADIUS.button,
+    paddingVertical: SPACING.md,
+    paddingHorizontal: SPACING.lg,
+    borderWidth: 1,
+    borderColor: COLORS.danger,
+  },
+  deleteButtonText: {
+    fontSize: TYPOGRAPHY.bodyLarge,
+    fontWeight: '600',
+    color: COLORS.danger,
+  },
   saveButton: {
+    flex: 1,
     backgroundColor: COLORS.primary,
     borderRadius: RADIUS.button,
     paddingVertical: SPACING.md,
     alignItems: 'center',
+  },
+  saveButtonWithDelete: {
+    flex: 1,
   },
   saveButtonDisabled: {
     backgroundColor: COLORS.disabled,

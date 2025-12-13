@@ -11,7 +11,6 @@ import {
   Animated,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import Svg, { Circle } from 'react-native-svg';
 import { COLORS, SPACING, RADIUS, SHADOWS } from '../constants/theme';
 import { useAppStore } from '../store/useAppStore';
 import { api } from '../utils/api';
@@ -83,29 +82,16 @@ export default function GoalsScreen() {
     setShowAddModal(true);
   };
 
-  const handleDeleteGoal = (goal: Goal) => {
-    Alert.alert(
-      'Delete Goal',
-      `Are you sure you want to delete "${goal.name}"?`,
-      [
-        { text: 'Cancel', style: 'cancel' },
-        {
-          text: 'Delete',
-          style: 'destructive',
-          onPress: async () => {
-            if (!user?._id) return;
-            
-            try {
-              await api.deleteGoal(user._id, goal._id);
-              await loadGoals();
-            } catch (error) {
-              console.error('Error deleting goal:', error);
-              Alert.alert('Error', 'Failed to delete goal. Please try again.');
-            }
-          },
-        },
-      ]
-    );
+  const handleDeleteGoal = async (goalId: string) => {
+    if (!user?._id) return;
+    
+    try {
+      await api.deleteGoal(user._id, goalId);
+      await loadGoals();
+    } catch (error) {
+      console.error('Error deleting goal:', error);
+      Alert.alert('Error', 'Failed to delete goal. Please try again.');
+    }
   };
 
   const handleAddNew = () => {
@@ -134,7 +120,6 @@ export default function GoalsScreen() {
   };
 
   const getIconName = (icon: string): keyof typeof Ionicons.glyphMap => {
-    // Direct mapping - use the icon name as-is if it's valid
     const validIcons: Record<string, keyof typeof Ionicons.glyphMap> = {
       airplane: 'airplane',
       laptop: 'laptop',
@@ -148,13 +133,24 @@ export default function GoalsScreen() {
       'game-controller': 'game-controller',
       fitness: 'fitness',
       medical: 'medical',
-      // Legacy mappings
       beach: 'airplane',
       shield: 'shield-checkmark',
       car: 'car-sport',
     };
     return validIcons[icon] || 'star';
   };
+
+  // Calculate overall achievement percentage
+  const calculateOverallProgress = () => {
+    if (goals.length === 0) return 0;
+    const totalSaved = goals.reduce((sum, goal) => sum + goal.saved_amount, 0);
+    const totalTarget = goals.reduce((sum, goal) => sum + goal.target_amount, 0);
+    return totalTarget > 0 ? Math.round((totalSaved / totalTarget) * 100) : 0;
+  };
+
+  const overallProgress = calculateOverallProgress();
+  const totalSaved = goals.reduce((sum, goal) => sum + goal.saved_amount, 0);
+  const totalTarget = goals.reduce((sum, goal) => sum + goal.target_amount, 0);
 
   if (loading) {
     return (
@@ -171,15 +167,9 @@ export default function GoalsScreen() {
       {/* Header */}
       <View style={styles.header}>
         <View>
-          <Text style={styles.headerTitle}>Goals</Text>
-          <Text style={styles.headerSubtitle}>Your financial targets</Text>
+          <Text style={styles.headerTitle}>Your Goals</Text>
+          <Text style={styles.headerSubtitle}>Track your financial targets</Text>
         </View>
-        {goals.length > 0 && (
-          <View style={styles.goalsSummary}>
-            <Text style={styles.goalCount}>{goals.length}</Text>
-            <Text style={styles.goalCountLabel}>Active</Text>
-          </View>
-        )}
       </View>
 
       <ScrollView style={styles.scrollView} contentContainerStyle={styles.scrollContent}>
@@ -199,116 +189,110 @@ export default function GoalsScreen() {
             </TouchableOpacity>
           </View>
         ) : (
-          /* Goals Grid */
-          <View style={styles.goalsGrid}>
+          <>
+            {/* Overall Achievement Card */}
+            <View style={styles.achievementCard}>
+              <View style={styles.achievementHeader}>
+                <Ionicons name="bar-chart" size={24} color={COLORS.primary} />
+                <Text style={styles.achievementTitle}>Overall Progress</Text>
+              </View>
+              <View style={styles.achievementContent}>
+                <View style={styles.progressBarContainer}>
+                  <View style={[styles.progressBarFill, { width: `${overallProgress}%` }]} />
+                </View>
+                <Text style={styles.progressLabel}>{overallProgress}% Complete</Text>
+              </View>
+              <View style={styles.achievementStats}>
+                <View style={styles.statItem}>
+                  <Text style={styles.statLabel}>Saved</Text>
+                  <Text style={styles.statValue}>{formatINRFull(totalSaved)}</Text>
+                </View>
+                <View style={styles.statDivider} />
+                <View style={styles.statItem}>
+                  <Text style={styles.statLabel}>Target</Text>
+                  <Text style={styles.statValue}>{formatINRFull(totalTarget)}</Text>
+                </View>
+                <View style={styles.statDivider} />
+                <View style={styles.statItem}>
+                  <Text style={styles.statLabel}>Goals</Text>
+                  <Text style={styles.statValue}>{goals.length}</Text>
+                </View>
+              </View>
+            </View>
+
+            {/* Goals List */}
+            <View style={styles.sectionHeader}>
+              <Text style={styles.sectionTitle}>All Goals</Text>
+            </View>
+
             {goals.map((goal) => {
               const progress = Math.min((goal.saved_amount / goal.target_amount) * 100, 100);
-              const circumference = 2 * Math.PI * 50;
-              const strokeDashoffset = circumference - (progress / 100) * circumference;
 
               return (
                 <TouchableOpacity
                   key={goal._id}
                   style={styles.goalCard}
-                  onLongPress={() => {
-                    Alert.alert(
-                      goal.name,
-                      'Choose an action',
-                      [
-                        {
-                          text: 'Edit',
-                          onPress: () => handleEditGoal(goal),
-                        },
-                        {
-                          text: 'Delete',
-                          style: 'destructive',
-                          onPress: () => handleDeleteGoal(goal),
-                        },
-                        { text: 'Cancel', style: 'cancel' },
-                      ]
-                    );
-                  }}
+                  onPress={() => handleEditGoal(goal)}
                   activeOpacity={0.7}
                 >
-                  {/* Edit Button */}
-                  <TouchableOpacity
-                    style={styles.editButton}
-                    onPress={() => handleEditGoal(goal)}
-                  >
-                    <Ionicons name="pencil" size={16} color={COLORS.primary} />
-                  </TouchableOpacity>
-
-                  <View style={styles.progressRing}>
-                    <Svg width={120} height={120}>
-                      <Circle
-                        cx="60"
-                        cy="60"
-                        r="50"
-                        stroke={COLORS.border}
-                        strokeWidth="8"
-                        fill="transparent"
-                      />
-                      <Circle
-                        cx="60"
-                        cy="60"
-                        r="50"
-                        stroke={COLORS.primary}
-                        strokeWidth="8"
-                        fill="transparent"
-                        strokeDasharray={circumference}
-                        strokeDashoffset={strokeDashoffset}
-                        strokeLinecap="round"
-                        transform="rotate(-90 60 60)"
-                      />
-                    </Svg>
-                    <View style={styles.progressContent}>
-                      <Ionicons name={getIconName(goal.icon)} size={28} color={COLORS.primary} />
-                      <Text style={styles.progressPercent}>{Math.round(progress)}%</Text>
-                    </View>
+                  {/* Icon Container */}
+                  <View style={styles.iconContainer}>
+                    <Ionicons name={getIconName(goal.icon)} size={32} color={COLORS.success} />
                   </View>
 
-                  <Text style={styles.goalName} numberOfLines={2}>{goal.name}</Text>
-                  <View style={styles.goalAmounts}>
-                    <Text style={styles.savedAmount}>{formatINRFull(goal.saved_amount)}</Text>
-                    <Text style={styles.targetAmount}>of {formatINRFull(goal.target_amount)}</Text>
-                  </View>
-                  
-                  {goal.deadline && (
-                    <View style={styles.deadlineContainer}>
-                      <Ionicons name="calendar-outline" size={12} color={COLORS.textSecondary} />
-                      <Text style={styles.deadlineText}>{goal.deadline}</Text>
+                  {/* Goal Info */}
+                  <View style={styles.goalInfo}>
+                    <View style={styles.goalHeader}>
+                      <View style={styles.goalTitleRow}>
+                        <Text style={styles.goalName} numberOfLines={1}>
+                          {goal.name}
+                        </Text>
+                        <Text style={styles.goalProgress}>{Math.round(progress)}%</Text>
+                      </View>
+                      <Text style={styles.goalAmount}>
+                        {formatINRFull(goal.saved_amount)} of {formatINRFull(goal.target_amount)}
+                      </Text>
                     </View>
-                  )}
+
+                    {/* Progress Bar */}
+                    <View style={styles.miniProgressBar}>
+                      <View
+                        style={[
+                          styles.miniProgressFill,
+                          { width: `${Math.round(progress)}%` },
+                        ]}
+                      />
+                    </View>
+                  </View>
                 </TouchableOpacity>
               );
             })}
-          </View>
+          </>
         )}
 
         <View style={styles.bottomPadding} />
       </ScrollView>
 
       {/* Floating Add Button */}
-      {goals.length > 0 && (
-        <Animated.View style={[styles.fab, { transform: [{ scale: fabScale }] }]}>
-          <TouchableOpacity
-            style={styles.fabButton}
-            onPress={() => {
-              animateFab();
-              handleAddNew();
-            }}
-            activeOpacity={0.8}
-          >
-            <Ionicons name="add" size={32} color={COLORS.surface} />
-          </TouchableOpacity>
-        </Animated.View>
-      )}
+      <Animated.View style={[styles.fab, { transform: [{ scale: fabScale }] }]}>
+        <TouchableOpacity
+          style={styles.fabButton}
+          onPress={() => {
+            animateFab();
+            handleAddNew();
+          }}
+          activeOpacity={0.8}
+        >
+          <Ionicons name="add" size={32} color={COLORS.surface} />
+        </TouchableOpacity>
+      </Animated.View>
 
       {/* Add/Edit Goal Modal */}
       <AddGoalModal
         visible={showAddModal}
         onClose={handleCloseModal}
         onSave={handleSaveGoal}
+        onDelete={handleDeleteGoal}
         editGoal={editingGoal}
       />
     </SafeAreaView>
@@ -344,24 +328,6 @@ const styles = StyleSheet.create({
   headerSubtitle: {
     fontSize: 15,
     color: COLORS.textSecondary,
-  },
-  goalsSummary: {
-    backgroundColor: COLORS.primary,
-    borderRadius: RADIUS.md,
-    paddingHorizontal: SPACING.md,
-    paddingVertical: SPACING.xs,
-    alignItems: 'center',
-    minWidth: 60,
-  },
-  goalCount: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: COLORS.surface,
-  },
-  goalCountLabel: {
-    fontSize: 12,
-    color: COLORS.surface,
-    opacity: 0.9,
   },
   scrollView: {
     flex: 1,
@@ -415,85 +381,133 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     color: COLORS.surface,
   },
-  goalsGrid: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: SPACING.md,
-  },
-  goalCard: {
-    width: '48%',
+  achievementCard: {
     backgroundColor: COLORS.surface,
     borderRadius: RADIUS.lg,
     padding: SPACING.md,
-    alignItems: 'center',
-    gap: SPACING.sm,
+    marginBottom: SPACING.md,
     ...SHADOWS.card,
-    position: 'relative',
   },
-  editButton: {
-    position: 'absolute',
-    top: SPACING.xs,
-    right: SPACING.xs,
-    backgroundColor: COLORS.background,
-    width: 32,
-    height: 32,
-    borderRadius: 16,
-    justifyContent: 'center',
+  achievementHeader: {
+    flexDirection: 'row',
     alignItems: 'center',
-    zIndex: 10,
-    ...SHADOWS.soft,
+    gap: SPACING.xs,
+    marginBottom: SPACING.md,
   },
-  progressRing: {
-    position: 'relative',
-    width: 120,
-    height: 120,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  progressContent: {
-    position: 'absolute',
-    justifyContent: 'center',
-    alignItems: 'center',
-    gap: 4,
-  },
-  progressPercent: {
-    fontSize: 16,
-    fontWeight: 'bold',
+  achievementTitle: {
+    fontSize: 18,
+    fontWeight: '700',
     color: COLORS.text,
   },
-  goalName: {
-    fontSize: 15,
+  achievementContent: {
+    marginBottom: SPACING.md,
+  },
+  progressBarContainer: {
+    height: 12,
+    backgroundColor: COLORS.border,
+    borderRadius: RADIUS.full,
+    overflow: 'hidden',
+    marginBottom: SPACING.xs,
+  },
+  progressBarFill: {
+    height: '100%',
+    backgroundColor: COLORS.success,
+    borderRadius: RADIUS.full,
+  },
+  progressLabel: {
+    fontSize: 14,
     fontWeight: '600',
     color: COLORS.text,
     textAlign: 'center',
-    minHeight: 38,
   },
-  goalAmounts: {
+  achievementStats: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
     alignItems: 'center',
-    gap: 2,
   },
-  savedAmount: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    color: COLORS.text,
+  statItem: {
+    flex: 1,
+    alignItems: 'center',
   },
-  targetAmount: {
+  statLabel: {
     fontSize: 12,
     color: COLORS.textSecondary,
+    marginBottom: 4,
   },
-  deadlineContainer: {
+  statValue: {
+    fontSize: 16,
+    fontWeight: '700',
+    color: COLORS.text,
+  },
+  statDivider: {
+    width: 1,
+    height: 40,
+    backgroundColor: COLORS.border,
+  },
+  sectionHeader: {
+    marginVertical: SPACING.sm,
+  },
+  sectionTitle: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: COLORS.text,
+  },
+  goalCard: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 4,
-    marginTop: 4,
-    paddingHorizontal: SPACING.xs,
-    paddingVertical: 2,
-    backgroundColor: COLORS.background,
-    borderRadius: RADIUS.sm,
+    backgroundColor: COLORS.surface,
+    borderRadius: RADIUS.lg,
+    padding: SPACING.md,
+    marginBottom: SPACING.sm,
+    ...SHADOWS.soft,
   },
-  deadlineText: {
-    fontSize: 11,
+  iconContainer: {
+    width: 60,
+    height: 60,
+    borderRadius: RADIUS.md,
+    backgroundColor: COLORS.success + '15',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: SPACING.md,
+  },
+  goalInfo: {
+    flex: 1,
+  },
+  goalHeader: {
+    marginBottom: SPACING.xs,
+  },
+  goalTitleRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 4,
+  },
+  goalName: {
+    fontSize: 16,
+    fontWeight: '700',
+    color: COLORS.text,
+    flex: 1,
+    marginRight: SPACING.sm,
+  },
+  goalProgress: {
+    fontSize: 14,
+    fontWeight: '700',
+    color: COLORS.success,
+  },
+  goalAmount: {
+    fontSize: 13,
     color: COLORS.textSecondary,
+  },
+  miniProgressBar: {
+    height: 6,
+    backgroundColor: COLORS.border,
+    borderRadius: RADIUS.full,
+    overflow: 'hidden',
+  },
+  miniProgressFill: {
+    height: '100%',
+    backgroundColor: COLORS.success,
+    borderRadius: RADIUS.full,
   },
   fab: {
     position: 'absolute',
