@@ -47,6 +47,7 @@ export default function TrackScreen() {
   const [sips, setSips] = useState<any[]>([]);
   const [otherInvestments, setOtherInvestments] = useState<any[]>([]);
   const [recommendations, setRecommendations] = useState<any[]>([]);
+  const [loadingRecommendations, setLoadingRecommendations] = useState(false);
 
   // Initialize user if not exists
   useEffect(() => {
