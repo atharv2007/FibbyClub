@@ -31,6 +31,7 @@ interface Conversation {
   _id: string;
   conversation_id: string;
   title: string;
+  category: string;
   created_at: string;
   updated_at: string;
   messages: any[];
