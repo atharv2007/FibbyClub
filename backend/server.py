@@ -1162,18 +1162,21 @@ async def delete_conversation(conversation_id: str, user_id: str):
         logger.error(f"Error deleting conversation: {str(e)}")
         raise HTTPException(status_code=500, detail=str(e))
 
-# ============= EMBEDDER ROUTES =============
+# ============= EMBEDDER & RAG SETUP =============
 from embedder_service import EmbedderAgent
+from rag_service import RAGService
 
-# Global embedder agent instance
+# Global embedder agent and RAG service instances
 embedder_agent: EmbedderAgent = None
+rag_service: RAGService = None
 
 @api_router.on_event("startup")
 async def startup_embedder():
-    """Initialize embedder agent on startup"""
-    global embedder_agent
+    """Initialize embedder agent and RAG service on startup"""
+    global embedder_agent, rag_service
     embedder_agent = EmbedderAgent()
-    logger.info("Embedder agent initialized")
+    rag_service = RAGService(embedder_agent)
+    logger.info("Embedder agent and RAG service initialized")
 
 @api_router.post("/embeddings/update/{user_id}")
 async def update_user_embeddings(user_id: str):
