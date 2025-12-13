@@ -158,12 +158,19 @@ export function AddBankModal({ visible, onClose, onAdd }: AddBankModalProps) {
             <TouchableOpacity
               style={[
                 styles.addButton,
-                (!selectedBank || !accountNumber || !balance) && styles.addButtonDisabled,
+                (panNumber.length !== 10 || isVerifying) && styles.addButtonDisabled,
               ]}
-              onPress={handleAdd}
-              disabled={!selectedBank || !accountNumber || !balance}
+              onPress={handleVerifyPAN}
+              disabled={panNumber.length !== 10 || isVerifying}
             >
-              <Text style={styles.addButtonText}>Add Bank Account</Text>
+              {isVerifying ? (
+                <>
+                  <ActivityIndicator size="small" color={COLORS.surface} style={{ marginRight: 8 }} />
+                  <Text style={styles.addButtonText}>Verifying PAN...</Text>
+                </>
+              ) : (
+                <Text style={styles.addButtonText}>Link Bank Accounts</Text>
+              )}
             </TouchableOpacity>
           </View>
         </View>
