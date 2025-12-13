@@ -245,12 +245,7 @@ metadata:
   run_ui: false
 
 test_plan:
-  current_focus:
-    - "API endpoint for 1 week spending (daily breakdown)"
-    - "API endpoint for 1 month spending (weekly breakdown)"
-    - "API endpoint for 1 year spending (bi-monthly breakdown)"
-    - "Category breakdown API with date range filtering"
-    - "Merchant leaderboard API with date range filtering"
+  current_focus: []
   stuck_tasks: []
   test_all: false
   test_priority: "high_first"
