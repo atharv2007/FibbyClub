@@ -130,6 +130,25 @@ export default function TrackScreen() {
     }
   };
   
+  const loadRecommendations = async (userId: string, baseUrl: string) => {
+    try {
+      setLoadingRecommendations(true);
+      console.log('🔄 Loading AI recommendations in background...');
+      
+      const recsRes = await fetch(`${baseUrl}/api/investments/recommendations?user_id=${userId}`);
+      const recsData = await recsRes.json();
+      
+      setRecommendations(recsData);
+      console.log('✅ AI recommendations loaded!');
+    } catch (error) {
+      console.error('❌ Error loading recommendations:', error);
+      // Set empty array on error so UI doesn't break
+      setRecommendations([]);
+    } finally {
+      setLoadingRecommendations(false);
+    }
+  };
+  
   const loadFilteredData = async (monthNum?: number, year?: number) => {
     if (!user?._id) return;
     
