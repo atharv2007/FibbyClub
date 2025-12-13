@@ -352,11 +352,12 @@ const styles = StyleSheet.create({
     marginBottom: SPACING.xl,
     borderWidth: 3,
     borderColor: COLORS.primary,
-    padding: SPACING.md,
+    padding: SPACING.xs,
+    overflow: 'hidden',
   },
   fibbyIconImage: {
-    width: '100%',
-    height: '100%',
+    width: 100,
+    height: 100,
   },
   welcomeTitle: {
     fontSize: TYPOGRAPHY.h2,
