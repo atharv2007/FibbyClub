@@ -31,6 +31,9 @@ export default function TrackScreen() {
   const [categories, setCategories] = useState([]);
   const [merchants, setMerchants] = useState([]);
   const [selectedMonth, setSelectedMonth] = useState('');
+  const [selectedMonthNum, setSelectedMonthNum] = useState<number | undefined>();
+  const [selectedYear, setSelectedYear] = useState<number | undefined>();
+  const [timePeriod, setTimePeriod] = useState('6mnth');
 
   // Initialize user if not exists
   useEffect(() => {
@@ -66,28 +69,72 @@ export default function TrackScreen() {
       setLoading(true);
       
       if (activeTab === 'spend') {
-        const [monthly, categoryData, merchantData] = await Promise.all([
-          api.getMonthlySpending(user._id),
-          api.getCategoryBreakdown(user._id, 1),
-          api.getMerchantLeaderboard(user._id, 10),
-        ]);
-        
+        // Load monthly data
+        const monthly = await api.getMonthlySpending(user._id, 6);
         setMonthlyData(monthly);
-        setCategories(categoryData);
-        setMerchants(merchantData);
         
+        // If no month selected, use the latest
         if (monthly.length > 0 && !selectedMonth) {
-          setSelectedMonth(monthly[monthly.length - 1].month);
+          const latestMonth = monthly[monthly.length - 1];
+          setSelectedMonth(latestMonth.month);
+          setSelectedMonthNum(latestMonth.month_num);
+          setSelectedYear(latestMonth.year);
         }
-      } else if (activeTab === 'income') {
-        const monthly = await api.getMonthlyIncome(user._id);
-        setMonthlyData(monthly);
+        
+        // Load category and merchant data based on selected month
+        await loadFilteredData(selectedMonthNum, selectedYear);
       }
     } catch (error) {
       console.error('Error loading track data:', error);
     } finally {
       setLoading(false);
     }
+  };
+  
+  const loadFilteredData = async (monthNum?: number, year?: number) => {
+    if (!user?._id) return;
+    
+    try {
+      let categoryData, merchantData;
+      
+      if (monthNum && year) {
+        // Filter by specific month
+        const categoryUrl = `${process.env.EXPO_PUBLIC_BACKEND_URL}/api/transactions/category-breakdown?user_id=${user._id}&month=${monthNum}&year=${year}`;
+        const merchantUrl = `${process.env.EXPO_PUBLIC_BACKEND_URL}/api/transactions/merchant-leaderboard?user_id=${user._id}&limit=10&month=${monthNum}&year=${year}`;
+        
+        const [catResponse, merchResponse] = await Promise.all([
+          fetch(categoryUrl),
+          fetch(merchantUrl),
+        ]);
+        
+        categoryData = await catResponse.json();
+        merchantData = await merchResponse.json();
+      } else {
+        // Default - last 30 days
+        categoryData = await api.getCategoryBreakdown(user._id, 1);
+        merchantData = await api.getMerchantLeaderboard(user._id, 10);
+      }
+      
+      setCategories(categoryData);
+      setMerchants(merchantData);
+    } catch (error) {
+      console.error('Error loading filtered data:', error);
+    }
+  };
+
+  const handleMonthSelect = async (month: string, monthNum?: number, year?: number) => {
+    setSelectedMonth(month);
+    setSelectedMonthNum(monthNum);
+    setSelectedYear(year);
+    
+    // Load filtered data for the selected month
+    await loadFilteredData(monthNum, year);
+  };
+
+  const handlePeriodChange = (period: string) => {
+    setTimePeriod(period);
+    console.log('Period changed to:', period);
+    // TODO: Implement different time period data loading (1wk, 1mnth, 1yr)
   };
 
   return (
@@ -164,11 +211,13 @@ export default function TrackScreen() {
 
           {activeTab === 'spend' && (
             <>
-              {/* Monthly Bar Chart */}
+              {/* Monthly Bar Chart with Filtering */}
               {monthlyData.length > 0 && (
                 <MonthlyBarChart
                   data={monthlyData}
-                  onMonthSelect={(month) => setSelectedMonth(month)}
+                  onMonthSelect={handleMonthSelect}
+                  onPeriodChange={handlePeriodChange}
+                  selectedPeriod={timePeriod}
                 />
               )}
 
