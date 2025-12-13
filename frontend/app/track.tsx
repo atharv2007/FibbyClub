@@ -362,6 +362,132 @@ export default function TrackScreen() {
             </>
           )}
 
+          {activeTab === 'invest' && portfolio && (
+            <>
+              {/* Portfolio Card */}
+              <PortfolioCard
+                totalValue={portfolio.total_value}
+                totalInvested={portfolio.total_invested}
+                totalPnl={portfolio.total_pnl}
+                totalReturnsPct={portfolio.total_returns_percentage}
+                onConnectBroker={() => {
+                  console.log('Connect broker pressed');
+                  // TODO: Implement broker connection flow
+                }}
+              />
+
+              {/* Asset Allocation */}
+              {portfolio.asset_allocation && (
+                <AssetAllocationChart allocation={portfolio.asset_allocation} />
+              )}
+
+              {/* Holdings Section */}
+              {holdings.length > 0 && (
+                <View style={styles.section}>
+                  <View style={styles.sectionHeader}>
+                    <Text style={styles.sectionTitle}>Stocks & ETFs</Text>
+                    <Text style={styles.sectionCount}>{holdings.length}</Text>
+                  </View>
+                  <ScrollView
+                    horizontal
+                    showsHorizontalScrollIndicator={false}
+                    contentContainerStyle={styles.horizontalScroll}
+                  >
+                    {holdings.map((holding, index) => (
+                      <HoldingCard
+                        key={index}
+                        tradingsymbol={holding.tradingsymbol}
+                        quantity={holding.quantity}
+                        averagePrice={holding.average_price}
+                        lastPrice={holding.last_price}
+                        pnl={holding.pnl}
+                        dayChange={holding.day_change}
+                        dayChangePct={holding.day_change_percentage}
+                        onPress={() => console.log('Holding pressed:', holding.tradingsymbol)}
+                      />
+                    ))}
+                  </ScrollView>
+                </View>
+              )}
+
+              {/* Active SIPs */}
+              {sips.length > 0 && (
+                <View style={styles.section}>
+                  <View style={styles.sectionHeader}>
+                    <Text style={styles.sectionTitle}>Active SIPs</Text>
+                    <Text style={styles.sectionCount}>{sips.length}</Text>
+                  </View>
+                  <ScrollView
+                    horizontal
+                    showsHorizontalScrollIndicator={false}
+                    contentContainerStyle={styles.horizontalScroll}
+                  >
+                    {sips.map((sip, index) => (
+                      <SIPCard
+                        key={index}
+                        fund={sip.fund}
+                        sipAmount={sip.sip_amount}
+                        sipDate={sip.sip_date}
+                        quantity={sip.quantity}
+                        averagePrice={sip.average_price}
+                        lastPrice={sip.last_price}
+                        pnl={sip.pnl}
+                      />
+                    ))}
+                  </ScrollView>
+                </View>
+              )}
+
+              {/* Other Investments */}
+              {otherInvestments.length > 0 && (
+                <View style={styles.section}>
+                  <View style={styles.sectionHeader}>
+                    <Text style={styles.sectionTitle}>Other Investments</Text>
+                    <Text style={styles.sectionCount}>{otherInvestments.length}</Text>
+                  </View>
+                  <ScrollView
+                    horizontal
+                    showsHorizontalScrollIndicator={false}
+                    contentContainerStyle={styles.horizontalScroll}
+                  >
+                    {otherInvestments.map((inv, index) => (
+                      <InvestmentCard
+                        key={index}
+                        type={inv.type}
+                        name={inv.name}
+                        amountInvested={inv.amount_invested}
+                        currentValue={inv.current_value}
+                        returns={inv.returns}
+                        returnsPct={inv.returns_percentage}
+                        metadata={inv.metadata}
+                      />
+                    ))}
+                  </ScrollView>
+                </View>
+              )}
+
+              {/* Recommendations */}
+              {recommendations.length > 0 && (
+                <View style={styles.section}>
+                  <View style={styles.sectionHeader}>
+                    <Text style={styles.sectionTitle}>Recommendations for You</Text>
+                    <Ionicons name="sparkles" size={18} color={COLORS.primary} />
+                  </View>
+                  {recommendations.map((rec, index) => (
+                    <RecommendationCard
+                      key={index}
+                      type={rec.type}
+                      title={rec.title}
+                      description={rec.description}
+                      assetClass={rec.asset_class}
+                      reasoning={rec.reasoning}
+                    />
+                  ))}
+                </View>
+              )}
+            </>
+          )}
+
           {activeTab === 'credit' && (
             <CreditCard
               creditInfo={{
