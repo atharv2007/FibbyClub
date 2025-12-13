@@ -516,6 +516,34 @@ async def create_goal(goal: GoalCreate, user_id: str):
     result = await db.goals.insert_one(goal_data)
     return {"id": str(result.inserted_id), **goal_data}
 
+@api_router.put("/goals/{goal_id}")
+async def update_goal(goal_id: str, goal: GoalCreate, user_id: str):
+    """Update an existing goal"""
+    goal_data = goal.dict()
+    goal_data["user_id"] = user_id
+    
+    result = await db.goals.update_one(
+        {"_id": ObjectId(goal_id), "user_id": user_id},
+        {"$set": goal_data}
+    )
+    
+    if result.modified_count == 0:
+        raise HTTPException(status_code=404, detail="Goal not found")
+    
+    return {"id": goal_id, **goal_data}
+
+@api_router.delete("/goals/{goal_id}")
+async def delete_goal(goal_id: str, user_id: str):
+    """Delete a goal"""
+    result = await db.goals.delete_one(
+        {"_id": ObjectId(goal_id), "user_id": user_id}
+    )
+    
+    if result.deleted_count == 0:
+        raise HTTPException(status_code=404, detail="Goal not found")
+    
+    return {"message": "Goal deleted successfully"}
+
 # ============= INSIGHT ROUTES =============
 @api_router.get("/insights")
 async def get_insights(user_id: str, unread_only: bool = False):
