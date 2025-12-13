@@ -73,7 +73,11 @@ const styles = StyleSheet.create({
   container: {
     borderRadius: RADIUS.card,
     padding: SPACING.lg,
-    ...SHADOWS.elevated,
+    shadowColor: COLORS.glassShadow,
+    shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 0.12,
+    shadowRadius: 16,
+    elevation: 5,
   },
   header: {
     flexDirection: 'row',
