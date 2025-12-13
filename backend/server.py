@@ -1313,6 +1313,66 @@ async def search_embeddings(query: str, user_id: str = None, limit: int = 5):
         logger.error(f"Error searching embeddings: {str(e)}")
         raise HTTPException(status_code=500, detail=str(e))
 
+# ============= BANK ACCOUNT ROUTES =============
+@api_router.post("/bank-accounts")
+async def add_bank_account(request: dict):
+    """Add a new bank account for user"""
+    try:
+        user_id = request.get("user_id")
+        bank_name = request.get("bank_name")
+        account_number = request.get("account_number")
+        balance = request.get("balance")
+        
+        if not user_id or not bank_name or not account_number:
+            raise HTTPException(status_code=400, detail="Missing required fields")
+        
+        account_data = {
+            "user_id": user_id,
+            "bank_name": bank_name,
+            "account_number": account_number,
+            "balance": balance or 0.0,
+            "last_updated": datetime.utcnow()
+        }
+        
+        result = await db.bank_accounts.insert_one(account_data)
+        return {"id": str(result.inserted_id), **account_data}
+    
+    except Exception as e:
+        logger.error(f"Error adding bank account: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@api_router.get("/bank-accounts")
+async def get_bank_accounts(user_id: str):
+    """Get all bank accounts for a user"""
+    try:
+        accounts = await db.bank_accounts.find(
+            {"user_id": user_id}
+        ).sort("last_updated", -1).to_list(100)
+        
+        return [serialize_doc(account) for account in accounts]
+    
+    except Exception as e:
+        logger.error(f"Error fetching bank accounts: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@api_router.delete("/bank-accounts/{account_id}")
+async def delete_bank_account(account_id: str, user_id: str):
+    """Delete a bank account"""
+    try:
+        result = await db.bank_accounts.delete_one({
+            "_id": ObjectId(account_id),
+            "user_id": user_id
+        })
+        
+        if result.deleted_count == 0:
+            raise HTTPException(status_code=404, detail="Account not found")
+        
+        return {"message": "Account deleted successfully"}
+    
+    except Exception as e:
+        logger.error(f"Error deleting bank account: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
+
 # ============= DASHBOARD ROUTES =============
 @api_router.get("/dashboard")
 async def get_dashboard_data(user_id: str):
