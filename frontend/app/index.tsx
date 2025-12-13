@@ -28,6 +28,8 @@ export default function HomeScreen() {
     error,
     refreshDashboard,
   } = useDashboard();
+  
+  const [showAddBankModal, setShowAddBankModal] = React.useState(false);
 
   if (loading && !user) {
     return (
