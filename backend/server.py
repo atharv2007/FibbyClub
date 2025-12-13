@@ -728,24 +728,31 @@ async def get_user_context(user_id: str, query: str) -> str:
 
 @api_router.post("/chat/message")
 async def chat_message(request: dict):
-    """Chat endpoint with contextual responses using GPT-4o-mini"""
+    """Chat endpoint with RAG-enhanced contextual responses using GPT-5.1"""
     try:
         user_id = request.get("user_id", "guest")
         message = request.get("message", "")
         
-        # Fetch relevant user data based on the query
-        user_context = await get_user_context(user_id, message)
+        # RAG: Fetch relevant context from vector database
+        try:
+            rag_context = rag_service.get_rag_context(user_id, message)
+            logger.info(f"RAG context retrieved for user {user_id}")
+        except Exception as e:
+            logger.warning(f"RAG context retrieval failed, using fallback: {str(e)}")
+            # Fallback to traditional context fetching if RAG fails
+            rag_context = await get_user_context(user_id, message)
         
-        # Build context-aware prompt
+        # Build context-aware prompt with RAG-retrieved information
         context_prompt = f"""User Query: {message}
 
-Relevant User Data:
-{user_context}
+{rag_context}
 
-Based on this data, provide a helpful response that:
-1. Directly answers the user's question with specific data and insights
-2. Only include MCQ options when there are natural follow-up paths or decisions to make
-3. Keep the response concise but informative"""
+Based on this retrieved context, provide a helpful response that:
+1. Directly answers the user's question with specific data and insights from the context
+2. Analyze the user's financial situation based on the retrieved data
+3. Only include MCQ options when there are natural follow-up paths or decisions to make
+4. Keep the response concise but informative
+5. If the context doesn't contain enough information to answer, acknowledge it politely"""
         
         # Initialize LLM Chat with professional advisor tone and structured output
         chat = LlmChat(
