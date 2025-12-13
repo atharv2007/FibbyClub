@@ -61,4 +61,22 @@ export const api = {
     });
     return response.json();
   },
+  
+  // Get monthly spending
+  getMonthlySpending: async (userId: string, months = 6) => {
+    const response = await fetch(`${API_URL}/api/analytics/monthly-spending?user_id=${userId}&months=${months}`);
+    return response.json();
+  },
+  
+  // Get monthly income
+  getMonthlyIncome: async (userId: string, months = 6) => {
+    const response = await fetch(`${API_URL}/api/analytics/monthly-income?user_id=${userId}&months=${months}`);
+    return response.json();
+  },
+  
+  // Get merchant leaderboard
+  getMerchantLeaderboard: async (userId: string, limit = 10) => {
+    const response = await fetch(`${API_URL}/api/transactions/merchant-leaderboard?user_id=${userId}&limit=${limit}`);
+    return response.json();
+  },
 };
