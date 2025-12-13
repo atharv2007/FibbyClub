@@ -75,9 +75,12 @@ export default function HomeScreen() {
           />
         )}
 
-        {/* Bank Stack */}
-        {primaryAccount && (
-          <BankStack account={primaryAccount} />
+        {/* Bank Carousel */}
+        {accounts && accounts.length > 0 && (
+          <BankCarousel 
+            accounts={accounts} 
+            onAddBank={() => setShowAddBankModal(true)}
+          />
         )}
 
         {/* Agent Chips */}
