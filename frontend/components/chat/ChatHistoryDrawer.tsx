@@ -250,12 +250,22 @@ export default function ChatHistoryDrawer({ visible, onClose, onNewChat, onSelec
   return (
     <Modal
       visible={visible}
-      animationType="slide"
+      animationType="none"
       transparent={true}
       onRequestClose={onClose}
     >
-      <View style={styles.overlay}>
-        <View style={styles.drawer}>
+      <TouchableOpacity 
+        style={styles.overlay} 
+        activeOpacity={1} 
+        onPress={onClose}
+      >
+        <Animated.View 
+          style={[
+            styles.drawer,
+            { transform: [{ translateX: slideAnim }] }
+          ]}
+          onStartShouldSetResponder={() => true}
+        >
           {/* Header */}
           <View style={styles.header}>
             <Text style={styles.headerTitle}>Chat History</Text>
