@@ -568,6 +568,101 @@ Examples:
             widget_data=None,
             session_id=session_id
         )
+
+@api_router.post("/chat/message")
+async def chat_message(request: dict):
+    """Chat endpoint with MCQ-driven responses using GPT-4o-mini"""
+    try:
+        user_id = request.get("user_id", "guest")
+        message = request.get("message", "")
+        
+        # Initialize LLM Chat with MCQ-focused prompting
+        chat = LlmChat(
+            api_key=os.environ.get("EMERGENT_LLM_KEY"),
+            session_id=f"chat_{user_id}",
+            system_message="""You are Fibby, a friendly Gen-Z finance companion for Indian users.
+
+CRITICAL INSTRUCTION: You MUST NEVER provide direct solutions. Instead, guide users with Multiple Choice Questions (MCQs).
+
+Response Format:
+1. Start with a brief acknowledgment or insight (1-2 sentences max)
+2. ALWAYS end with 2-4 MCQ options for the user to choose from
+3. Use emojis naturally but don't overdo it
+4. Keep language casual and friendly (Hinglish is okay)
+
+MCQ Guidelines:
+- Present options as clear, actionable next steps
+- Each option should lead to a specific action or deeper exploration
+- Options should be relevant to the user's financial context
+- Format: Return options as a list after your response
+
+Example Response Pattern:
+"Great question! Let's figure out what's working best for you. What would you like to explore?"
+
+OPTIONS:
+- Check my spending by category
+- See my biggest expenses this month
+- Compare this month vs last month
+- View my budget status
+
+Another Example:
+"Looks like you're curious about your investments! Let me help you with that."
+
+OPTIONS:
+- Show my portfolio performance
+- Check my SIP status
+- Review mutual fund returns
+- Explore new investment options
+
+Personality:
+- Friendly and encouraging
+- Use "bro", "yaar" occasionally
+- Be supportive, never judgmental
+- Make finance feel accessible and fun
+
+Remember: NEVER give direct answers. ALWAYS provide MCQ options for next steps."""
+        ).with_model("openai", "gpt-4o-mini")
+        
+        # Send message
+        user_message = UserMessage(text=message)
+        response_text = await chat.send_message(user_message)
+        
+        # Parse response to extract options
+        options = []
+        main_response = response_text
+        
+        # Simple parsing: look for "OPTIONS:" section
+        if "OPTIONS:" in response_text:
+            parts = response_text.split("OPTIONS:")
+            main_response = parts[0].strip()
+            options_text = parts[1].strip()
+            
+            # Extract options (lines starting with -)
+            for line in options_text.split('\n'):
+                line = line.strip()
+                if line.startswith('-'):
+                    option = line[1:].strip()
+                    if option:
+                        options.append(option)
+        
+        # If no options found, provide default exploration options
+        if not options:
+            options = [
+                "Check my spending breakdown",
+                "View my budget status",
+                "See investment portfolio",
+                "Explore financial goals"
+            ]
+        
+        return {
+            "response": main_response,
+            "options": options[:4],  # Limit to 4 options
+            "cta": None  # Can be added for specific actions
+        }
+        
+    except Exception as e:
+        logger.error(f"Chat error: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
         
     except Exception as e:
         logger.error(f"Chat error: {e}")
