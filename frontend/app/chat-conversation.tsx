@@ -106,7 +106,7 @@ export default function ChatConversationScreen() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          user_id: user?.id || 'guest',
+          user_id: user?._id || 'guest',
           message: message,
         }),
       });
@@ -124,9 +124,31 @@ export default function ChatConversationScreen() {
         timestamp: new Date(),
         options: data.options || [],
         cta: data.cta,
+        card: data.card_data ? { type: data.card_type, metrics: data.card_data } : undefined,
       };
 
       setMessages((prev) => [...prev, botMessage]);
+      
+      // Save conversation to MongoDB
+      try {
+        await fetch(`${process.env.EXPO_PUBLIC_BACKEND_URL}/api/chat/conversations`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            user_id: user?._id || 'guest',
+            conversation_id: conversationIdRef.current,
+            user_message: message,
+            assistant_message: data.response,
+            card_type: data.card_type,
+            metrics: data.card_data,
+          }),
+        });
+      } catch (saveError) {
+        console.error('Error saving conversation:', saveError);
+        // Don't fail the chat if save fails
+      }
     } catch (error) {
       console.error('Chat error:', error);
       const errorMessage: Message = {
