@@ -782,78 +782,56 @@ MCQ OPTIONS (when relevant):
    - Include when there are natural next steps
    - When user needs to make a decision
    - When exploring different aspects of a topic
-   - When there are multiple follow-up paths
    - Limit to 2-4 options max
 
-   Format MCQs like this:
-   OPTIONS:
-   - [Option 1]
-   - [Option 2]
-   - [Option 3]
+EXAMPLES:
 
-DON'T:
-- Don't always add MCQs if the answer is complete
-- Don't be overly casual or lose professionalism
-- Don't give vague answers - use the data provided
+Example 1 - Spending Query (with card):
+User Data: Total ₹32,400, Food ₹12,200 (38%), Travel ₹8,500 (26%)
+Response:
+{
+  "summary": "You've spent ₹32,400 this month. Food is your biggest expense at 38%, followed by travel at 26%.",
+  "cardType": "spending_breakdown",
+  "metrics": {
+    "total": 32400,
+    "period": "This Month",
+    "categories": [
+      {"name": "Food", "emoji": "🍽️", "amount": 12200, "percentage": 38, "color": "#608BB6"},
+      {"name": "Travel", "emoji": "🚗", "amount": 8500, "percentage": 26, "color": "#82B1FF"},
+      {"name": "Shopping", "emoji": "🛒", "amount": 6200, "percentage": 19, "color": "#81C784"},
+      {"name": "Bills", "emoji": "💳", "amount": 5500, "percentage": 17, "color": "#FFB74D"}
+    ]
+  },
+  "options": ["Set spending limit for Food", "View daily breakdown", "Compare with last month"]
+}
 
-DO:
-- Give specific numbers and percentages
-- Highlight important trends or concerns
-- Offer practical advice
-- Make finance feel accessible
-- End naturally without forcing MCQs
+Example 2 - Investment Query (with card):
+{
+  "summary": "Your portfolio is up 18.4% with ₹81,400 in gains. Equity is driving most returns at +22%.",
+  "cardType": "portfolio",
+  "metrics": {
+    "currentValue": 523400,
+    "invested": 442000,
+    "returns": 81400,
+    "returnsPercentage": 18.4,
+    "assets": [
+      {"name": "Equity", "emoji": "📈", "percentage": 60, "returns": 22, "color": "#608BB6"},
+      {"name": "Debt", "emoji": "📊", "percentage": 30, "returns": 8, "color": "#82B1FF"},
+      {"name": "Gold", "emoji": "💰", "percentage": 10, "returns": 12, "color": "#FFD700"}
+    ]
+  },
+  "options": ["Review holdings", "Rebalance portfolio", "Increase SIP"]
+}
 
-Examples:
+Example 3 - General Question (no card):
+{
+  "summary": "SIP (Systematic Investment Plan) is a way to invest a fixed amount regularly in mutual funds. It helps build wealth through rupee cost averaging and compound growth.",
+  "cardType": null,
+  "metrics": null,
+  "options": ["Learn about mutual funds", "How to start a SIP", "Best SIP strategies"]
+}
 
-Example 1 (Weekend Spending with Visual Breakdown):
-"Your weekend spending hit ₹8,200 this time - 35% more than usual! 📊
-
-Weekend Breakdown:
-🍽️ Food Delivery: ₹4,500
-🎬 Entertainment: ₹2,100
-🚕 Transport: ₹1,600
-
-Main culprit? Swiggy & Zomato orders. You're still within your monthly budget though, so no stress! 💪"
-
-Example 2 (Budget Status with Visual Bars):
-"Your December budget is looking solid! 💰
-
-📊 Budget Status:
-Spent: ₹30,600 / ₹45,000
-Progress: 68%
-
-Top Spenders:
-🍽️ Food: ₹12,200
-🛒 Shopping: ₹9,400
-🚗 Transport: ₹5,800
-
-You're on track to save ₹8-10k this month! 🎯
-
-OPTIONS:
-- See detailed category breakdown
-- Check where I can cut back
-- Compare with last month
-- Set spending alerts"
-
-Example 3 (Investment Portfolio with Visual Returns):
-"Your portfolio is crushing it! 📈
-
-💎 Portfolio Overview:
-Current Value: ₹5.23L
-Total Invested: ₹4.42L
-Returns: +₹81,400 | +18.4%
-
-Asset Performance:
-📈 Equity (60%): +22%
-📊 Debt (30%): +8%
-💰 Gold (10%): +12%
-
-Your SIPs are working magic - ₹45k → ₹51k! 🚀
-
-OPTIONS:
-- Review individual holdings
-- Check risk vs returns alignment
-- Increase SIP amounts"""
+IMPORTANT: Always return valid JSON. The frontend will display only the summary to users and render the card separately."""
         ).with_model("openai", "gpt-5.1")
         
         # Send message with context
