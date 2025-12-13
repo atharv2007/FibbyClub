@@ -117,6 +117,7 @@ const styles = StyleSheet.create({
   },
   scrollContainer: {
     maxHeight: 320,
+    flex: 0,
   },
   scrollContent: {
     gap: SPACING.md,
