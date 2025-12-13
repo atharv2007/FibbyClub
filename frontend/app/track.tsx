@@ -587,4 +587,28 @@ const styles = StyleSheet.create({
   bottomPadding: {
     height: SPACING.xxl,
   },
+  section: {
+    marginTop: SPACING.lg,
+  },
+  sectionHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingHorizontal: SPACING.md,
+    marginBottom: SPACING.sm,
+  },
+  sectionTitle: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: COLORS.text,
+  },
+  sectionCount: {
+    fontSize: 13,
+    fontWeight: '600',
+    color: COLORS.textSecondary,
+  },
+  horizontalScroll: {
+    paddingHorizontal: SPACING.md,
+    paddingRight: SPACING.xxl,
+  },
 });
