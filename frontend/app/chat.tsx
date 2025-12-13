@@ -69,7 +69,7 @@ export default function ChatScreen() {
       Animated.sequence([
         Animated.timing(scrollAnim1, {
           toValue: -row1Width,
-          duration: 25000,
+          duration: 30000,
           useNativeDriver: true,
         }),
         Animated.timing(scrollAnim1, {
@@ -82,15 +82,17 @@ export default function ChatScreen() {
     anim1.start();
 
     // Row 2 - Scroll right (positive direction) - infinite loop
+    // Start from negative position and animate to 0 for right-scrolling effect
+    scrollAnim2.setValue(-row2Width);
     const anim2 = Animated.loop(
       Animated.sequence([
         Animated.timing(scrollAnim2, {
-          toValue: row2Width,
-          duration: 25000,
+          toValue: 0,
+          duration: 30000,
           useNativeDriver: true,
         }),
         Animated.timing(scrollAnim2, {
-          toValue: 0,
+          toValue: -row2Width,
           duration: 0,
           useNativeDriver: true,
         }),
@@ -103,7 +105,7 @@ export default function ChatScreen() {
       Animated.sequence([
         Animated.timing(scrollAnim3, {
           toValue: -row3Width,
-          duration: 25000,
+          duration: 30000,
           useNativeDriver: true,
         }),
         Animated.timing(scrollAnim3, {
