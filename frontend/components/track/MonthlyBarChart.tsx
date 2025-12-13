@@ -8,11 +8,15 @@ interface MonthlyData {
   amount: number;
   year?: number;
   month_num?: number;
+  day?: number;
+  date?: string;
+  week_num?: number;
+  period?: string;
 }
 
 interface MonthlyBarChartProps {
   data: MonthlyData[];
-  onMonthSelect: (month: string, monthNum?: number, year?: number) => void;
+  onMonthSelect: (item: MonthlyData) => void;
   onPeriodChange: (period: string) => void;
   selectedPeriod?: string;
 }
@@ -36,7 +40,7 @@ export function MonthlyBarChart({ data, onMonthSelect, onPeriodChange, selectedP
   
   const handleBarPress = (item: MonthlyData) => {
     setSelectedMonth(item.month);
-    onMonthSelect(item.month, item.month_num, item.year);
+    onMonthSelect(item);
   };
 
   const handlePeriodChange = (period: TimePeriod) => {
