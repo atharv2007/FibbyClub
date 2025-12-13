@@ -297,6 +297,21 @@ backend:
         agent: "testing"
         comment: "✅ FIXED AND TESTED SUCCESSFULLY: Added missing session_id parameter to LlmChat initialization. API now returns both AI and rule-based recommendations properly sorted by priority. AI recommendations have higher priorities (10-12) and provide detailed investment advice. Rule-based recommendations cover missing asset classes like gold."
 
+  - task: "Chat Feature with JSON Response Format"
+    implemented: true
+    working: true
+    file: "backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: "NA"
+        agent: "testing"
+        comment: "Testing chat endpoint /api/chat/message with 4 scenarios: Budget/Spending Query, Investment Query, General Question, Simple Balance Query."
+      - working: true
+        agent: "testing"
+        comment: "✅ TESTED SUCCESSFULLY: All 4 chat scenarios pass. Budget queries return proper budget_status cards with spending data. Investment queries return portfolio cards with performance metrics (₹4,19,097 current value, +11.3% returns). General questions provide educational responses without cards. Simple queries return concise 1-sentence answers. Response field contains clean summary text (not raw JSON), card data is properly structured in separate field, and relevant options are provided. Fixed investment context calculation issue where mutual fund data structure was causing NoneType comparison errors."
+
 frontend:
   - task: "Chart component displays all time periods correctly"
     implemented: true
