@@ -93,16 +93,22 @@ async def initialize_user():
             insights = generate_mock_insights(user_id)
             if insights:
                 await db.insights.insert_many(insights)
-            
-            # Create investment data
+        
+        # Always ensure investment data exists (separate from account creation)
+        existing_holdings = await db.investment_holdings.find_one({"user_id": user_id})
+        if not existing_holdings:
             holdings = generate_mock_holdings(user_id)
             if holdings:
                 await db.investment_holdings.insert_many(holdings)
-            
+        
+        existing_mf = await db.mutual_funds.find_one({"user_id": user_id})
+        if not existing_mf:
             mutual_funds = generate_mock_mutual_funds(user_id)
             if mutual_funds:
                 await db.mutual_funds.insert_many(mutual_funds)
-            
+        
+        existing_other = await db.other_investments.find_one({"user_id": user_id})
+        if not existing_other:
             other_investments = generate_mock_other_investments(user_id)
             if other_investments:
                 await db.other_investments.insert_many(other_investments)
