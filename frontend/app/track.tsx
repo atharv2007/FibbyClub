@@ -468,22 +468,13 @@ export default function TrackScreen() {
 
               {/* Recommendations */}
               {recommendations.length > 0 && (
-                <View style={styles.section}>
-                  <View style={styles.sectionHeader}>
-                    <Text style={styles.sectionTitle}>Recommendations for You</Text>
-                    <Ionicons name="sparkles" size={18} color={COLORS.primary} />
-                  </View>
-                  {recommendations.map((rec, index) => (
-                    <RecommendationCard
-                      key={index}
-                      type={rec.type}
-                      title={rec.title}
-                      description={rec.description}
-                      assetClass={rec.asset_class}
-                      reasoning={rec.reasoning}
-                    />
-                  ))}
-                </View>
+                <RecommendationAccordion recommendations={recommendations.map(rec => ({
+                  type: rec.type,
+                  title: rec.title,
+                  description: rec.description,
+                  assetClass: rec.asset_class,
+                  reasoning: rec.reasoning,
+                }))} />
               )}
             </>
           )}
