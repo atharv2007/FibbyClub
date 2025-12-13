@@ -16,6 +16,8 @@ import { Ionicons } from '@expo/vector-icons';
 import { COLORS, SPACING, RADIUS, TYPOGRAPHY } from '../constants/theme';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import { useAppStore } from '../store/useAppStore';
+import BudgetCard from '../components/chat/BudgetCard';
+import InvestmentCard from '../components/chat/InvestmentCard';
 
 interface Message {
   id: string;
