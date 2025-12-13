@@ -1099,7 +1099,7 @@ async def create_or_update_conversation(request: dict):
         }
         
         if existing_conv:
-            # Update existing conversation
+            # Update existing conversation (don't change category)
             await db.chat_conversations.update_one(
                 {"_id": existing_conv["_id"]},
                 {
@@ -1111,23 +1111,24 @@ async def create_or_update_conversation(request: dict):
                     "$set": {"updated_at": datetime.utcnow()}
                 }
             )
-            return {"conversation_id": conversation_id, "status": "updated"}
+            return {"conversation_id": conversation_id, "status": "updated", "category": existing_conv.get("category", "status")}
         else:
             # Generate title from first user message (first 50 chars)
             title = user_message[:50] + "..." if len(user_message) > 50 else user_message
             
-            # Create new conversation
+            # Create new conversation with auto-detected category
             new_conv = {
                 "user_id": user_id,
                 "conversation_id": conversation_id,
                 "title": title,
+                "category": category,  # Auto-detected category
                 "messages": [user_msg, assistant_msg],
                 "created_at": datetime.utcnow(),
                 "updated_at": datetime.utcnow()
             }
             
             await db.chat_conversations.insert_one(new_conv)
-            return {"conversation_id": conversation_id, "status": "created"}
+            return {"conversation_id": conversation_id, "status": "created", "category": category}
     
     except Exception as e:
         logger.error(f"Error saving conversation: {str(e)}")
