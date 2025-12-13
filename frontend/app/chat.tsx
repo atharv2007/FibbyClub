@@ -1,11 +1,12 @@
 import { useState, useRef, useEffect } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, TextInput, SafeAreaView, Animated, Dimensions } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, TextInput, SafeAreaView, Animated, Dimensions, Image } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { COLORS, SPACING, RADIUS, TYPOGRAPHY } from '../constants/theme';
 import { useRouter } from 'expo-router';
 import { useAppStore } from '../store/useAppStore';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
+const CHIP_WIDTH = 220; // Average chip width including gap
 
 interface SuggestionChip {
   id: string;
