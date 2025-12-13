@@ -216,7 +216,7 @@ export default function ChatScreen() {
                     { transform: [{ translateX: scrollAnim2 }] },
                   ]}
                 >
-                  {[...suggestionChipsRow2, ...suggestionChipsRow2].map((chip, index) => (
+                  {[...suggestionChipsRow2, ...suggestionChipsRow2, ...suggestionChipsRow2].map((chip, index) => (
                     <TouchableOpacity
                       key={`${chip.id}-${index}`}
                       style={styles.chip}
