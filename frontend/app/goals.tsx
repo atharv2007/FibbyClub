@@ -11,6 +11,7 @@ import {
   Animated,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import Svg, { Circle } from 'react-native-svg';
 import { COLORS, SPACING, RADIUS, SHADOWS } from '../constants/theme';
 import { useAppStore } from '../store/useAppStore';
 import { api } from '../utils/api';
