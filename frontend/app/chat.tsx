@@ -118,9 +118,11 @@ export default function ChatScreen() {
   };
 
   const handleChipPress = (chip: SuggestionChip) => {
-    setInputText(chip.label);
-    setShowWelcome(false);
-    // TODO: Auto-send or let user edit
+    // Navigate to conversation screen with the selected prompt
+    router.push({
+      pathname: '/chat-conversation',
+      params: { prompt: chip.label },
+    });
   };
 
   const handleNewChat = () => {
