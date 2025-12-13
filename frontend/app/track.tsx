@@ -20,7 +20,7 @@ import { BudgetCard } from '../components/track/BudgetCard';
 import { CategoryLimits } from '../components/track/CategoryLimits';
 import { CreditCard } from '../components/track/CreditCard';
 
-type TabType = 'budget' | 'spend' | 'credit';
+type TabType = 'budget' | 'spend' | 'invest' | 'credit';
 
 export default function TrackScreen() {
   const router = useRouter();
