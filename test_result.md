@@ -189,6 +189,114 @@ backend:
         agent: "testing"
         comment: "✅ TESTED SUCCESSFULLY: API correctly filters merchants by date range and returns top 10 as requested. Returns 4 merchants with proper structure: _id (merchant name like 'IRCTC'), total (1644.06), count (1), and category ('Travel'). Date filtering and limit parameter work correctly."
 
+  - task: "Investment Portfolio Summary API"
+    implemented: true
+    working: true
+    file: "backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Implemented /api/investments/portfolio endpoint with complete portfolio summary including total_value, total_invested, total_pnl, total_returns_percentage, asset_allocation, and counts."
+      - working: true
+        agent: "testing"
+        comment: "✅ TESTED SUCCESSFULLY: API returns complete portfolio summary with all required fields. Total Value: ₹1,150,298.29, P&L: ₹112,065.67 (10.79% returns). Asset allocation includes equity, mutual_funds, crypto, fixed_income, real_estate, insurance, and NPS categories."
+
+  - task: "Investment Stock Holdings API"
+    implemented: true
+    working: true
+    file: "backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Implemented /api/investments/holdings endpoint returning stock holdings with Zerodha Kite API structure including tradingsymbol, exchange, quantity, prices, and P&L calculations."
+      - working: true
+        agent: "testing"
+        comment: "✅ TESTED SUCCESSFULLY: API returns exactly 6 stock holdings with correct structure. All expected fields present: tradingsymbol, exchange, quantity, average_price, last_price, pnl, day_change, day_change_percentage. Holdings include RELIANCE, TCS, INFY, HDFCBANK, SBIN, TATAMOTORS."
+
+  - task: "Investment Mutual Funds API"
+    implemented: true
+    working: true
+    file: "backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Implemented /api/investments/mutual-funds endpoint returning mutual fund holdings with folio numbers, fund names, quantities, prices, P&L, and SIP flags."
+      - working: true
+        agent: "testing"
+        comment: "✅ TESTED SUCCESSFULLY: API returns exactly 4 mutual funds with correct structure. All expected fields present: folio, fund, quantity, average_price, last_price, pnl, is_sip. Includes funds from ICICI, SBI, Axis, and Mirae Asset."
+
+  - task: "Investment Active SIPs API"
+    implemented: true
+    working: true
+    file: "backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Implemented /api/investments/sips endpoint filtering mutual funds where is_sip=true and including sip_amount and sip_date fields."
+      - working: true
+        agent: "testing"
+        comment: "✅ TESTED SUCCESSFULLY: API returns exactly 3 active SIPs with correct structure. All have is_sip=true and include sip_amount and sip_date fields. SIP amounts: ₹5,000, ₹3,000, and ₹2,000 with different dates."
+
+  - task: "Investment Other Investments API"
+    implemented: true
+    working: true
+    file: "backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Implemented /api/investments/other endpoint returning crypto, FDs, bonds, real estate, NPS, PPF, and insurance investments with optional type filtering."
+      - working: true
+        agent: "testing"
+        comment: "✅ TESTED SUCCESSFULLY: API returns 9 other investments with correct structure. Investment types include: crypto, fd, bond, real_estate, nps, ppf, insurance. All have required fields: type, name, amount_invested, current_value, returns, returns_percentage."
+
+  - task: "Investment Filtered Other Investments API"
+    implemented: true
+    working: true
+    file: "backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Implemented investment_type query parameter for /api/investments/other endpoint to filter by specific investment types like crypto, fd, bond, etc."
+      - working: true
+        agent: "testing"
+        comment: "✅ TESTED SUCCESSFULLY: API correctly filters investments by type. When filtering for crypto, returns exactly 2 crypto investments (Bitcoin and Ethereum) with all items having type='crypto'."
+
+  - task: "Investment AI + Rule-based Recommendations API"
+    implemented: true
+    working: true
+    file: "backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Implemented /api/investments/recommendations endpoint with AI + Rule-based ensemble system. Uses GPT for AI recommendations and rule-based logic for portfolio analysis, returning up to 5 recommendations sorted by priority."
+      - working: false
+        agent: "testing"
+        comment: "❌ INITIAL ISSUE: LlmChat initialization missing session_id parameter causing AI recommendations to fail. Only rule-based recommendations were working."
+      - working: true
+        agent: "testing"
+        comment: "✅ FIXED AND TESTED SUCCESSFULLY: Added missing session_id parameter to LlmChat initialization. API now returns both AI and rule-based recommendations properly sorted by priority. AI recommendations have higher priorities (10-12) and provide detailed investment advice. Rule-based recommendations cover missing asset classes like gold."
+
 frontend:
   - task: "Chart component displays all time periods correctly"
     implemented: true
