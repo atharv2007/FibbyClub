@@ -338,20 +338,11 @@ const styles = StyleSheet.create({
     marginBottom: SPACING.xl,
     borderWidth: 3,
     borderColor: COLORS.primary,
+    padding: SPACING.md,
   },
-  fibbyIconInner: {
-    width: 100,
-    height: 100,
-    borderRadius: 50,
-    backgroundColor: COLORS.primary,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  fibbyIconText: {
-    fontSize: 48,
-    fontWeight: '700',
-    color: COLORS.surface,
-    fontFamily: TYPOGRAPHY.heading,
+  fibbyIconImage: {
+    width: '100%',
+    height: '100%',
   },
   welcomeTitle: {
     fontSize: TYPOGRAPHY.h2,
