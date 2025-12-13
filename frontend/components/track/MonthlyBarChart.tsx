@@ -39,8 +39,8 @@ export function MonthlyBarChart({ data, onMonthSelect, onPeriodChange, selectedP
   const [selectedMonth, setSelectedMonth] = useState(data[data.length - 1]?.month);
   const [activePeriod, setActivePeriod] = useState<TimePeriod>(selectedPeriod as TimePeriod);
   
-  // Get last 6 months of data
-  const displayData = data.slice(-6);
+  // Display all data (no slicing)
+  const displayData = data;
   const maxAmount = Math.max(...displayData.map(d => d.amount));
   
   const handleBarPress = (item: MonthlyData) => {
