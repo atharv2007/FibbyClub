@@ -462,4 +462,38 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: COLORS.textSecondary,
   },
+  filtersContainer: {
+    marginBottom: SPACING.sm,
+  },
+  filtersContent: {
+    paddingHorizontal: SPACING.md,
+    gap: SPACING.xs,
+  },
+  filterPill: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: SPACING.sm + 4,
+    paddingVertical: SPACING.xs,
+    borderRadius: RADIUS.full,
+    backgroundColor: COLORS.surface,
+    borderWidth: 1,
+    borderColor: COLORS.border,
+    marginRight: SPACING.xs,
+  },
+  filterPillActive: {
+    backgroundColor: COLORS.primary,
+    borderColor: COLORS.primary,
+  },
+  filterIcon: {
+    marginRight: 6,
+  },
+  filterText: {
+    fontSize: TYPOGRAPHY.bodySmall - 1,
+    fontWeight: '500',
+    color: COLORS.textSecondary,
+  },
+  filterTextActive: {
+    color: COLORS.surface,
+    fontWeight: '600',
+  },
 });
