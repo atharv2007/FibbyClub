@@ -489,14 +489,31 @@ export default function TrackScreen() {
               )}
 
               {/* Recommendations */}
-              {recommendations.length > 0 && (
-                <RecommendationAccordion recommendations={recommendations.map(rec => ({
-                  type: rec.type,
-                  title: rec.title,
-                  description: rec.description,
-                  assetClass: rec.asset_class,
-                  reasoning: rec.reasoning,
-                }))} />
+              {(loadingRecommendations || recommendations.length > 0) && (
+                <View style={styles.section}>
+                  {loadingRecommendations ? (
+                    <View style={styles.loadingRecommendations}>
+                      <View style={styles.loadingHeader}>
+                        <Ionicons name="sparkles" size={20} color={COLORS.primary} />
+                        <Text style={styles.loadingTitle}>Loading AI Recommendations...</Text>
+                      </View>
+                      <View style={styles.loadingCard}>
+                        <ActivityIndicator size="small" color={COLORS.primary} />
+                        <Text style={styles.loadingText}>
+                          Our AI is analyzing your portfolio to provide personalized investment advice
+                        </Text>
+                      </View>
+                    </View>
+                  ) : (
+                    <RecommendationAccordion recommendations={recommendations.map(rec => ({
+                      type: rec.type,
+                      title: rec.title,
+                      description: rec.description,
+                      assetClass: rec.asset_class,
+                      reasoning: rec.reasoning,
+                    }))} />
+                  )}
+                </View>
               )}
             </>
           )}
