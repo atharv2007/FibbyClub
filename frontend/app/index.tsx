@@ -106,6 +106,21 @@ export default function HomeScreen() {
         {/* Bottom padding */}
         <View style={styles.bottomPadding} />
       </ScrollView>
+      
+      {/* Add Bank Modal */}
+      <AddBankModal
+        visible={showAddBankModal}
+        onClose={() => setShowAddBankModal(false)}
+        onAdd={async (bankData) => {
+          try {
+            await api.addBankAccount(user?._id!, bankData);
+            // Refresh dashboard to show new account
+            await refreshDashboard();
+          } catch (error) {
+            console.error('Error adding bank account:', error);
+          }
+        }}
+      />
     </SafeAreaView>
   );
 }
