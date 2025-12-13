@@ -1,150 +1,239 @@
-import { useState } from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  ScrollView,
-  TextInput,
-  TouchableOpacity,
-  KeyboardAvoidingView,
-  Platform,
-  SafeAreaView,
-  ActivityIndicator,
-} from 'react-native';
+import { useState, useRef, useEffect } from 'react';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, TextInput, SafeAreaView, Animated, Dimensions } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { COLORS, SPACING, RADIUS } from '../constants/theme';
-import { api } from '../utils/api';
+import { COLORS, SPACING, RADIUS, TYPOGRAPHY } from '../constants/theme';
+import { useRouter } from 'expo-router';
+import { useAppStore } from '../store/user';
 
-interface Message {
+const SCREEN_WIDTH = Dimensions.get('window').width;
+
+interface SuggestionChip {
   id: string;
-  role: 'user' | 'assistant';
-  content: string;
+  label: string;
+  emoji: string;
 }
 
+const suggestionChipsRow1: SuggestionChip[] = [
+  { id: '1', emoji: '📊', label: 'Analyze my weekend spend' },
+  { id: '2', emoji: '✈️', label: 'Can I afford a Goa trip?' },
+  { id: '3', emoji: '📈', label: 'Show my SIPs' },
+  { id: '4', emoji: '💰', label: 'How is my budget?' },
+];
+
+const suggestionChipsRow2: SuggestionChip[] = [
+  { id: '5', emoji: '🔍', label: 'Where did my money go?' },
+  { id: '6', emoji: '🛑', label: 'Set a spending limit' },
+  { id: '7', emoji: '🔄', label: 'Check my subscriptions' },
+  { id: '8', emoji: '💎', label: 'Show my portfolio' },
+];
+
+const suggestionChipsRow3: SuggestionChip[] = [
+  { id: '9', emoji: '🎯', label: 'Track my savings goal' },
+  { id: '10', emoji: '💎', label: 'Review my investments' },
+  { id: '11', emoji: '📱', label: 'Bill payment reminders' },
+  { id: '12', emoji: '🏦', label: 'Account summary' },
+];
+
 export default function ChatScreen() {
-  const [messages, setMessages] = useState<Message[]>([
-    {
-      id: '1',
-      role: 'assistant',
-      content: 'Hey! Main Fibby hoon, tumhara money buddy! 💰 Kaise madad kar sakta hoon?',
-    },
-  ]);
+  const router = useRouter();
+  const { user } = useAppStore();
   const [inputText, setInputText] = useState('');
-  const [loading, setLoading] = useState(false);
+  const [showWelcome, setShowWelcome] = useState(true);
+  
+  // Animation values for scrolling rows
+  const scrollAnim1 = useRef(new Animated.Value(0)).current;
+  const scrollAnim2 = useRef(new Animated.Value(0)).current;
+  const scrollAnim3 = useRef(new Animated.Value(0)).current;
 
-  const handleSend = async () => {
-    if (!inputText.trim() || loading) return;
+  useEffect(() => {
+    // Row 1 - Scroll left (negative direction)
+    Animated.loop(
+      Animated.timing(scrollAnim1, {
+        toValue: -1000,
+        duration: 20000,
+        useNativeDriver: true,
+      })
+    ).start();
 
-    const userMessage: Message = {
-      id: Date.now().toString(),
-      role: 'user',
-      content: inputText.trim(),
-    };
+    // Row 2 - Scroll right (positive direction)
+    Animated.loop(
+      Animated.timing(scrollAnim2, {
+        toValue: 1000,
+        duration: 20000,
+        useNativeDriver: true,
+      })
+    ).start();
 
-    setMessages((prev) => [...prev, userMessage]);
-    setInputText('');
-    setLoading(true);
+    // Row 3 - Scroll left (negative direction)
+    Animated.loop(
+      Animated.timing(scrollAnim3, {
+        toValue: -1000,
+        duration: 20000,
+        useNativeDriver: true,
+      })
+    ).start();
+  }, []);
 
-    try {
-      const response = await api.chat(userMessage.content);
-      
-      const assistantMessage: Message = {
-        id: (Date.now() + 1).toString(),
-        role: 'assistant',
-        content: response.message,
-      };
-
-      setMessages((prev) => [...prev, assistantMessage]);
-    } catch (error) {
-      console.error('Chat error:', error);
-    } finally {
-      setLoading(false);
+  const handleSend = () => {
+    if (inputText.trim()) {
+      setShowWelcome(false);
+      // TODO: Implement chat message sending
+      console.log('Sending message:', inputText);
+      setInputText('');
     }
+  };
+
+  const handleChipPress = (chip: SuggestionChip) => {
+    setInputText(chip.label);
+    setShowWelcome(false);
+    // TODO: Auto-send or let user edit
   };
 
   return (
     <SafeAreaView style={styles.container}>
-      <KeyboardAvoidingView
-        style={styles.keyboardView}
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        keyboardVerticalOffset={Platform.OS === 'ios' ? 90 : 0}
-      >
-        {/* Header */}
-        <View style={styles.header}>
-          <View style={styles.avatar}>
-            <Ionicons name="sparkles" size={24} color={COLORS.primary} />
+      {/* Header */}
+      <View style={styles.header}>
+        <TouchableOpacity style={styles.menuButton}>
+          <Ionicons name="menu" size={24} color={COLORS.text} />
+        </TouchableOpacity>
+        
+        <View style={styles.headerCenter}>
+          <View style={styles.logo}>
+            <Text style={styles.logoText}>F</Text>
           </View>
           <View>
             <Text style={styles.headerTitle}>Fibby</Text>
-            <Text style={styles.headerSubtitle}>Your Money Buddy</Text>
+            <Text style={styles.headerSubtitle}>Your money buddy</Text>
           </View>
         </View>
 
-        {/* Chat Messages */}
-        <ScrollView style={styles.messagesContainer} contentContainerStyle={styles.messagesContent}>
-          {messages.map((message) => (
-            <View
-              key={message.id}
-              style={[
-                styles.messageWrapper,
-                message.role === 'user' ? styles.userMessageWrapper : styles.assistantMessageWrapper,
-              ]}
-            >
-              <View
-                style={[
-                  styles.messageBubble,
-                  message.role === 'user' ? styles.userMessage : styles.assistantMessage,
-                ]}
-              >
-                <Text
+        <TouchableOpacity style={styles.menuButton}>
+          <Ionicons name="ellipsis-vertical" size={24} color={COLORS.text} />
+        </TouchableOpacity>
+      </View>
+
+      {/* Main Content Area */}
+      <ScrollView 
+        style={styles.content}
+        contentContainerStyle={styles.contentContainer}
+        showsVerticalScrollIndicator={false}
+      >
+        {showWelcome && (
+          <View style={styles.welcomeContainer}>
+            {/* Large Fibby Icon */}
+            <View style={styles.fibbyIconLarge}>
+              <View style={styles.fibbyIconInner}>
+                <Text style={styles.fibbyIconText}>F</Text>
+              </View>
+            </View>
+
+            {/* Welcome Text */}
+            <Text style={styles.welcomeTitle}>Ask Fibby anything</Text>
+            <Text style={styles.welcomeSubtitle}>Your AI-powered money buddy</Text>
+
+            {/* Animated Suggestion Chips */}
+            <View style={styles.suggestionsContainer}>
+              {/* Row 1 - Scrolls Left */}
+              <View style={styles.suggestionRow}>
+                <Animated.View
                   style={[
-                    styles.messageText,
-                    message.role === 'user' && styles.userMessageText,
+                    styles.animatedRow,
+                    { transform: [{ translateX: scrollAnim1 }] },
                   ]}
                 >
-                  {message.content}
-                </Text>
+                  {[...suggestionChipsRow1, ...suggestionChipsRow1].map((chip, index) => (
+                    <TouchableOpacity
+                      key={`${chip.id}-${index}`}
+                      style={styles.chip}
+                      onPress={() => handleChipPress(chip)}
+                      activeOpacity={0.7}
+                    >
+                      <Text style={styles.chipEmoji}>{chip.emoji}</Text>
+                      <Text style={styles.chipText}>{chip.label}</Text>
+                    </TouchableOpacity>
+                  ))}
+                </Animated.View>
+              </View>
+
+              {/* Row 2 - Scrolls Right */}
+              <View style={styles.suggestionRow}>
+                <Animated.View
+                  style={[
+                    styles.animatedRow,
+                    { transform: [{ translateX: scrollAnim2 }] },
+                  ]}
+                >
+                  {[...suggestionChipsRow2, ...suggestionChipsRow2].map((chip, index) => (
+                    <TouchableOpacity
+                      key={`${chip.id}-${index}`}
+                      style={styles.chip}
+                      onPress={() => handleChipPress(chip)}
+                      activeOpacity={0.7}
+                    >
+                      <Text style={styles.chipEmoji}>{chip.emoji}</Text>
+                      <Text style={styles.chipText}>{chip.label}</Text>
+                    </TouchableOpacity>
+                  ))}
+                </Animated.View>
+              </View>
+
+              {/* Row 3 - Scrolls Left */}
+              <View style={styles.suggestionRow}>
+                <Animated.View
+                  style={[
+                    styles.animatedRow,
+                    { transform: [{ translateX: scrollAnim3 }] },
+                  ]}
+                >
+                  {[...suggestionChipsRow3, ...suggestionChipsRow3].map((chip, index) => (
+                    <TouchableOpacity
+                      key={`${chip.id}-${index}`}
+                      style={styles.chip}
+                      onPress={() => handleChipPress(chip)}
+                      activeOpacity={0.7}
+                    >
+                      <Text style={styles.chipEmoji}>{chip.emoji}</Text>
+                      <Text style={styles.chipText}>{chip.label}</Text>
+                    </TouchableOpacity>
+                  ))}
+                </Animated.View>
               </View>
             </View>
-          ))}
-
-          {loading && (
-            <View style={styles.loadingWrapper}>
-              <View style={styles.loadingBubble}>
-                <ActivityIndicator size="small" color={COLORS.primary} />
-              </View>
-            </View>
-          )}
-
-          <View style={styles.bottomPadding} />
-        </ScrollView>
-
-        {/* Input Area */}
-        <View style={styles.inputContainer}>
-          <View style={styles.inputWrapper}>
-            <TextInput
-              style={styles.input}
-              placeholder="Type your message..."
-              placeholderTextColor={COLORS.textTertiary}
-              value={inputText}
-              onChangeText={setInputText}
-              multiline
-              maxLength={500}
-            />
-            <TouchableOpacity
-              style={[styles.sendButton, !inputText.trim() && styles.sendButtonDisabled]}
-              onPress={handleSend}
-              disabled={!inputText.trim() || loading}
-            >
-              <Ionicons
-                name="send"
-                size={20}
-                color={inputText.trim() ? COLORS.surface : COLORS.textTertiary}
-              />
-            </TouchableOpacity>
           </View>
+        )}
+
+        {!showWelcome && (
+          <View style={styles.chatContainer}>
+            {/* TODO: Chat messages will go here */}
+            <Text style={styles.comingSoon}>Chat messages coming soon...</Text>
+          </View>
+        )}
+      </ScrollView>
+
+      {/* Input Area */}
+      <View style={styles.inputContainer}>
+        <View style={styles.inputWrapper}>
+          <TextInput
+            style={styles.input}
+            placeholder="Ask Fibby anything..."
+            placeholderTextColor={COLORS.textSecondary}
+            value={inputText}
+            onChangeText={setInputText}
+            multiline
+            maxLength={500}
+          />
+          <TouchableOpacity style={styles.micButton}>
+            <Ionicons name="mic" size={20} color={COLORS.textSecondary} />
+          </TouchableOpacity>
         </View>
-      </KeyboardAvoidingView>
+        <TouchableOpacity
+          style={[styles.sendButton, !inputText.trim() && styles.sendButtonDisabled]}
+          onPress={handleSend}
+          disabled={!inputText.trim()}
+        >
+          <Ionicons name="send" size={20} color={COLORS.surface} />
+        </TouchableOpacity>
+      </View>
     </SafeAreaView>
   );
 }
@@ -154,116 +243,187 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: COLORS.background,
   },
-  keyboardView: {
-    flex: 1,
-  },
   header: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: SPACING.sm,
-    backgroundColor: COLORS.surface,
+    justifyContent: 'space-between',
     paddingHorizontal: SPACING.md,
     paddingVertical: SPACING.md,
+    backgroundColor: COLORS.surface,
     borderBottomWidth: 1,
     borderBottomColor: COLORS.border,
   },
-  avatar: {
-    width: 48,
-    height: 48,
-    borderRadius: 24,
-    backgroundColor: COLORS.primary + '20',
-    justifyContent: 'center',
-    alignItems: 'center',
+  menuButton: {
+    padding: SPACING.xs,
   },
-  headerTitle: {
-    fontSize: 18,
-    fontWeight: '600',
-    color: COLORS.text,
-  },
-  headerSubtitle: {
-    fontSize: 13,
-    color: COLORS.textSecondary,
-  },
-  messagesContainer: {
-    flex: 1,
-  },
-  messagesContent: {
-    padding: SPACING.md,
-    paddingBottom: 100,
-  },
-  messageWrapper: {
-    flexDirection: 'row',
-    marginBottom: SPACING.md,
-  },
-  userMessageWrapper: {
-    justifyContent: 'flex-end',
-  },
-  assistantMessageWrapper: {
-    justifyContent: 'flex-start',
-  },
-  messageBubble: {
-    maxWidth: '75%',
-    padding: SPACING.md,
-    borderRadius: RADIUS.lg,
-  },
-  userMessage: {
-    backgroundColor: COLORS.primary,
-  },
-  assistantMessage: {
-    backgroundColor: COLORS.surface,
-  },
-  messageText: {
-    fontSize: 15,
-    lineHeight: 22,
-    color: COLORS.text,
-  },
-  userMessageText: {
-    color: COLORS.surface,
-  },
-  loadingWrapper: {
-    marginBottom: SPACING.md,
-  },
-  loadingBubble: {
-    padding: SPACING.md,
-    backgroundColor: COLORS.surface,
-    borderRadius: RADIUS.lg,
-  },
-  bottomPadding: {
-    height: 20,
-  },
-  inputContainer: {
-    backgroundColor: COLORS.surface,
-    paddingHorizontal: SPACING.md,
-    paddingVertical: SPACING.sm,
-    borderTopWidth: 1,
-    borderTopColor: COLORS.border,
-    paddingBottom: 80,
-  },
-  inputWrapper: {
+  headerCenter: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: COLORS.background,
-    borderRadius: RADIUS.lg,
-    paddingHorizontal: SPACING.md,
-    paddingVertical: SPACING.xs,
     gap: SPACING.sm,
   },
-  input: {
-    flex: 1,
-    fontSize: 15,
-    color: COLORS.text,
-    maxHeight: 100,
-    paddingVertical: SPACING.xs,
-  },
-  sendButton: {
+  logo: {
     width: 40,
     height: 40,
     borderRadius: 20,
     backgroundColor: COLORS.primary,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  logoText: {
+    fontSize: 20,
+    fontWeight: '700',
+    color: COLORS.surface,
+    fontFamily: TYPOGRAPHY.heading,
+  },
+  headerTitle: {
+    fontSize: TYPOGRAPHY.h4,
+    fontWeight: '700',
+    color: COLORS.text,
+    fontFamily: TYPOGRAPHY.heading,
+  },
+  headerSubtitle: {
+    fontSize: TYPOGRAPHY.caption,
+    color: COLORS.textSecondary,
+    fontFamily: TYPOGRAPHY.body,
+  },
+  content: {
+    flex: 1,
+  },
+  contentContainer: {
+    flexGrow: 1,
+  },
+  welcomeContainer: {
+    flex: 1,
+    alignItems: 'center',
+    paddingTop: SPACING.xxl,
+    paddingHorizontal: SPACING.md,
+  },
+  fibbyIconLarge: {
+    width: 120,
+    height: 120,
+    borderRadius: 60,
+    backgroundColor: COLORS.surface,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: SPACING.xl,
+    borderWidth: 3,
+    borderColor: COLORS.primary,
+  },
+  fibbyIconInner: {
+    width: 100,
+    height: 100,
+    borderRadius: 50,
+    backgroundColor: COLORS.primary,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  fibbyIconText: {
+    fontSize: 48,
+    fontWeight: '700',
+    color: COLORS.surface,
+    fontFamily: TYPOGRAPHY.heading,
+  },
+  welcomeTitle: {
+    fontSize: TYPOGRAPHY.h2,
+    fontWeight: '700',
+    color: COLORS.text,
+    fontFamily: TYPOGRAPHY.heading,
+    marginBottom: SPACING.xs,
+    textAlign: 'center',
+  },
+  welcomeSubtitle: {
+    fontSize: TYPOGRAPHY.bodySmall,
+    color: COLORS.textSecondary,
+    fontFamily: TYPOGRAPHY.body,
+    marginBottom: SPACING.xl,
+    textAlign: 'center',
+  },
+  suggestionsContainer: {
+    width: SCREEN_WIDTH,
+    marginTop: SPACING.lg,
+  },
+  suggestionRow: {
+    height: 48,
+    marginBottom: SPACING.sm,
+    overflow: 'hidden',
+  },
+  animatedRow: {
+    flexDirection: 'row',
+    gap: SPACING.sm,
+    paddingLeft: SPACING.md,
+  },
+  chip: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: SPACING.xs,
+    backgroundColor: COLORS.surface,
+    paddingHorizontal: SPACING.md,
+    paddingVertical: SPACING.sm,
+    borderRadius: RADIUS.card,
+    borderWidth: 1,
+    borderColor: COLORS.border,
+  },
+  chipEmoji: {
+    fontSize: 18,
+  },
+  chipText: {
+    fontSize: TYPOGRAPHY.bodySmall,
+    color: COLORS.text,
+    fontFamily: TYPOGRAPHY.body,
+    fontWeight: '500',
+  },
+  chatContainer: {
+    flex: 1,
+    padding: SPACING.md,
     justifyContent: 'center',
     alignItems: 'center',
   },
+  comingSoon: {
+    fontSize: TYPOGRAPHY.bodySmall,
+    color: COLORS.textSecondary,
+    fontFamily: TYPOGRAPHY.body,
+  },
+  inputContainer: {
+    flexDirection: 'row',
+    alignItems: 'flex-end',
+    gap: SPACING.sm,
+    paddingHorizontal: SPACING.md,
+    paddingVertical: SPACING.md,
+    backgroundColor: COLORS.surface,
+    borderTopWidth: 1,
+    borderTopColor: COLORS.border,
+  },
+  inputWrapper: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: COLORS.background,
+    borderRadius: RADIUS.card,
+    borderWidth: 1,
+    borderColor: COLORS.border,
+    paddingHorizontal: SPACING.md,
+    minHeight: 48,
+    maxHeight: 120,
+  },
+  input: {
+    flex: 1,
+    fontSize: TYPOGRAPHY.bodySmall,
+    color: COLORS.text,
+    fontFamily: TYPOGRAPHY.body,
+    paddingVertical: SPACING.sm,
+  },
+  micButton: {
+    padding: SPACING.xs,
+  },
+  sendButton: {
+    width: 48,
+    height: 48,
+    borderRadius: RADIUS.card,
+    backgroundColor: COLORS.primary,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   sendButtonDisabled: {
-    backgroundColor: COLORS.border,
+    backgroundColor: COLORS.disabled,
   },
 });
