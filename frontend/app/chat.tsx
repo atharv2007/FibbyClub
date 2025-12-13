@@ -52,6 +52,7 @@ export default function ChatScreen() {
   const { user } = useAppStore();
   const [inputText, setInputText] = useState('');
   const [showWelcome, setShowWelcome] = useState(true);
+  const [showChatHistory, setShowChatHistory] = useState(false);
   
   // Animation values for scrolling rows - Initialize all to 0
   const scrollAnim1 = useRef(new Animated.Value(0)).current;
