@@ -176,7 +176,7 @@ export default function ChatScreen() {
               <Image 
                 source={require('../assets/fibbylogo.png')} 
                 style={styles.fibbyIconImage}
-                resizeMode="contain"
+                resizeMode="cover"
               />
             </View>
 
