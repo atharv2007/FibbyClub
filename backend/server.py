@@ -338,7 +338,9 @@ async def get_spending_by_period(user_id: str, period: str = "6mnth"):
                 "month": f"W{5-i}",
                 "amount": amount,
                 "date": f"{week_start.strftime('%d')}-{week_end.strftime('%d %b')}",
-                "week_num": 5-i
+                "week_num": 5-i,
+                "week_start": week_start.isoformat(),
+                "week_end": week_end.isoformat()
             })
         
         return results
@@ -411,14 +413,21 @@ async def get_spending_by_period(user_id: str, period: str = "6mnth"):
             result = await db.transactions.aggregate(pipeline).to_list(1)
             amount = result[0]["total"] if result else 0
             
-            # Format: "Dec 24 - Jan 25"
-            label = f"{month_names[start_month-1]} {str(start_year)[-2:]}"
+            # Calculate the second month in the pair
+            second_month = start_month + 1
+            if second_month > 12:
+                second_month = 1
+            
+            # Format: "Feb-Mar", "Apr-May", etc.
+            label = f"{month_names[start_month-1]}-{month_names[second_month-1]}"
             
             results.append({
                 "month": label,
                 "amount": amount,
-                "period": f"{month_names[start_month-1]}-{month_names[(end_month-1)%12]}",
-                "year": start_year
+                "period_start": start_of_period.isoformat(),
+                "period_end": end_of_period.isoformat(),
+                "start_month": start_month,
+                "start_year": start_year
             })
         
         return results
