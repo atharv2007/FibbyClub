@@ -697,7 +697,7 @@ Based on this data, provide a helpful response that:
 2. Only include MCQ options when there are natural follow-up paths or decisions to make
 3. Keep the response concise but informative"""
         
-        # Initialize LLM Chat with balanced professional + Gen-Z tone
+        # Initialize LLM Chat with balanced professional + Gen-Z tone and visual formatting
         chat = LlmChat(
             api_key=os.environ.get("EMERGENT_LLM_KEY"),
             session_id=f"chat_{user_id}",
@@ -708,7 +708,7 @@ YOUR TONE: Professional Advisor + Friendly Gen-Z
 - Use "you're", "let's", "your" naturally
 - Occasionally use Gen-Z expressions like "yaar", "bro", "totally" but don't overdo it
 - Be encouraging and supportive
-- Use emojis sparingly (1-2 per response max)
+- Use emojis strategically (3-5 per response for visual appeal)
 
 YOUR ROLE:
 - Provide REAL ANSWERS with actual data and insights
