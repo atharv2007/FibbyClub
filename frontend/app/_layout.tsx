@@ -1,6 +1,7 @@
 import { Stack } from 'expo-router';
 import { StatusBar } from 'react-native';
 import { COLORS } from '../constants/theme';
+import { BottomNav } from '../components/navigation/BottomNav';
 
 export default function RootLayout() {
   return (
@@ -14,7 +15,11 @@ export default function RootLayout() {
       >
         <Stack.Screen name="index" />
         <Stack.Screen name="track" />
+        <Stack.Screen name="chat" />
+        <Stack.Screen name="goals" />
+        <Stack.Screen name="profile" />
       </Stack>
+      <BottomNav />
     </>
   );
 }
