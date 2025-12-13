@@ -1,0 +1,1788 @@
+[
+  {
+    "collection": "bank_accounts",
+    "document_id": "693d2626a878e575aaf43c0b",
+    "field": "balance",
+    "value": 122700.0,
+    "currency": "INR",
+    "description": "HDFC Bank - Account Balance"
+  },
+  {
+    "collection": "transactions",
+    "document_id": "693d2626a878e575aaf43c0c",
+    "field": "amount",
+    "value": 1715.2,
+    "currency": "INR",
+    "category": "Travel",
+    "merchant": "Ola",
+    "transaction_type": "expense",
+    "description": "Ola - Travel"
+  },
+  {
+    "collection": "transactions",
+    "document_id": "693d2626a878e575aaf43c0d",
+    "field": "amount",
+    "value": 2743.84,
+    "currency": "INR",
+    "category": "Groceries",
+    "merchant": "Blinkit",
+    "transaction_type": "expense",
+    "description": "Blinkit - Groceries"
+  },
+  {
+    "collection": "transactions",
+    "document_id": "693d2626a878e575aaf43c0e",
+    "field": "amount",
+    "value": 180000.0,
+    "currency": "INR",
+    "category": "Salary",
+    "merchant": "Company Inc",
+    "transaction_type": "income",
+    "description": "Company Inc - Salary"
+  },
+  {
+    "collection": "transactions",
+    "document_id": "693d2626a878e575aaf43c0f",
+    "field": "amount",
+    "value": 8477.16,
+    "currency": "INR",
+    "category": "Shopping",
+    "merchant": "Amazon",
+    "transaction_type": "expense",
+    "description": "Amazon - Shopping"
+  },
+  {
+    "collection": "transactions",
+    "document_id": "693d2626a878e575aaf43c10",
+    "field": "amount",
+    "value": 22500.0,
+    "currency": "INR",
+    "category": "EMI",
+    "merchant": "HDFC EMI",
+    "transaction_type": "expense",
+    "description": "HDFC EMI - EMI"
+  },
+  {
+    "collection": "transactions",
+    "document_id": "693d2626a878e575aaf43c11",
+    "field": "amount",
+    "value": 1996.0,
+    "currency": "INR",
+    "category": "Subscriptions",
+    "merchant": "Netflix",
+    "transaction_type": "expense",
+    "description": "Netflix - Subscriptions"
+  },
+  {
+    "collection": "transactions",
+    "document_id": "693d2626a878e575aaf43c12",
+    "field": "amount",
+    "value": 3764.44,
+    "currency": "INR",
+    "category": "Travel",
+    "merchant": "Ola",
+    "transaction_type": "expense",
+    "description": "Ola - Travel"
+  },
+  {
+    "collection": "transactions",
+    "document_id": "693d2626a878e575aaf43c13",
+    "field": "amount",
+    "value": 2607.68,
+    "currency": "INR",
+    "category": "Food & Dining",
+    "merchant": "Domino's",
+    "transaction_type": "expense",
+    "description": "Domino's - Food & Dining"
+  },
+  {
+    "collection": "transactions",
+    "document_id": "693d2626a878e575aaf43c14",
+    "field": "amount",
+    "value": 6483.4,
+    "currency": "INR",
+    "category": "Utilities",
+    "merchant": "Vi",
+    "transaction_type": "expense",
+    "description": "Vi - Utilities"
+  },
+  {
+    "collection": "transactions",
+    "document_id": "693d2626a878e575aaf43c15",
+    "field": "amount",
+    "value": 1813.88,
+    "currency": "INR",
+    "category": "Food & Dining",
+    "merchant": "Starbucks",
+    "transaction_type": "expense",
+    "description": "Starbucks - Food & Dining"
+  },
+  {
+    "collection": "transactions",
+    "document_id": "693d2626a878e575aaf43c16",
+    "field": "amount",
+    "value": 6576.24,
+    "currency": "INR",
+    "category": "Travel",
+    "merchant": "IRCTC",
+    "transaction_type": "expense",
+    "description": "IRCTC - Travel"
+  },
+  {
+    "collection": "transactions",
+    "document_id": "693d2626a878e575aaf43c17",
+    "field": "amount",
+    "value": 677.4,
+    "currency": "INR",
+    "category": "Food & Dining",
+    "merchant": "Starbucks",
+    "transaction_type": "expense",
+    "description": "Starbucks - Food & Dining"
+  },
+  {
+    "collection": "transactions",
+    "document_id": "693d2626a878e575aaf43c18",
+    "field": "amount",
+    "value": 1196.0,
+    "currency": "INR",
+    "category": "Subscriptions",
+    "merchant": "YouTube Premium",
+    "transaction_type": "expense",
+    "description": "YouTube Premium - Subscriptions"
+  },
+  {
+    "collection": "transactions",
+    "document_id": "693d2626a878e575aaf43c19",
+    "field": "amount",
+    "value": 4028.04,
+    "currency": "INR",
+    "category": "Food & Dining",
+    "merchant": "McDonald's",
+    "transaction_type": "expense",
+    "description": "McDonald's - Food & Dining"
+  },
+  {
+    "collection": "transactions",
+    "document_id": "693d2626a878e575aaf43c1a",
+    "field": "amount",
+    "value": 12638.48,
+    "currency": "INR",
+    "category": "Shopping",
+    "merchant": "Flipkart",
+    "transaction_type": "expense",
+    "description": "Flipkart - Shopping"
+  },
+  {
+    "collection": "transactions",
+    "document_id": "693d2626a878e575aaf43c1b",
+    "field": "amount",
+    "value": 943.64,
+    "currency": "INR",
+    "category": "Transport",
+    "merchant": "Rapido",
+    "transaction_type": "expense",
+    "description": "Rapido - Transport"
+  },
+  {
+    "collection": "transactions",
+    "document_id": "693d2626a878e575aaf43c1c",
+    "field": "amount",
+    "value": 3549.92,
+    "currency": "INR",
+    "category": "Food & Dining",
+    "merchant": "McDonald's",
+    "transaction_type": "expense",
+    "description": "McDonald's - Food & Dining"
+  },
+  {
+    "collection": "transactions",
+    "document_id": "693d2626a878e575aaf43c1d",
+    "field": "amount",
+    "value": 10633.88,
+    "currency": "INR",
+    "category": "Shopping",
+    "merchant": "Flipkart",
+    "transaction_type": "expense",
+    "description": "Flipkart - Shopping"
+  },
+  {
+    "collection": "transactions",
+    "document_id": "693d2626a878e575aaf43c1e",
+    "field": "amount",
+    "value": 1842.6,
+    "currency": "INR",
+    "category": "Healthcare",
+    "merchant": "Unknown",
+    "transaction_type": "expense",
+    "description": "Unknown - Healthcare"
+  },
+  {
+    "collection": "transactions",
+    "document_id": "693d2626a878e575aaf43c1f",
+    "field": "amount",
+    "value": 1105.48,
+    "currency": "INR",
+    "category": "Entertainment",
+    "merchant": "Hotstar",
+    "transaction_type": "expense",
+    "description": "Hotstar - Entertainment"
+  },
+  {
+    "collection": "transactions",
+    "document_id": "693d2626a878e575aaf43c20",
+    "field": "amount",
+    "value": 1249.2,
+    "currency": "INR",
+    "category": "Transport",
+    "merchant": "Metro",
+    "transaction_type": "expense",
+    "description": "Metro - Transport"
+  },
+  {
+    "collection": "transactions",
+    "document_id": "693d2626a878e575aaf43c21",
+    "field": "amount",
+    "value": 13793.8,
+    "currency": "INR",
+    "category": "Shopping",
+    "merchant": "Ajio",
+    "transaction_type": "expense",
+    "description": "Ajio - Shopping"
+  },
+  {
+    "collection": "transactions",
+    "document_id": "693d2626a878e575aaf43c22",
+    "field": "amount",
+    "value": 1487.44,
+    "currency": "INR",
+    "category": "Food & Dining",
+    "merchant": "Swiggy",
+    "transaction_type": "expense",
+    "description": "Swiggy - Food & Dining"
+  },
+  {
+    "collection": "transactions",
+    "document_id": "693d2626a878e575aaf43c23",
+    "field": "amount",
+    "value": 6855.04,
+    "currency": "INR",
+    "category": "Shopping",
+    "merchant": "Amazon",
+    "transaction_type": "expense",
+    "description": "Amazon - Shopping"
+  },
+  {
+    "collection": "transactions",
+    "document_id": "693d2626a878e575aaf43c24",
+    "field": "amount",
+    "value": 4442.04,
+    "currency": "INR",
+    "category": "Food & Dining",
+    "merchant": "KFC",
+    "transaction_type": "expense",
+    "description": "KFC - Food & Dining"
+  },
+  {
+    "collection": "transactions",
+    "document_id": "693d2626a878e575aaf43c25",
+    "field": "amount",
+    "value": 342.84,
+    "currency": "INR",
+    "category": "Transport",
+    "merchant": "BMTC",
+    "transaction_type": "expense",
+    "description": "BMTC - Transport"
+  },
+  {
+    "collection": "transactions",
+    "document_id": "693d2626a878e575aaf43c26",
+    "field": "amount",
+    "value": 180000.0,
+    "currency": "INR",
+    "category": "Salary",
+    "merchant": "Company Inc",
+    "transaction_type": "income",
+    "description": "Company Inc - Salary"
+  },
+  {
+    "collection": "transactions",
+    "document_id": "693d2626a878e575aaf43c27",
+    "field": "amount",
+    "value": 3229.68,
+    "currency": "INR",
+    "category": "Groceries",
+    "merchant": "Blinkit",
+    "transaction_type": "expense",
+    "description": "Blinkit - Groceries"
+  },
+  {
+    "collection": "transactions",
+    "document_id": "693d2626a878e575aaf43c28",
+    "field": "amount",
+    "value": 1709.44,
+    "currency": "INR",
+    "category": "Food & Dining",
+    "merchant": "Domino's",
+    "transaction_type": "expense",
+    "description": "Domino's - Food & Dining"
+  },
+  {
+    "collection": "transactions",
+    "document_id": "693d2626a878e575aaf43c29",
+    "field": "amount",
+    "value": 22500.0,
+    "currency": "INR",
+    "category": "EMI",
+    "merchant": "HDFC EMI",
+    "transaction_type": "expense",
+    "description": "HDFC EMI - EMI"
+  },
+  {
+    "collection": "transactions",
+    "document_id": "693d2626a878e575aaf43c2a",
+    "field": "amount",
+    "value": 2238.28,
+    "currency": "INR",
+    "category": "Food & Dining",
+    "merchant": "McDonald's",
+    "transaction_type": "expense",
+    "description": "McDonald's - Food & Dining"
+  },
+  {
+    "collection": "transactions",
+    "document_id": "693d2626a878e575aaf43c2b",
+    "field": "amount",
+    "value": 7583.16,
+    "currency": "INR",
+    "category": "Shopping",
+    "merchant": "Flipkart",
+    "transaction_type": "expense",
+    "description": "Flipkart - Shopping"
+  },
+  {
+    "collection": "transactions",
+    "document_id": "693d2626a878e575aaf43c2c",
+    "field": "amount",
+    "value": 1701.32,
+    "currency": "INR",
+    "category": "Food & Dining",
+    "merchant": "Zomato",
+    "transaction_type": "expense",
+    "description": "Zomato - Food & Dining"
+  },
+  {
+    "collection": "transactions",
+    "document_id": "693d2626a878e575aaf43c2d",
+    "field": "amount",
+    "value": 4775.76,
+    "currency": "INR",
+    "category": "Fitness",
+    "merchant": "Decathlon",
+    "transaction_type": "expense",
+    "description": "Decathlon - Fitness"
+  },
+  {
+    "collection": "transactions",
+    "document_id": "693d2626a878e575aaf43c2e",
+    "field": "amount",
+    "value": 2138.88,
+    "currency": "INR",
+    "category": "Food & Dining",
+    "merchant": "Zomato",
+    "transaction_type": "expense",
+    "description": "Zomato - Food & Dining"
+  },
+  {
+    "collection": "transactions",
+    "document_id": "693d2626a878e575aaf43c2f",
+    "field": "amount",
+    "value": 5321.96,
+    "currency": "INR",
+    "category": "Healthcare",
+    "merchant": "Unknown",
+    "transaction_type": "expense",
+    "description": "Unknown - Healthcare"
+  },
+  {
+    "collection": "transactions",
+    "document_id": "693d2626a878e575aaf43c30",
+    "field": "amount",
+    "value": 6263.52,
+    "currency": "INR",
+    "category": "Education",
+    "merchant": "Unknown",
+    "transaction_type": "expense",
+    "description": "Unknown - Education"
+  },
+  {
+    "collection": "transactions",
+    "document_id": "693d2626a878e575aaf43c31",
+    "field": "amount",
+    "value": 2369.72,
+    "currency": "INR",
+    "category": "Food & Dining",
+    "merchant": "Starbucks",
+    "transaction_type": "expense",
+    "description": "Starbucks - Food & Dining"
+  },
+  {
+    "collection": "transactions",
+    "document_id": "693d2626a878e575aaf43c32",
+    "field": "amount",
+    "value": 1983.08,
+    "currency": "INR",
+    "category": "Food & Dining",
+    "merchant": "Domino's",
+    "transaction_type": "expense",
+    "description": "Domino's - Food & Dining"
+  },
+  {
+    "collection": "transactions",
+    "document_id": "693d2626a878e575aaf43c33",
+    "field": "amount",
+    "value": 4795.64,
+    "currency": "INR",
+    "category": "Groceries",
+    "merchant": "Blinkit",
+    "transaction_type": "expense",
+    "description": "Blinkit - Groceries"
+  },
+  {
+    "collection": "transactions",
+    "document_id": "693d2626a878e575aaf43c34",
+    "field": "amount",
+    "value": 1172.16,
+    "currency": "INR",
+    "category": "Utilities",
+    "merchant": "Airtel",
+    "transaction_type": "expense",
+    "description": "Airtel - Utilities"
+  },
+  {
+    "collection": "transactions",
+    "document_id": "693d2626a878e575aaf43c35",
+    "field": "amount",
+    "value": 4941.24,
+    "currency": "INR",
+    "category": "Travel",
+    "merchant": "MakeMyTrip",
+    "transaction_type": "expense",
+    "description": "MakeMyTrip - Travel"
+  },
+  {
+    "collection": "transactions",
+    "document_id": "693d2626a878e575aaf43c36",
+    "field": "amount",
+    "value": 4532.72,
+    "currency": "INR",
+    "category": "Travel",
+    "merchant": "MakeMyTrip",
+    "transaction_type": "expense",
+    "description": "MakeMyTrip - Travel"
+  },
+  {
+    "collection": "transactions",
+    "document_id": "693d2626a878e575aaf43c37",
+    "field": "amount",
+    "value": 4675.68,
+    "currency": "INR",
+    "category": "Healthcare",
+    "merchant": "Unknown",
+    "transaction_type": "expense",
+    "description": "Unknown - Healthcare"
+  },
+  {
+    "collection": "transactions",
+    "document_id": "693d2626a878e575aaf43c38",
+    "field": "amount",
+    "value": 1677.32,
+    "currency": "INR",
+    "category": "Groceries",
+    "merchant": "Blinkit",
+    "transaction_type": "expense",
+    "description": "Blinkit - Groceries"
+  },
+  {
+    "collection": "transactions",
+    "document_id": "693d2626a878e575aaf43c39",
+    "field": "amount",
+    "value": 6359.64,
+    "currency": "INR",
+    "category": "Shopping",
+    "merchant": "Ajio",
+    "transaction_type": "expense",
+    "description": "Ajio - Shopping"
+  },
+  {
+    "collection": "transactions",
+    "document_id": "693d2626a878e575aaf43c3a",
+    "field": "amount",
+    "value": 766.2,
+    "currency": "INR",
+    "category": "Food & Dining",
+    "merchant": "KFC",
+    "transaction_type": "expense",
+    "description": "KFC - Food & Dining"
+  },
+  {
+    "collection": "transactions",
+    "document_id": "693d2626a878e575aaf43c3b",
+    "field": "amount",
+    "value": 582.04,
+    "currency": "INR",
+    "category": "Transport",
+    "merchant": "Rapido",
+    "transaction_type": "expense",
+    "description": "Rapido - Transport"
+  },
+  {
+    "collection": "transactions",
+    "document_id": "693d2626a878e575aaf43c3c",
+    "field": "amount",
+    "value": 796.0,
+    "currency": "INR",
+    "category": "Subscriptions",
+    "merchant": "Spotify",
+    "transaction_type": "expense",
+    "description": "Spotify - Subscriptions"
+  },
+  {
+    "collection": "transactions",
+    "document_id": "693d2626a878e575aaf43c3d",
+    "field": "amount",
+    "value": 1162.72,
+    "currency": "INR",
+    "category": "Food & Dining",
+    "merchant": "Domino's",
+    "transaction_type": "expense",
+    "description": "Domino's - Food & Dining"
+  },
+  {
+    "collection": "transactions",
+    "document_id": "693d2626a878e575aaf43c3e",
+    "field": "amount",
+    "value": 12168.24,
+    "currency": "INR",
+    "category": "Shopping",
+    "merchant": "Ajio",
+    "transaction_type": "expense",
+    "description": "Ajio - Shopping"
+  },
+  {
+    "collection": "transactions",
+    "document_id": "693d2626a878e575aaf43c3f",
+    "field": "amount",
+    "value": 1123.52,
+    "currency": "INR",
+    "category": "Utilities",
+    "merchant": "BESCOM",
+    "transaction_type": "expense",
+    "description": "BESCOM - Utilities"
+  },
+  {
+    "collection": "transactions",
+    "document_id": "693d2626a878e575aaf43c40",
+    "field": "amount",
+    "value": 180000.0,
+    "currency": "INR",
+    "category": "Salary",
+    "merchant": "Company Inc",
+    "transaction_type": "income",
+    "description": "Company Inc - Salary"
+  },
+  {
+    "collection": "transactions",
+    "document_id": "693d2626a878e575aaf43c41",
+    "field": "amount",
+    "value": 2991.32,
+    "currency": "INR",
+    "category": "Food & Dining",
+    "merchant": "Domino's",
+    "transaction_type": "expense",
+    "description": "Domino's - Food & Dining"
+  },
+  {
+    "collection": "transactions",
+    "document_id": "693d2626a878e575aaf43c42",
+    "field": "amount",
+    "value": 1078.76,
+    "currency": "INR",
+    "category": "Transport",
+    "merchant": "Rapido",
+    "transaction_type": "expense",
+    "description": "Rapido - Transport"
+  },
+  {
+    "collection": "transactions",
+    "document_id": "693d2626a878e575aaf43c43",
+    "field": "amount",
+    "value": 7274.24,
+    "currency": "INR",
+    "category": "Fitness",
+    "merchant": "Gold's Gym",
+    "transaction_type": "expense",
+    "description": "Gold's Gym - Fitness"
+  },
+  {
+    "collection": "transactions",
+    "document_id": "693d2626a878e575aaf43c44",
+    "field": "amount",
+    "value": 3726.4,
+    "currency": "INR",
+    "category": "Groceries",
+    "merchant": "Zepto",
+    "transaction_type": "expense",
+    "description": "Zepto - Groceries"
+  },
+  {
+    "collection": "transactions",
+    "document_id": "693d2626a878e575aaf43c45",
+    "field": "amount",
+    "value": 5672.68,
+    "currency": "INR",
+    "category": "Shopping",
+    "merchant": "Amazon",
+    "transaction_type": "expense",
+    "description": "Amazon - Shopping"
+  },
+  {
+    "collection": "transactions",
+    "document_id": "693d2626a878e575aaf43c46",
+    "field": "amount",
+    "value": 5352.36,
+    "currency": "INR",
+    "category": "Travel",
+    "merchant": "MakeMyTrip",
+    "transaction_type": "expense",
+    "description": "MakeMyTrip - Travel"
+  },
+  {
+    "collection": "transactions",
+    "document_id": "693d2626a878e575aaf43c47",
+    "field": "amount",
+    "value": 4416.76,
+    "currency": "INR",
+    "category": "Utilities",
+    "merchant": "BESCOM",
+    "transaction_type": "expense",
+    "description": "BESCOM - Utilities"
+  },
+  {
+    "collection": "transactions",
+    "document_id": "693d2626a878e575aaf43c48",
+    "field": "amount",
+    "value": 2283.48,
+    "currency": "INR",
+    "category": "Entertainment",
+    "merchant": "BookMyShow",
+    "transaction_type": "expense",
+    "description": "BookMyShow - Entertainment"
+  },
+  {
+    "collection": "transactions",
+    "document_id": "693d2626a878e575aaf43c49",
+    "field": "amount",
+    "value": 4115.96,
+    "currency": "INR",
+    "category": "Groceries",
+    "merchant": "DMart",
+    "transaction_type": "expense",
+    "description": "DMart - Groceries"
+  },
+  {
+    "collection": "transactions",
+    "document_id": "693d2626a878e575aaf43c4a",
+    "field": "amount",
+    "value": 3553.6,
+    "currency": "INR",
+    "category": "Fitness",
+    "merchant": "Decathlon",
+    "transaction_type": "expense",
+    "description": "Decathlon - Fitness"
+  },
+  {
+    "collection": "transactions",
+    "document_id": "693d2626a878e575aaf43c4b",
+    "field": "amount",
+    "value": 3478.64,
+    "currency": "INR",
+    "category": "Groceries",
+    "merchant": "Zepto",
+    "transaction_type": "expense",
+    "description": "Zepto - Groceries"
+  },
+  {
+    "collection": "transactions",
+    "document_id": "693d2626a878e575aaf43c4c",
+    "field": "amount",
+    "value": 4718.68,
+    "currency": "INR",
+    "category": "Food & Dining",
+    "merchant": "Zomato",
+    "transaction_type": "expense",
+    "description": "Zomato - Food & Dining"
+  },
+  {
+    "collection": "transactions",
+    "document_id": "693d2626a878e575aaf43c4d",
+    "field": "amount",
+    "value": 22500.0,
+    "currency": "INR",
+    "category": "EMI",
+    "merchant": "Bajaj Finserv",
+    "transaction_type": "expense",
+    "description": "Bajaj Finserv - EMI"
+  },
+  {
+    "collection": "transactions",
+    "document_id": "693d2626a878e575aaf43c4e",
+    "field": "amount",
+    "value": 1047.08,
+    "currency": "INR",
+    "category": "Transport",
+    "merchant": "Ola",
+    "transaction_type": "expense",
+    "description": "Ola - Transport"
+  },
+  {
+    "collection": "transactions",
+    "document_id": "693d2626a878e575aaf43c4f",
+    "field": "amount",
+    "value": 3245.36,
+    "currency": "INR",
+    "category": "Food & Dining",
+    "merchant": "Starbucks",
+    "transaction_type": "expense",
+    "description": "Starbucks - Food & Dining"
+  },
+  {
+    "collection": "transactions",
+    "document_id": "693d2626a878e575aaf43c50",
+    "field": "amount",
+    "value": 5886.68,
+    "currency": "INR",
+    "category": "Travel",
+    "merchant": "IRCTC",
+    "transaction_type": "expense",
+    "description": "IRCTC - Travel"
+  },
+  {
+    "collection": "transactions",
+    "document_id": "693d2626a878e575aaf43c51",
+    "field": "amount",
+    "value": 1050.4,
+    "currency": "INR",
+    "category": "Food & Dining",
+    "merchant": "McDonald's",
+    "transaction_type": "expense",
+    "description": "McDonald's - Food & Dining"
+  },
+  {
+    "collection": "transactions",
+    "document_id": "693d2626a878e575aaf43c52",
+    "field": "amount",
+    "value": 2396.2,
+    "currency": "INR",
+    "category": "Groceries",
+    "merchant": "Zepto",
+    "transaction_type": "expense",
+    "description": "Zepto - Groceries"
+  },
+  {
+    "collection": "transactions",
+    "document_id": "693d2626a878e575aaf43c53",
+    "field": "amount",
+    "value": 6411.16,
+    "currency": "INR",
+    "category": "Travel",
+    "merchant": "Goibibo",
+    "transaction_type": "expense",
+    "description": "Goibibo - Travel"
+  },
+  {
+    "collection": "transactions",
+    "document_id": "693d2626a878e575aaf43c54",
+    "field": "amount",
+    "value": 877.64,
+    "currency": "INR",
+    "category": "Food & Dining",
+    "merchant": "Domino's",
+    "transaction_type": "expense",
+    "description": "Domino's - Food & Dining"
+  },
+  {
+    "collection": "transactions",
+    "document_id": "693d2626a878e575aaf43c55",
+    "field": "amount",
+    "value": 8490.36,
+    "currency": "INR",
+    "category": "Shopping",
+    "merchant": "Amazon",
+    "transaction_type": "expense",
+    "description": "Amazon - Shopping"
+  },
+  {
+    "collection": "transactions",
+    "document_id": "693d2626a878e575aaf43c56",
+    "field": "amount",
+    "value": 1348.48,
+    "currency": "INR",
+    "category": "Education",
+    "merchant": "Unknown",
+    "transaction_type": "expense",
+    "description": "Unknown - Education"
+  },
+  {
+    "collection": "transactions",
+    "document_id": "693d2626a878e575aaf43c57",
+    "field": "amount",
+    "value": 10263.56,
+    "currency": "INR",
+    "category": "Shopping",
+    "merchant": "Ajio",
+    "transaction_type": "expense",
+    "description": "Ajio - Shopping"
+  },
+  {
+    "collection": "transactions",
+    "document_id": "693d2626a878e575aaf43c58",
+    "field": "amount",
+    "value": 1606.96,
+    "currency": "INR",
+    "category": "Food & Dining",
+    "merchant": "McDonald's",
+    "transaction_type": "expense",
+    "description": "McDonald's - Food & Dining"
+  },
+  {
+    "collection": "investment_holdings",
+    "document_id": "693d5eaff8f036b62e28e9ef",
+    "field": "quantity",
+    "value": 20,
+    "stock": "RELIANCE",
+    "description": "RELIANCE - Quantity"
+  },
+  {
+    "collection": "investment_holdings",
+    "document_id": "693d5eaff8f036b62e28e9ef",
+    "field": "average_price",
+    "value": 2600.5,
+    "stock": "RELIANCE",
+    "description": "RELIANCE - Average Price"
+  },
+  {
+    "collection": "investment_holdings",
+    "document_id": "693d5eaff8f036b62e28e9ef",
+    "field": "last_price",
+    "value": 2750.0,
+    "stock": "RELIANCE",
+    "description": "RELIANCE - Last Price"
+  },
+  {
+    "collection": "investment_holdings",
+    "document_id": "693d5eaff8f036b62e28e9ef",
+    "field": "close_price",
+    "value": 2745.0,
+    "stock": "RELIANCE",
+    "description": "RELIANCE - Close Price"
+  },
+  {
+    "collection": "investment_holdings",
+    "document_id": "693d5eaff8f036b62e28e9ef",
+    "field": "pnl",
+    "value": 2990.0,
+    "stock": "RELIANCE",
+    "description": "RELIANCE - Pnl"
+  },
+  {
+    "collection": "investment_holdings",
+    "document_id": "693d5eaff8f036b62e28e9ef",
+    "field": "day_change",
+    "value": 10.0,
+    "stock": "RELIANCE",
+    "description": "RELIANCE - Day Change"
+  },
+  {
+    "collection": "investment_holdings",
+    "document_id": "693d5eaff8f036b62e28e9ef",
+    "field": "day_change_percentage",
+    "value": 0.18,
+    "stock": "RELIANCE",
+    "description": "RELIANCE - Day Change Percentage"
+  },
+  {
+    "collection": "investment_holdings",
+    "document_id": "693d5eaff8f036b62e28e9f0",
+    "field": "quantity",
+    "value": 10,
+    "stock": "TCS",
+    "description": "TCS - Quantity"
+  },
+  {
+    "collection": "investment_holdings",
+    "document_id": "693d5eaff8f036b62e28e9f0",
+    "field": "average_price",
+    "value": 3850.0,
+    "stock": "TCS",
+    "description": "TCS - Average Price"
+  },
+  {
+    "collection": "investment_holdings",
+    "document_id": "693d5eaff8f036b62e28e9f0",
+    "field": "last_price",
+    "value": 4025.5,
+    "stock": "TCS",
+    "description": "TCS - Last Price"
+  },
+  {
+    "collection": "investment_holdings",
+    "document_id": "693d5eaff8f036b62e28e9f0",
+    "field": "close_price",
+    "value": 4020.0,
+    "stock": "TCS",
+    "description": "TCS - Close Price"
+  },
+  {
+    "collection": "investment_holdings",
+    "document_id": "693d5eaff8f036b62e28e9f0",
+    "field": "pnl",
+    "value": 1755.0,
+    "stock": "TCS",
+    "description": "TCS - Pnl"
+  },
+  {
+    "collection": "investment_holdings",
+    "document_id": "693d5eaff8f036b62e28e9f0",
+    "field": "day_change",
+    "value": 11.0,
+    "stock": "TCS",
+    "description": "TCS - Day Change"
+  },
+  {
+    "collection": "investment_holdings",
+    "document_id": "693d5eaff8f036b62e28e9f0",
+    "field": "day_change_percentage",
+    "value": 0.14,
+    "stock": "TCS",
+    "description": "TCS - Day Change Percentage"
+  },
+  {
+    "collection": "investment_holdings",
+    "document_id": "693d5eaff8f036b62e28e9f1",
+    "field": "quantity",
+    "value": 30,
+    "stock": "INFY",
+    "description": "INFY - Quantity"
+  },
+  {
+    "collection": "investment_holdings",
+    "document_id": "693d5eaff8f036b62e28e9f1",
+    "field": "average_price",
+    "value": 1520.0,
+    "stock": "INFY",
+    "description": "INFY - Average Price"
+  },
+  {
+    "collection": "investment_holdings",
+    "document_id": "693d5eaff8f036b62e28e9f1",
+    "field": "last_price",
+    "value": 1685.75,
+    "stock": "INFY",
+    "description": "INFY - Last Price"
+  },
+  {
+    "collection": "investment_holdings",
+    "document_id": "693d5eaff8f036b62e28e9f1",
+    "field": "close_price",
+    "value": 1680.0,
+    "stock": "INFY",
+    "description": "INFY - Close Price"
+  },
+  {
+    "collection": "investment_holdings",
+    "document_id": "693d5eaff8f036b62e28e9f1",
+    "field": "pnl",
+    "value": 4972.5,
+    "stock": "INFY",
+    "description": "INFY - Pnl"
+  },
+  {
+    "collection": "investment_holdings",
+    "document_id": "693d5eaff8f036b62e28e9f1",
+    "field": "day_change",
+    "value": 11.5,
+    "stock": "INFY",
+    "description": "INFY - Day Change"
+  },
+  {
+    "collection": "investment_holdings",
+    "document_id": "693d5eaff8f036b62e28e9f1",
+    "field": "day_change_percentage",
+    "value": 0.34,
+    "stock": "INFY",
+    "description": "INFY - Day Change Percentage"
+  },
+  {
+    "collection": "investment_holdings",
+    "document_id": "693d5eaff8f036b62e28e9f2",
+    "field": "quantity",
+    "value": 16,
+    "stock": "HDFCBANK",
+    "description": "HDFCBANK - Quantity"
+  },
+  {
+    "collection": "investment_holdings",
+    "document_id": "693d5eaff8f036b62e28e9f2",
+    "field": "average_price",
+    "value": 1650.0,
+    "stock": "HDFCBANK",
+    "description": "HDFCBANK - Average Price"
+  },
+  {
+    "collection": "investment_holdings",
+    "document_id": "693d5eaff8f036b62e28e9f2",
+    "field": "last_price",
+    "value": 1725.5,
+    "stock": "HDFCBANK",
+    "description": "HDFCBANK - Last Price"
+  },
+  {
+    "collection": "investment_holdings",
+    "document_id": "693d5eaff8f036b62e28e9f2",
+    "field": "close_price",
+    "value": 1720.0,
+    "stock": "HDFCBANK",
+    "description": "HDFCBANK - Close Price"
+  },
+  {
+    "collection": "investment_holdings",
+    "document_id": "693d5eaff8f036b62e28e9f2",
+    "field": "pnl",
+    "value": 1208.0,
+    "stock": "HDFCBANK",
+    "description": "HDFCBANK - Pnl"
+  },
+  {
+    "collection": "investment_holdings",
+    "document_id": "693d5eaff8f036b62e28e9f2",
+    "field": "day_change",
+    "value": 11.0,
+    "stock": "HDFCBANK",
+    "description": "HDFCBANK - Day Change"
+  },
+  {
+    "collection": "investment_holdings",
+    "document_id": "693d5eaff8f036b62e28e9f2",
+    "field": "day_change_percentage",
+    "value": 0.32,
+    "stock": "HDFCBANK",
+    "description": "HDFCBANK - Day Change Percentage"
+  },
+  {
+    "collection": "investment_holdings",
+    "document_id": "693d5eaff8f036b62e28e9f3",
+    "field": "quantity",
+    "value": 50,
+    "stock": "SBIN",
+    "description": "SBIN - Quantity"
+  },
+  {
+    "collection": "investment_holdings",
+    "document_id": "693d5eaff8f036b62e28e9f3",
+    "field": "average_price",
+    "value": 650.0,
+    "stock": "SBIN",
+    "description": "SBIN - Average Price"
+  },
+  {
+    "collection": "investment_holdings",
+    "document_id": "693d5eaff8f036b62e28e9f3",
+    "field": "last_price",
+    "value": 762.45,
+    "stock": "SBIN",
+    "description": "SBIN - Last Price"
+  },
+  {
+    "collection": "investment_holdings",
+    "document_id": "693d5eaff8f036b62e28e9f3",
+    "field": "close_price",
+    "value": 766.4,
+    "stock": "SBIN",
+    "description": "SBIN - Close Price"
+  },
+  {
+    "collection": "investment_holdings",
+    "document_id": "693d5eaff8f036b62e28e9f3",
+    "field": "pnl",
+    "value": 5622.5,
+    "stock": "SBIN",
+    "description": "SBIN - Pnl"
+  },
+  {
+    "collection": "investment_holdings",
+    "document_id": "693d5eaff8f036b62e28e9f3",
+    "field": "day_change",
+    "value": -7.9,
+    "stock": "SBIN",
+    "description": "SBIN - Day Change"
+  },
+  {
+    "collection": "investment_holdings",
+    "document_id": "693d5eaff8f036b62e28e9f3",
+    "field": "day_change_percentage",
+    "value": -0.52,
+    "stock": "SBIN",
+    "description": "SBIN - Day Change Percentage"
+  },
+  {
+    "collection": "investment_holdings",
+    "document_id": "693d5eaff8f036b62e28e9f4",
+    "field": "quantity",
+    "value": 40,
+    "stock": "TATAMOTORS",
+    "description": "TATAMOTORS - Quantity"
+  },
+  {
+    "collection": "investment_holdings",
+    "document_id": "693d5eaff8f036b62e28e9f4",
+    "field": "average_price",
+    "value": 850.0,
+    "stock": "TATAMOTORS",
+    "description": "TATAMOTORS - Average Price"
+  },
+  {
+    "collection": "investment_holdings",
+    "document_id": "693d5eaff8f036b62e28e9f4",
+    "field": "last_price",
+    "value": 925.8,
+    "stock": "TATAMOTORS",
+    "description": "TATAMOTORS - Last Price"
+  },
+  {
+    "collection": "investment_holdings",
+    "document_id": "693d5eaff8f036b62e28e9f4",
+    "field": "close_price",
+    "value": 920.0,
+    "stock": "TATAMOTORS",
+    "description": "TATAMOTORS - Close Price"
+  },
+  {
+    "collection": "investment_holdings",
+    "document_id": "693d5eaff8f036b62e28e9f4",
+    "field": "pnl",
+    "value": 3032.0,
+    "stock": "TATAMOTORS",
+    "description": "TATAMOTORS - Pnl"
+  },
+  {
+    "collection": "investment_holdings",
+    "document_id": "693d5eaff8f036b62e28e9f4",
+    "field": "day_change",
+    "value": 11.6,
+    "stock": "TATAMOTORS",
+    "description": "TATAMOTORS - Day Change"
+  },
+  {
+    "collection": "investment_holdings",
+    "document_id": "693d5eaff8f036b62e28e9f4",
+    "field": "day_change_percentage",
+    "value": 0.63,
+    "stock": "TATAMOTORS",
+    "description": "TATAMOTORS - Day Change Percentage"
+  },
+  {
+    "collection": "mutual_funds",
+    "document_id": "693d5eaff8f036b62e28e9f5",
+    "field": "quantity",
+    "value": 900.5,
+    "fund": "ICICI Prudential Bluechip Fund - Direct Plan",
+    "description": "ICICI Prudential Bluechip Fund - Direct Plan - Quantity"
+  },
+  {
+    "collection": "mutual_funds",
+    "document_id": "693d5eaff8f036b62e28e9f5",
+    "field": "average_price",
+    "value": 65.5,
+    "fund": "ICICI Prudential Bluechip Fund - Direct Plan",
+    "description": "ICICI Prudential Bluechip Fund - Direct Plan - Average Price"
+  },
+  {
+    "collection": "mutual_funds",
+    "document_id": "693d5eaff8f036b62e28e9f5",
+    "field": "last_price",
+    "value": 78.43,
+    "fund": "ICICI Prudential Bluechip Fund - Direct Plan",
+    "description": "ICICI Prudential Bluechip Fund - Direct Plan - Last Price"
+  },
+  {
+    "collection": "mutual_funds",
+    "document_id": "693d5eaff8f036b62e28e9f5",
+    "field": "pnl",
+    "value": 11643.46,
+    "fund": "ICICI Prudential Bluechip Fund - Direct Plan",
+    "description": "ICICI Prudential Bluechip Fund - Direct Plan - Pnl"
+  },
+  {
+    "collection": "mutual_funds",
+    "document_id": "693d5eaff8f036b62e28e9f5",
+    "field": "sip_amount",
+    "value": 20000,
+    "fund": "ICICI Prudential Bluechip Fund - Direct Plan",
+    "is_sip": true,
+    "description": "ICICI Prudential Bluechip Fund - Direct Plan - Monthly SIP"
+  },
+  {
+    "collection": "mutual_funds",
+    "document_id": "693d5eaff8f036b62e28e9f6",
+    "field": "quantity",
+    "value": 241.0,
+    "fund": "SBI Equity Hybrid Fund - Direct Plan",
+    "description": "SBI Equity Hybrid Fund - Direct Plan - Quantity"
+  },
+  {
+    "collection": "mutual_funds",
+    "document_id": "693d5eaff8f036b62e28e9f6",
+    "field": "average_price",
+    "value": 180.0,
+    "fund": "SBI Equity Hybrid Fund - Direct Plan",
+    "description": "SBI Equity Hybrid Fund - Direct Plan - Average Price"
+  },
+  {
+    "collection": "mutual_funds",
+    "document_id": "693d5eaff8f036b62e28e9f6",
+    "field": "last_price",
+    "value": 195.5,
+    "fund": "SBI Equity Hybrid Fund - Direct Plan",
+    "description": "SBI Equity Hybrid Fund - Direct Plan - Last Price"
+  },
+  {
+    "collection": "mutual_funds",
+    "document_id": "693d5eaff8f036b62e28e9f6",
+    "field": "pnl",
+    "value": 3735.5,
+    "fund": "SBI Equity Hybrid Fund - Direct Plan",
+    "description": "SBI Equity Hybrid Fund - Direct Plan - Pnl"
+  },
+  {
+    "collection": "mutual_funds",
+    "document_id": "693d5eaff8f036b62e28e9f6",
+    "field": "sip_amount",
+    "value": 12000,
+    "fund": "SBI Equity Hybrid Fund - Direct Plan",
+    "is_sip": true,
+    "description": "SBI Equity Hybrid Fund - Direct Plan - Monthly SIP"
+  },
+  {
+    "collection": "mutual_funds",
+    "document_id": "693d5eaff8f036b62e28e9f7",
+    "field": "quantity",
+    "value": 171.5,
+    "fund": "Axis Long Term Equity Fund - Direct Plan",
+    "description": "Axis Long Term Equity Fund - Direct Plan - Quantity"
+  },
+  {
+    "collection": "mutual_funds",
+    "document_id": "693d5eaff8f036b62e28e9f7",
+    "field": "average_price",
+    "value": 95.0,
+    "fund": "Axis Long Term Equity Fund - Direct Plan",
+    "description": "Axis Long Term Equity Fund - Direct Plan - Average Price"
+  },
+  {
+    "collection": "mutual_funds",
+    "document_id": "693d5eaff8f036b62e28e9f7",
+    "field": "last_price",
+    "value": 108.25,
+    "fund": "Axis Long Term Equity Fund - Direct Plan",
+    "description": "Axis Long Term Equity Fund - Direct Plan - Last Price"
+  },
+  {
+    "collection": "mutual_funds",
+    "document_id": "693d5eaff8f036b62e28e9f7",
+    "field": "pnl",
+    "value": 2272.38,
+    "fund": "Axis Long Term Equity Fund - Direct Plan",
+    "description": "Axis Long Term Equity Fund - Direct Plan - Pnl"
+  },
+  {
+    "collection": "mutual_funds",
+    "document_id": "693d5eaff8f036b62e28e9f7",
+    "field": "sip_amount",
+    "value": 8000,
+    "fund": "Axis Long Term Equity Fund - Direct Plan",
+    "is_sip": true,
+    "description": "Axis Long Term Equity Fund - Direct Plan - Monthly SIP"
+  },
+  {
+    "collection": "mutual_funds",
+    "document_id": "693d5eaff8f036b62e28e9f8",
+    "field": "quantity",
+    "value": 400.0,
+    "fund": "Mirae Asset Large Cap Fund - Direct Plan",
+    "description": "Mirae Asset Large Cap Fund - Direct Plan - Quantity"
+  },
+  {
+    "collection": "mutual_funds",
+    "document_id": "693d5eaff8f036b62e28e9f8",
+    "field": "average_price",
+    "value": 72.0,
+    "fund": "Mirae Asset Large Cap Fund - Direct Plan",
+    "description": "Mirae Asset Large Cap Fund - Direct Plan - Average Price"
+  },
+  {
+    "collection": "mutual_funds",
+    "document_id": "693d5eaff8f036b62e28e9f8",
+    "field": "last_price",
+    "value": 85.5,
+    "fund": "Mirae Asset Large Cap Fund - Direct Plan",
+    "description": "Mirae Asset Large Cap Fund - Direct Plan - Last Price"
+  },
+  {
+    "collection": "mutual_funds",
+    "document_id": "693d5eaff8f036b62e28e9f8",
+    "field": "pnl",
+    "value": 5400.0,
+    "fund": "Mirae Asset Large Cap Fund - Direct Plan",
+    "description": "Mirae Asset Large Cap Fund - Direct Plan - Pnl"
+  },
+  {
+    "collection": "other_investments",
+    "document_id": "693d5eaff8f036b62e28e9f9",
+    "field": "amount_invested",
+    "value": 250000.0,
+    "investment_type": "crypto",
+    "investment_name": "Bitcoin (BTC)",
+    "description": "Bitcoin (BTC) - Amount Invested"
+  },
+  {
+    "collection": "other_investments",
+    "document_id": "693d5eaff8f036b62e28e9f9",
+    "field": "current_value",
+    "value": 312500.0,
+    "investment_type": "crypto",
+    "investment_name": "Bitcoin (BTC)",
+    "description": "Bitcoin (BTC) - Current Value"
+  },
+  {
+    "collection": "other_investments",
+    "document_id": "693d5eaff8f036b62e28e9f9",
+    "field": "returns",
+    "value": 62500.0,
+    "investment_type": "crypto",
+    "investment_name": "Bitcoin (BTC)",
+    "description": "Bitcoin (BTC) - Returns"
+  },
+  {
+    "collection": "other_investments",
+    "document_id": "693d5eaff8f036b62e28e9f9",
+    "field": "returns_percentage",
+    "value": 25.0,
+    "investment_type": "crypto",
+    "investment_name": "Bitcoin (BTC)",
+    "description": "Bitcoin (BTC) - Returns Percentage"
+  },
+  {
+    "collection": "other_investments",
+    "document_id": "693d5eaff8f036b62e28e9fa",
+    "field": "amount_invested",
+    "value": 150000.0,
+    "investment_type": "crypto",
+    "investment_name": "Ethereum (ETH)",
+    "description": "Ethereum (ETH) - Amount Invested"
+  },
+  {
+    "collection": "other_investments",
+    "document_id": "693d5eaff8f036b62e28e9fa",
+    "field": "current_value",
+    "value": 172500.0,
+    "investment_type": "crypto",
+    "investment_name": "Ethereum (ETH)",
+    "description": "Ethereum (ETH) - Current Value"
+  },
+  {
+    "collection": "other_investments",
+    "document_id": "693d5eaff8f036b62e28e9fa",
+    "field": "returns",
+    "value": 22500.0,
+    "investment_type": "crypto",
+    "investment_name": "Ethereum (ETH)",
+    "description": "Ethereum (ETH) - Returns"
+  },
+  {
+    "collection": "other_investments",
+    "document_id": "693d5eaff8f036b62e28e9fa",
+    "field": "returns_percentage",
+    "value": 15.0,
+    "investment_type": "crypto",
+    "investment_name": "Ethereum (ETH)",
+    "description": "Ethereum (ETH) - Returns Percentage"
+  },
+  {
+    "collection": "other_investments",
+    "document_id": "693d5eaff8f036b62e28e9fb",
+    "field": "amount_invested",
+    "value": 500000.0,
+    "investment_type": "fd",
+    "investment_name": "HDFC Bank FD",
+    "description": "HDFC Bank FD - Amount Invested"
+  },
+  {
+    "collection": "other_investments",
+    "document_id": "693d5eaff8f036b62e28e9fb",
+    "field": "current_value",
+    "value": 542500.0,
+    "investment_type": "fd",
+    "investment_name": "HDFC Bank FD",
+    "description": "HDFC Bank FD - Current Value"
+  },
+  {
+    "collection": "other_investments",
+    "document_id": "693d5eaff8f036b62e28e9fb",
+    "field": "returns",
+    "value": 42500.0,
+    "investment_type": "fd",
+    "investment_name": "HDFC Bank FD",
+    "description": "HDFC Bank FD - Returns"
+  },
+  {
+    "collection": "other_investments",
+    "document_id": "693d5eaff8f036b62e28e9fb",
+    "field": "returns_percentage",
+    "value": 8.5,
+    "investment_type": "fd",
+    "investment_name": "HDFC Bank FD",
+    "description": "HDFC Bank FD - Returns Percentage"
+  },
+  {
+    "collection": "other_investments",
+    "document_id": "693d5eaff8f036b62e28e9fb",
+    "field": "interest_rate",
+    "value": 6.8,
+    "investment_type": "fd",
+    "investment_name": "HDFC Bank FD",
+    "description": "HDFC Bank FD - Interest Rate"
+  },
+  {
+    "collection": "other_investments",
+    "document_id": "693d5eaff8f036b62e28e9fc",
+    "field": "amount_invested",
+    "value": 250000.0,
+    "investment_type": "fd",
+    "investment_name": "SBI FD",
+    "description": "SBI FD - Amount Invested"
+  },
+  {
+    "collection": "other_investments",
+    "document_id": "693d5eaff8f036b62e28e9fc",
+    "field": "current_value",
+    "value": 271250.0,
+    "investment_type": "fd",
+    "investment_name": "SBI FD",
+    "description": "SBI FD - Current Value"
+  },
+  {
+    "collection": "other_investments",
+    "document_id": "693d5eaff8f036b62e28e9fc",
+    "field": "returns",
+    "value": 21250.0,
+    "investment_type": "fd",
+    "investment_name": "SBI FD",
+    "description": "SBI FD - Returns"
+  },
+  {
+    "collection": "other_investments",
+    "document_id": "693d5eaff8f036b62e28e9fc",
+    "field": "returns_percentage",
+    "value": 8.5,
+    "investment_type": "fd",
+    "investment_name": "SBI FD",
+    "description": "SBI FD - Returns Percentage"
+  },
+  {
+    "collection": "other_investments",
+    "document_id": "693d5eaff8f036b62e28e9fc",
+    "field": "interest_rate",
+    "value": 7.0,
+    "investment_type": "fd",
+    "investment_name": "SBI FD",
+    "description": "SBI FD - Interest Rate"
+  },
+  {
+    "collection": "other_investments",
+    "document_id": "693d5eaff8f036b62e28e9fd",
+    "field": "amount_invested",
+    "value": 125000.0,
+    "investment_type": "bond",
+    "investment_name": "REC Bonds 2024",
+    "description": "REC Bonds 2024 - Amount Invested"
+  },
+  {
+    "collection": "other_investments",
+    "document_id": "693d5eaff8f036b62e28e9fd",
+    "field": "current_value",
+    "value": 132500.0,
+    "investment_type": "bond",
+    "investment_name": "REC Bonds 2024",
+    "description": "REC Bonds 2024 - Current Value"
+  },
+  {
+    "collection": "other_investments",
+    "document_id": "693d5eaff8f036b62e28e9fd",
+    "field": "returns",
+    "value": 7500.0,
+    "investment_type": "bond",
+    "investment_name": "REC Bonds 2024",
+    "description": "REC Bonds 2024 - Returns"
+  },
+  {
+    "collection": "other_investments",
+    "document_id": "693d5eaff8f036b62e28e9fd",
+    "field": "returns_percentage",
+    "value": 6.0,
+    "investment_type": "bond",
+    "investment_name": "REC Bonds 2024",
+    "description": "REC Bonds 2024 - Returns Percentage"
+  },
+  {
+    "collection": "other_investments",
+    "document_id": "693d5eaff8f036b62e28e9fd",
+    "field": "interest_rate",
+    "value": 7.5,
+    "investment_type": "bond",
+    "investment_name": "REC Bonds 2024",
+    "description": "REC Bonds 2024 - Interest Rate"
+  },
+  {
+    "collection": "other_investments",
+    "document_id": "693d5eaff8f036b62e28e9fe",
+    "field": "amount_invested",
+    "value": 1250000.0,
+    "investment_type": "real_estate",
+    "investment_name": "Fractional RE - Mumbai",
+    "description": "Fractional RE - Mumbai - Amount Invested"
+  },
+  {
+    "collection": "other_investments",
+    "document_id": "693d5eaff8f036b62e28e9fe",
+    "field": "current_value",
+    "value": 1375000.0,
+    "investment_type": "real_estate",
+    "investment_name": "Fractional RE - Mumbai",
+    "description": "Fractional RE - Mumbai - Current Value"
+  },
+  {
+    "collection": "other_investments",
+    "document_id": "693d5eaff8f036b62e28e9fe",
+    "field": "returns",
+    "value": 125000.0,
+    "investment_type": "real_estate",
+    "investment_name": "Fractional RE - Mumbai",
+    "description": "Fractional RE - Mumbai - Returns"
+  },
+  {
+    "collection": "other_investments",
+    "document_id": "693d5eaff8f036b62e28e9fe",
+    "field": "returns_percentage",
+    "value": 10.0,
+    "investment_type": "real_estate",
+    "investment_name": "Fractional RE - Mumbai",
+    "description": "Fractional RE - Mumbai - Returns Percentage"
+  },
+  {
+    "collection": "other_investments",
+    "document_id": "693d5eaff8f036b62e28e9ff",
+    "field": "amount_invested",
+    "value": 375000.0,
+    "investment_type": "nps",
+    "investment_name": "NPS Tier 1",
+    "description": "NPS Tier 1 - Amount Invested"
+  },
+  {
+    "collection": "other_investments",
+    "document_id": "693d5eaff8f036b62e28e9ff",
+    "field": "current_value",
+    "value": 412500.0,
+    "investment_type": "nps",
+    "investment_name": "NPS Tier 1",
+    "description": "NPS Tier 1 - Current Value"
+  },
+  {
+    "collection": "other_investments",
+    "document_id": "693d5eaff8f036b62e28e9ff",
+    "field": "returns",
+    "value": 37500.0,
+    "investment_type": "nps",
+    "investment_name": "NPS Tier 1",
+    "description": "NPS Tier 1 - Returns"
+  },
+  {
+    "collection": "other_investments",
+    "document_id": "693d5eaff8f036b62e28e9ff",
+    "field": "returns_percentage",
+    "value": 10.0,
+    "investment_type": "nps",
+    "investment_name": "NPS Tier 1",
+    "description": "NPS Tier 1 - Returns Percentage"
+  },
+  {
+    "collection": "other_investments",
+    "document_id": "693d5eaff8f036b62e28ea00",
+    "field": "amount_invested",
+    "value": 750000.0,
+    "investment_type": "ppf",
+    "investment_name": "PPF Account",
+    "description": "PPF Account - Amount Invested"
+  },
+  {
+    "collection": "other_investments",
+    "document_id": "693d5eaff8f036b62e28ea00",
+    "field": "current_value",
+    "value": 825000.0,
+    "investment_type": "ppf",
+    "investment_name": "PPF Account",
+    "description": "PPF Account - Current Value"
+  },
+  {
+    "collection": "other_investments",
+    "document_id": "693d5eaff8f036b62e28ea00",
+    "field": "returns",
+    "value": 75000.0,
+    "investment_type": "ppf",
+    "investment_name": "PPF Account",
+    "description": "PPF Account - Returns"
+  },
+  {
+    "collection": "other_investments",
+    "document_id": "693d5eaff8f036b62e28ea00",
+    "field": "returns_percentage",
+    "value": 10.0,
+    "investment_type": "ppf",
+    "investment_name": "PPF Account",
+    "description": "PPF Account - Returns Percentage"
+  },
+  {
+    "collection": "other_investments",
+    "document_id": "693d5eaff8f036b62e28ea00",
+    "field": "interest_rate",
+    "value": 7.1,
+    "investment_type": "ppf",
+    "investment_name": "PPF Account",
+    "description": "PPF Account - Interest Rate"
+  },
+  {
+    "collection": "other_investments",
+    "document_id": "693d5eaff8f036b62e28ea01",
+    "field": "amount_invested",
+    "value": 600000.0,
+    "investment_type": "insurance",
+    "investment_name": "HDFC Life Sanchay Plus",
+    "description": "HDFC Life Sanchay Plus - Amount Invested"
+  },
+  {
+    "collection": "other_investments",
+    "document_id": "693d5eaff8f036b62e28ea01",
+    "field": "current_value",
+    "value": 660000.0,
+    "investment_type": "insurance",
+    "investment_name": "HDFC Life Sanchay Plus",
+    "description": "HDFC Life Sanchay Plus - Current Value"
+  },
+  {
+    "collection": "other_investments",
+    "document_id": "693d5eaff8f036b62e28ea01",
+    "field": "returns",
+    "value": 60000.0,
+    "investment_type": "insurance",
+    "investment_name": "HDFC Life Sanchay Plus",
+    "description": "HDFC Life Sanchay Plus - Returns"
+  },
+  {
+    "collection": "other_investments",
+    "document_id": "693d5eaff8f036b62e28ea01",
+    "field": "returns_percentage",
+    "value": 10.0,
+    "investment_type": "insurance",
+    "investment_name": "HDFC Life Sanchay Plus",
+    "description": "HDFC Life Sanchay Plus - Returns Percentage"
+  },
+  {
+    "collection": "goals",
+    "document_id": "693d2626a878e575aaf43c59",
+    "field": "target_amount",
+    "value": 120000.0,
+    "goal_name": "Goa Trip",
+    "description": "Goa Trip - Target Amount"
+  },
+  {
+    "collection": "goals",
+    "document_id": "693d2626a878e575aaf43c59",
+    "field": "saved_amount",
+    "value": 50000.0,
+    "goal_name": "Goa Trip",
+    "description": "Goa Trip - Saved Amount"
+  },
+  {
+    "collection": "goals",
+    "document_id": "693d2626a878e575aaf43c59",
+    "field": "auto_save_amount",
+    "value": 4000.0,
+    "goal_name": "Goa Trip",
+    "description": "Goa Trip - Auto Save Amount"
+  },
+  {
+    "collection": "goals",
+    "document_id": "693d2626a878e575aaf43c5a",
+    "field": "target_amount",
+    "value": 300000.0,
+    "goal_name": "New Laptop",
+    "description": "New Laptop - Target Amount"
+  },
+  {
+    "collection": "goals",
+    "document_id": "693d2626a878e575aaf43c5a",
+    "field": "saved_amount",
+    "value": 100000.0,
+    "goal_name": "New Laptop",
+    "description": "New Laptop - Saved Amount"
+  },
+  {
+    "collection": "goals",
+    "document_id": "693d2626a878e575aaf43c5b",
+    "field": "target_amount",
+    "value": 400000.0,
+    "goal_name": "Emergency Fund",
+    "description": "Emergency Fund - Target Amount"
+  },
+  {
+    "collection": "goals",
+    "document_id": "693d2626a878e575aaf43c5b",
+    "field": "saved_amount",
+    "value": 180000.0,
+    "goal_name": "Emergency Fund",
+    "description": "Emergency Fund - Saved Amount"
+  },
+  {
+    "collection": "goals",
+    "document_id": "693d2626a878e575aaf43c5b",
+    "field": "auto_save_amount",
+    "value": 8000.0,
+    "goal_name": "Emergency Fund",
+    "description": "Emergency Fund - Auto Save Amount"
+  },
+  {
+    "collection": "insights",
+    "document_id": "693d2626a878e575aaf43c5c",
+    "field": "amount",
+    "value": 2596.0,
+    "insight_type": "alert",
+    "description": "Netflix price hike detected. New plan: \u20b92596"
+  },
+  {
+    "collection": "insights",
+    "document_id": "693d2626a878e575aaf43c5e",
+    "field": "amount",
+    "value": 9600.0,
+    "insight_type": "tip",
+    "description": "You can save \u20b99,600 by switching to annual Spotify!"
+  }
+]
