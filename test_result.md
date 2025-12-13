@@ -101,3 +101,163 @@
 #====================================================================================================
 # Testing Data - Main Agent and testing sub agent both should log testing data below this section
 #====================================================================================================
+
+user_problem_statement: |
+  Build a Gen-Z finance companion mobile app called "Fibby". The TRACK screen should have a 
+  "Spending Matrix" chart that displays spending data across different time periods:
+  - 1 week: 7 daily bars
+  - 1 month: 4-5 weekly bars
+  - 6 months: 6 monthly bars
+  - 1 year: 6 bi-monthly bars with labels like 'Feb-Mar'
+  
+  The chart should be horizontally scrollable and clicking a bar should filter the 
+  "Category Breakdown" and "Top Places You Spend" sections below based on the selected time period.
+
+backend:
+  - task: "API endpoint for 1 week spending (daily breakdown)"
+    implemented: true
+    working: true
+    file: "backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Implemented /api/analytics/spending-by-period endpoint with period=1wk parameter. Returns 7 daily bars with day names, dates, and amounts."
+  
+  - task: "API endpoint for 1 month spending (weekly breakdown)"
+    implemented: true
+    working: true
+    file: "backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Implemented period=1mnth parameter. Returns 5 weekly bars (W1-W5) with week_start and week_end ISO timestamps for filtering."
+  
+  - task: "API endpoint for 1 year spending (bi-monthly breakdown)"
+    implemented: true
+    working: true
+    file: "backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Implemented period=1yr parameter. Returns 6 bi-monthly bars with labels like 'Feb-Mar' and period_start/period_end timestamps for filtering."
+  
+  - task: "Category breakdown API with date range filtering"
+    implemented: true
+    working: true
+    file: "backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Already supports start_date_str and end_date_str query parameters for filtering by date range."
+  
+  - task: "Merchant leaderboard API with date range filtering"
+    implemented: true
+    working: true
+    file: "backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Already supports start_date_str and end_date_str query parameters for filtering by date range."
+
+frontend:
+  - task: "Chart component displays all time periods correctly"
+    implemented: true
+    working: "NA"
+    file: "frontend/components/track/MonthlyBarChart.tsx"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Removed data slicing (was limiting to 6 bars). Now displays all bars for each period. Increased bar width to 70px for better visibility and scrolling."
+  
+  - task: "Bar selection filters category and merchant data for 1 month period"
+    implemented: true
+    working: "NA"
+    file: "frontend/app/track.tsx"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Updated handleMonthSelect to use week_start and week_end from the selected bar when period=1mnth. Passes these as start_date_str and end_date_str to the API."
+  
+  - task: "Bar selection filters category and merchant data for 1 year period"
+    implemented: true
+    working: "NA"
+    file: "frontend/app/track.tsx"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Updated handleMonthSelect to use period_start and period_end from the selected bar when period=1yr. Passes these as start_date_str and end_date_str to the API."
+  
+  - task: "Horizontal scrolling for bar chart"
+    implemented: true
+    working: "NA"
+    file: "frontend/components/track/MonthlyBarChart.tsx"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "ScrollView with horizontal=true is already implemented. Adjusted bar width and removed minWidth constraint to enable proper scrolling."
+
+metadata:
+  created_by: "main_agent"
+  version: "1.0"
+  test_sequence: 1
+  run_ui: false
+
+test_plan:
+  current_focus:
+    - "API endpoint for 1 week spending (daily breakdown)"
+    - "API endpoint for 1 month spending (weekly breakdown)"
+    - "API endpoint for 1 year spending (bi-monthly breakdown)"
+    - "Category breakdown API with date range filtering"
+    - "Merchant leaderboard API with date range filtering"
+  stuck_tasks: []
+  test_all: false
+  test_priority: "high_first"
+
+agent_communication:
+  - agent: "main"
+    message: |
+      I've completed the implementation for the Spending Matrix chart for all time periods.
+      
+      BACKEND CHANGES:
+      - The /api/analytics/spending-by-period endpoint already had all the necessary logic implemented
+      - Tested all periods (1wk, 1mnth, 6mnth, 1yr) via curl and confirmed data structure is correct
+      
+      FRONTEND CHANGES:
+      - Fixed track.tsx handleMonthSelect function to properly handle week_start/week_end for 1 month period
+      - Fixed track.tsx handleMonthSelect function to properly handle period_start/period_end for 1 year period
+      - Removed data slicing in MonthlyBarChart.tsx so all bars are displayed (was artificially limiting to 6)
+      - Adjusted bar width from 60px to 70px for better visibility
+      
+      TESTING NEEDED:
+      - Please test all backend API endpoints with the user_id: 693d2626a878e575aaf43c0a
+      - Test that period=1wk returns 7 daily bars
+      - Test that period=1mnth returns 5 weekly bars with week_start/week_end
+      - Test that period=1yr returns 6 bi-monthly bars with period_start/period_end and labels like 'Feb-Mar'
+      - Test category breakdown and merchant leaderboard APIs with start_date_str and end_date_str parameters
