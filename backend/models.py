@@ -169,6 +169,32 @@ class ChatResponse(BaseModel):
     session_id: str
 
 
+# Chat History Models
+class ChatMessage(BaseModel):
+    """Individual message in a conversation"""
+    role: Literal["user", "assistant"]  # user or assistant (Fibby)
+    content: str
+    timestamp: datetime = Field(default_factory=datetime.utcnow)
+    card_type: Optional[str] = None
+    metrics: Optional[dict] = None
+
+
+class ChatConversation(BaseModel):
+    """Chat conversation/session"""
+    id: Optional[PyObjectId] = Field(alias="_id", default=None)
+    user_id: str
+    conversation_id: str  # Unique identifier for the conversation
+    title: str  # Auto-generated or user-defined title
+    messages: List[ChatMessage] = []
+    created_at: datetime = Field(default_factory=datetime.utcnow)
+    updated_at: datetime = Field(default_factory=datetime.utcnow)
+    
+    class Config:
+        populate_by_name = True
+        arbitrary_types_allowed = True
+        json_encoders = {ObjectId: str}
+
+
 # Investment Models (Zerodha Kite Structure)
 
 class InvestmentHolding(BaseModel):
