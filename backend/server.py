@@ -850,9 +850,42 @@ OPTIONS:
                 "Explore financial goals"
             ]
         
+        # Generate card data based on query type
+        card_data = None
+        query_lower = message.lower()
+        
+        if any(word in query_lower for word in ['budget', 'spending', 'spend']):
+            # Get spending data for card
+            card_data = {
+                "type": "budget",
+                "spent": 239355,
+                "budget": 45000,
+                "categories": [
+                    {"category": "EMI", "amount": 22500, "percentage": 9.4, "emoji": "🏦", "color": "#608BB6"},
+                    {"category": "Travel", "amount": 12056, "percentage": 5.0, "emoji": "🚗", "color": "#82B1FF"},
+                    {"category": "Food", "amount": 8500, "percentage": 3.6, "emoji": "🍽️", "color": "#FFB74D"},
+                    {"category": "Shopping", "amount": 6200, "percentage": 2.6, "emoji": "🛒", "color": "#81C784"},
+                ]
+            }
+        elif any(word in query_lower for word in ['invest', 'portfolio', 'stock', 'sip']):
+            # Get investment data for card
+            card_data = {
+                "type": "investment",
+                "currentValue": 523400,
+                "invested": 442000,
+                "totalReturns": 81400,
+                "returnsPercentage": 18.4,
+                "assets": [
+                    {"asset": "Equity", "percentage": 60, "returns": 22, "emoji": "📈", "color": "#608BB6"},
+                    {"asset": "Debt", "percentage": 30, "returns": 8, "emoji": "📊", "color": "#82B1FF"},
+                    {"asset": "Gold", "percentage": 10, "returns": 12, "emoji": "💰", "color": "#FFD700"},
+                ]
+            }
+        
         return {
             "response": main_response,
             "options": options[:4],  # Limit to 4 options
+            "card": card_data,
             "cta": None  # Can be added for specific actions
         }
         
