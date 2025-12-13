@@ -255,6 +255,40 @@ export default function ChatHistoryDrawer({ visible, onClose }: ChatHistoryDrawe
             )}
           </View>
 
+          {/* Category Filters */}
+          <ScrollView 
+            horizontal 
+            showsHorizontalScrollIndicator={false}
+            style={styles.filtersContainer}
+            contentContainerStyle={styles.filtersContent}
+          >
+            {categories.map((category) => (
+              <TouchableOpacity
+                key={category.id}
+                style={[
+                  styles.filterPill,
+                  selectedCategory === category.id && styles.filterPillActive,
+                ]}
+                onPress={() => setSelectedCategory(category.id)}
+              >
+                <Ionicons
+                  name={category.icon as any}
+                  size={16}
+                  color={selectedCategory === category.id ? COLORS.surface : COLORS.textSecondary}
+                  style={styles.filterIcon}
+                />
+                <Text
+                  style={[
+                    styles.filterText,
+                    selectedCategory === category.id && styles.filterTextActive,
+                  ]}
+                >
+                  {category.label}
+                </Text>
+              </TouchableOpacity>
+            ))}
+          </ScrollView>
+
           {/* Conversations List */}
           <ScrollView
             style={styles.scrollView}
