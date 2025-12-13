@@ -147,11 +147,23 @@ export default function ChatHistoryDrawer({ visible, onClose }: ChatHistoryDrawe
   };
 
   const filterConversations = (convs: Conversation[]) => {
-    if (!searchQuery.trim()) return convs;
+    let filtered = convs;
     
-    return convs.filter(conv =>
-      conv.title.toLowerCase().includes(searchQuery.toLowerCase())
-    );
+    // Category filter
+    if (selectedCategory !== 'all') {
+      filtered = filtered.filter(conv => 
+        conv.category === selectedCategory
+      );
+    }
+    
+    // Search filter
+    if (searchQuery.trim()) {
+      filtered = filtered.filter(conv =>
+        conv.title.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+    }
+    
+    return filtered;
   };
 
   const renderConversationItem = (conversation: Conversation) => (
