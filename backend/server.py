@@ -773,8 +773,8 @@ OPTIONS:
 - Increase SIP amounts"""
         ).with_model("openai", "gpt-4o-mini")
         
-        # Send message
-        user_message = UserMessage(text=message)
+        # Send message with context
+        user_message = UserMessage(text=context_prompt)
         response_text = await chat.send_message(user_message)
         
         # Parse response to extract options
