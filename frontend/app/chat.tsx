@@ -6,7 +6,6 @@ import { useRouter } from 'expo-router';
 import { useAppStore } from '../store/useAppStore';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
-const CHIP_WIDTH = 220; // Average chip width including gap
 
 interface SuggestionChip {
   id: string;
