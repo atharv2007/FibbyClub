@@ -20,51 +20,61 @@ interface AddBankModalProps {
   onAdd: (bankData: any) => void;
 }
 
-const POPULAR_BANKS = [
-  { id: 'hdfc', name: 'HDFC Bank', icon: 'business' },
-  { id: 'icici', name: 'ICICI Bank', icon: 'business' },
-  { id: 'sbi', name: 'State Bank of India', icon: 'business' },
-  { id: 'axis', name: 'Axis Bank', icon: 'business' },
-  { id: 'kotak', name: 'Kotak Mahindra', icon: 'business' },
-  { id: 'other', name: 'Other Bank', icon: 'add-circle' },
+// Mock bank accounts that will be "discovered" via PAN
+const MOCK_BANKS = [
+  { 
+    bank_name: 'ICICI Bank',
+    account_number: 'XXXX8901',
+    balance: 45230.50
+  },
+  { 
+    bank_name: 'State Bank of India',
+    account_number: 'XXXX2345',
+    balance: 28750.00
+  },
+  { 
+    bank_name: 'Axis Bank',
+    account_number: 'XXXX6789',
+    balance: 67890.25
+  },
 ];
 
 export function AddBankModal({ visible, onClose, onAdd }: AddBankModalProps) {
-  const [bankName, setBankName] = useState('');
-  const [accountNumber, setAccountNumber] = useState('');
-  const [balance, setBalance] = useState('');
-  const [selectedBank, setSelectedBank] = useState<string | null>(null);
+  const [panNumber, setPanNumber] = useState('');
+  const [isVerifying, setIsVerifying] = useState(false);
 
-  const handleSelectBank = (bank: typeof POPULAR_BANKS[0]) => {
-    setSelectedBank(bank.id);
-    if (bank.id !== 'other') {
-      setBankName(bank.name);
-    } else {
-      setBankName('');
-    }
-  };
-
-  const handleAdd = () => {
-    if (!bankName.trim() || !accountNumber.trim() || !balance.trim()) {
-      Alert.alert('Missing Information', 'Please fill in all fields');
+  const handleVerifyPAN = async () => {
+    // Validate PAN format (basic validation)
+    const panRegex = /^[A-Z]{5}[0-9]{4}[A-Z]{1}$/;
+    if (!panRegex.test(panNumber.toUpperCase())) {
+      Alert.alert('Invalid PAN', 'Please enter a valid PAN card number (e.g., ABCDE1234F)');
       return;
     }
 
-    const bankData = {
-      bank_name: bankName.trim(),
-      account_number: accountNumber.trim(),
-      balance: parseFloat(balance.replace(/[^0-9.]/g, '')),
-      last_updated: new Date().toISOString(),
-    };
-
-    onAdd(bankData);
+    setIsVerifying(true);
     
-    // Reset form
-    setBankName('');
-    setAccountNumber('');
-    setBalance('');
-    setSelectedBank(null);
-    onClose();
+    // Simulate AA service verification (2 second delay)
+    setTimeout(() => {
+      // Add mock bank accounts
+      MOCK_BANKS.forEach((bank) => {
+        const bankData = {
+          ...bank,
+          last_updated: new Date().toISOString(),
+        };
+        onAdd(bankData);
+      });
+      
+      setIsVerifying(false);
+      setPanNumber('');
+      onClose();
+      
+      // Success message
+      Alert.alert(
+        'Accounts Linked Successfully',
+        `${MOCK_BANKS.length} bank accounts have been linked to your profile.`,
+        [{ text: 'OK' }]
+      );
+    }, 2000);
   };
 
   return (
