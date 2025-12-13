@@ -1,7 +1,7 @@
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
-import { COLORS, SPACING, RADIUS, SHADOWS, TYPOGRAPHY } from '../../constants/theme';
+import { COLORS, SPACING, RADIUS, TYPOGRAPHY } from '../../constants/theme';
 import { formatINR } from '../../utils/format';
 
 interface PortfolioCardProps {
@@ -73,11 +73,6 @@ const styles = StyleSheet.create({
   container: {
     borderRadius: RADIUS.card,
     padding: SPACING.lg,
-    shadowColor: COLORS.glassShadow,
-    shadowOffset: { width: 0, height: 6 },
-    shadowOpacity: 0.12,
-    shadowRadius: 16,
-    elevation: 5,
   },
   header: {
     flexDirection: 'row',
@@ -108,7 +103,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: SPACING.md,
     paddingVertical: SPACING.sm,
     borderRadius: RADIUS.button,
-    ...SHADOWS.soft,
   },
   connectText: {
     fontSize: TYPOGRAPHY.caption,

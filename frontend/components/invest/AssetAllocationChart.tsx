@@ -1,5 +1,5 @@
 import { View, Text, StyleSheet, ScrollView } from 'react-native';
-import { COLORS, SPACING, RADIUS, SHADOWS, TYPOGRAPHY } from '../../constants/theme';
+import { COLORS, SPACING, RADIUS, TYPOGRAPHY } from '../../constants/theme';
 import { formatINR } from '../../utils/format';
 
 interface AssetAllocation {
@@ -96,7 +96,6 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.surface,
     borderRadius: RADIUS.card,
     padding: SPACING.lg,
-    ...SHADOWS.card,
     borderWidth: 1,
     borderColor: COLORS.glassBorder,
   },
@@ -117,7 +116,6 @@ const styles = StyleSheet.create({
   },
   scrollContainer: {
     maxHeight: 320,
-    flex: 0,
   },
   scrollContent: {
     gap: SPACING.md,

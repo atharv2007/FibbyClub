@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, ScrollView, LayoutAnimation, Platform, UIManager } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { COLORS, SPACING, RADIUS, SHADOWS, TYPOGRAPHY } from '../../constants/theme';
+import { COLORS, SPACING, RADIUS, TYPOGRAPHY } from '../../constants/theme';
 
 if (Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental) {
   UIManager.setLayoutAnimationEnabledExperimental(true);
@@ -118,7 +118,6 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.surface,
     borderRadius: RADIUS.card,
     padding: SPACING.lg,
-    ...SHADOWS.card,
     borderWidth: 1,
     borderColor: COLORS.glassBorder,
   },
@@ -169,7 +168,6 @@ const styles = StyleSheet.create({
   accordionItemExpanded: {
     backgroundColor: COLORS.surface,
     borderColor: COLORS.primary,
-    ...SHADOWS.soft,
   },
   accordionHeader: {
     flexDirection: 'row',
