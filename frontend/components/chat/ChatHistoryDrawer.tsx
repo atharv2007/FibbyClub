@@ -1,7 +1,10 @@
-import { View, Text, StyleSheet, TouchableOpacity, TextInput, ScrollView, Modal } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, TextInput, ScrollView, Modal, Animated, Dimensions } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { COLORS, SPACING, RADIUS, TYPOGRAPHY } from '../../constants/theme';
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
+
+const SCREEN_WIDTH = Dimensions.get('window').width;
+const DRAWER_WIDTH = Math.min(SCREEN_WIDTH * 0.85, 400);
 
 interface ChatHistoryItem {
   id: string;
@@ -21,67 +24,143 @@ interface ChatHistoryDrawerProps {
 }
 
 const categories = [
-  { id: 'all', label: 'All', emoji: '' },
+  { id: 'all', label: 'All Chats' },
   { id: 'budget', label: 'Budget', emoji: '📊' },
   { id: 'spending', label: 'Spending', emoji: '💰' },
   { id: 'goals', label: 'Goals', emoji: '🎯' },
+  { id: 'investments', label: 'Invest', emoji: '💎' },
 ];
 
-// Mock chat history data
+// Get realistic dates
+const getRealisticDates = () => {
+  const now = new Date();
+  const today = new Date(now);
+  const yesterday = new Date(now);
+  yesterday.setDate(yesterday.getDate() - 1);
+  
+  const threeDaysAgo = new Date(now);
+  threeDaysAgo.setDate(threeDaysAgo.getDate() - 3);
+  
+  const fiveDaysAgo = new Date(now);
+  fiveDaysAgo.setDate(fiveDaysAgo.getDate() - 5);
+  
+  const tenDaysAgo = new Date(now);
+  tenDaysAgo.setDate(tenDaysAgo.getDate() - 10);
+  
+  const twentyDaysAgo = new Date(now);
+  twentyDaysAgo.setDate(twentyDaysAgo.getDate() - 20);
+  
+  const oneMonthAgo = new Date(now);
+  oneMonthAgo.setMonth(oneMonthAgo.getMonth() - 1);
+  
+  const twoMonthsAgo = new Date(now);
+  twoMonthsAgo.setMonth(twoMonthsAgo.getMonth() - 2);
+
+  return {
+    today,
+    yesterday,
+    threeDaysAgo,
+    fiveDaysAgo,
+    tenDaysAgo,
+    twentyDaysAgo,
+    oneMonthAgo,
+    twoMonthsAgo,
+  };
+};
+
+const dates = getRealisticDates();
+
+// Mock chat history data with realistic dates
 const mockChatHistory: ChatHistoryItem[] = [
   {
     id: '1',
-    title: 'Budget Analysis',
-    preview: "Looking at your monthly budget, you've used 72% so far...",
-    timestamp: 'Dec 13, 11:46 PM',
-    category: 'Budget',
-    emoji: '📊',
-    date: new Date('2024-12-13'),
+    title: 'Weekend Spending Analysis',
+    preview: "Your weekend spending was ₹8,200. Let me break it down by category for you.",
+    timestamp: '2:45 PM',
+    category: 'Spending',
+    emoji: '💰',
+    date: dates.today,
   },
   {
     id: '2',
-    title: 'Weekend Spending Review',
-    preview: 'Looks like you had quite a weekend! Your spending was higher than usual.',
-    timestamp: 'Dec 11, 11:46 PM',
-    category: 'Spending',
-    emoji: '💰',
-    date: new Date('2024-12-11'),
+    title: 'Budget Check for December',
+    preview: "You've used 68% of your December budget with 18 days remaining.",
+    timestamp: '10:30 AM',
+    category: 'Budget',
+    emoji: '📊',
+    date: dates.today,
   },
   {
     id: '3',
-    title: 'New Laptop Goal',
-    preview: "I've created a savings goal for your new laptop. Let's aim for ₹80,000.",
-    timestamp: 'Dec 8, 11:46 PM',
-    category: 'Goals',
-    emoji: '🎯',
-    date: new Date('2024-12-08'),
+    title: 'Investment Portfolio Review',
+    preview: 'Your portfolio grew by ₹24,500 this month. Overall returns: +18.2%',
+    timestamp: '6:15 PM',
+    category: 'Investments',
+    emoji: '💎',
+    date: dates.yesterday,
   },
   {
     id: '4',
-    title: 'Investment Portfolio Review',
-    preview: 'Your portfolio is performing well with 18.2% returns this year.',
-    timestamp: 'Dec 5, 3:20 PM',
-    category: 'Investments',
-    emoji: '💎',
-    date: new Date('2024-12-05'),
+    title: 'Goa Trip Savings Goal',
+    preview: "You're 72% towards your Goa trip goal! Just ₹18,000 more to go.",
+    timestamp: '4:20 PM',
+    category: 'Goals',
+    emoji: '🎯',
+    date: dates.yesterday,
   },
   {
     id: '5',
-    title: 'Subscription Management',
-    preview: 'Found 5 active subscriptions totaling ₹2,400 per month.',
-    timestamp: 'Nov 28, 9:15 AM',
+    title: 'Subscription Audit',
+    preview: 'Found 7 active subscriptions totaling ₹3,200/month. Want to optimize?',
+    timestamp: '11:30 AM',
     category: 'Spending',
     emoji: '🔄',
-    date: new Date('2024-11-28'),
+    date: dates.threeDaysAgo,
   },
   {
     id: '6',
-    title: 'Tax Saving Tips',
-    preview: 'Here are some tax-saving investment options for this financial year.',
-    timestamp: 'Nov 20, 2:30 PM',
+    title: 'SIP Performance Update',
+    preview: 'Your mutual fund SIPs have generated 14.5% returns over 6 months.',
+    timestamp: '3:45 PM',
+    category: 'Investments',
+    emoji: '📈',
+    date: dates.fiveDaysAgo,
+  },
+  {
+    id: '7',
+    title: 'Credit Card Bill Reminder',
+    preview: 'HDFC Card bill of ₹28,400 is due in 3 days. Pay now to avoid charges?',
+    timestamp: '9:00 AM',
     category: 'General',
+    emoji: '💳',
+    date: dates.tenDaysAgo,
+  },
+  {
+    id: '8',
+    title: 'Monthly Expense Report',
+    preview: 'November expenses: ₹45,200. Top category: Food & Dining (₹12,800)',
+    timestamp: '7:20 PM',
+    category: 'Spending',
+    emoji: '📊',
+    date: dates.twentyDaysAgo,
+  },
+  {
+    id: '9',
+    title: 'Emergency Fund Goal',
+    preview: 'Great progress! Your emergency fund now covers 4 months of expenses.',
+    timestamp: '1:15 PM',
+    category: 'Goals',
+    emoji: '🎯',
+    date: dates.oneMonthAgo,
+  },
+  {
+    id: '10',
+    title: 'Tax Saving Options',
+    preview: 'Here are 5 tax-saving investments to maximize your 80C deductions.',
+    timestamp: '5:30 PM',
+    category: 'Investments',
     emoji: '📄',
-    date: new Date('2024-11-20'),
+    date: dates.twoMonthsAgo,
   },
 ];
 
