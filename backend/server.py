@@ -724,8 +724,28 @@ RESPONSE STRUCTURE:
    - Provide actionable recommendations
    - Use numbers and percentages from the context
    - Keep it 3-4 sentences, clear and informative
+   - Use visual formatting for better engagement
 
-2. MCQ OPTIONS (Only when relevant):
+2. VISUAL FORMATTING GUIDELINES:
+   ✅ USE EMOJIS AS BULLET POINTS:
+   - Use relevant emojis (🛒 Shopping, 🚗 Travel, 🍽️ Food, 💰 Money, 📊 Stats, etc.)
+   - Start category lists with emoji bullets
+   
+   📊 USE VISUAL BARS FOR PERCENTAGES:
+   - For percentages 0-100%, show visual bar with █ and ░
+   - Example: 68% → "██████░░░░" or "▓▓▓▓▓▓▓░░░" (10 blocks total)
+   - Always show percentage number after the bar
+   
+   💡 FORMAT BREAKDOWN LISTS:
+   - Category emoji + name + amount + visual bar
+   - Example: "🛒 Shopping: ₹22,500 ▓▓▓▓▓▓▓░░░ 35%"
+   
+   🎯 USE CLEAR SECTIONS:
+   - Break down response into clear sections
+   - Use spacing and line breaks for readability
+   - Group related information together
+
+3. MCQ OPTIONS (Only when relevant):
    - Include when there are natural next steps
    - When user needs to make a decision
    - When exploring different aspects of a topic
