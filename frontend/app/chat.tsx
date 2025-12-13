@@ -47,32 +47,67 @@ export default function ChatScreen() {
   const scrollAnim3 = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
-    // Row 1 - Scroll left (negative direction)
-    Animated.loop(
-      Animated.timing(scrollAnim1, {
-        toValue: -1000,
-        duration: 20000,
-        useNativeDriver: true,
-      })
-    ).start();
+    // Calculate the width needed for one complete set of chips
+    const row1Width = suggestionChipsRow1.length * CHIP_WIDTH;
+    const row2Width = suggestionChipsRow2.length * CHIP_WIDTH;
+    const row3Width = suggestionChipsRow3.length * CHIP_WIDTH;
 
-    // Row 2 - Scroll right (positive direction)
-    Animated.loop(
-      Animated.timing(scrollAnim2, {
-        toValue: 1000,
-        duration: 20000,
-        useNativeDriver: true,
-      })
-    ).start();
+    // Row 1 - Scroll left (negative direction) - infinite loop
+    const anim1 = Animated.loop(
+      Animated.sequence([
+        Animated.timing(scrollAnim1, {
+          toValue: -row1Width,
+          duration: 25000,
+          useNativeDriver: true,
+        }),
+        Animated.timing(scrollAnim1, {
+          toValue: 0,
+          duration: 0,
+          useNativeDriver: true,
+        }),
+      ])
+    );
+    anim1.start();
 
-    // Row 3 - Scroll left (negative direction)
-    Animated.loop(
-      Animated.timing(scrollAnim3, {
-        toValue: -1000,
-        duration: 20000,
-        useNativeDriver: true,
-      })
-    ).start();
+    // Row 2 - Scroll right (positive direction) - infinite loop
+    const anim2 = Animated.loop(
+      Animated.sequence([
+        Animated.timing(scrollAnim2, {
+          toValue: row2Width,
+          duration: 25000,
+          useNativeDriver: true,
+        }),
+        Animated.timing(scrollAnim2, {
+          toValue: 0,
+          duration: 0,
+          useNativeDriver: true,
+        }),
+      ])
+    );
+    anim2.start();
+
+    // Row 3 - Scroll left (negative direction) - infinite loop
+    const anim3 = Animated.loop(
+      Animated.sequence([
+        Animated.timing(scrollAnim3, {
+          toValue: -row3Width,
+          duration: 25000,
+          useNativeDriver: true,
+        }),
+        Animated.timing(scrollAnim3, {
+          toValue: 0,
+          duration: 0,
+          useNativeDriver: true,
+        }),
+      ])
+    );
+    anim3.start();
+
+    return () => {
+      anim1.stop();
+      anim2.stop();
+      anim3.stop();
+    };
   }, []);
 
   const handleSend = () => {
