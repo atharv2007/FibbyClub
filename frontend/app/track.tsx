@@ -24,7 +24,7 @@ import { AssetAllocationChart } from '../components/invest/AssetAllocationChart'
 import { HoldingCard } from '../components/invest/HoldingCard';
 import { SIPCard } from '../components/invest/SIPCard';
 import { InvestmentCard } from '../components/invest/InvestmentCard';
-import { RecommendationCard } from '../components/invest/RecommendationCard';
+import { RecommendationAccordion } from '../components/invest/RecommendationAccordion';
 
 type TabType = 'budget' | 'spend' | 'invest' | 'credit';
 
