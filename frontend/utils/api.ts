@@ -90,6 +90,40 @@ export const api = {
     return response.json();
   },
   
+  // Chat History
+  saveConversation: async (data: {
+    user_id: string;
+    conversation_id: string;
+    user_message: string;
+    assistant_message: string;
+    card_type?: string;
+    metrics?: any;
+  }) => {
+    const response = await fetch(`${API_URL}/api/chat/conversations`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data),
+    });
+    return response.json();
+  },
+  
+  getChatHistory: async (userId: string) => {
+    const response = await fetch(`${API_URL}/api/chat/conversations?user_id=${userId}`);
+    return response.json();
+  },
+  
+  getConversation: async (userId: string, conversationId: string) => {
+    const response = await fetch(`${API_URL}/api/chat/conversations/${conversationId}?user_id=${userId}`);
+    return response.json();
+  },
+  
+  deleteConversation: async (userId: string, conversationId: string) => {
+    const response = await fetch(`${API_URL}/api/chat/conversations/${conversationId}?user_id=${userId}`, {
+      method: 'DELETE',
+    });
+    return response.json();
+  },
+  
   // Get monthly spending
   getMonthlySpending: async (userId: string, months = 6) => {
     const response = await fetch(`${API_URL}/api/analytics/monthly-spending?user_id=${userId}&months=${months}`);
