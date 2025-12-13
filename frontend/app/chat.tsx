@@ -139,7 +139,7 @@ export default function ChatScreen() {
     <SafeAreaView style={styles.container}>
       {/* Header */}
       <View style={styles.header}>
-        <TouchableOpacity style={styles.menuButton}>
+        <TouchableOpacity style={styles.menuButton} onPress={() => setShowChatHistory(true)}>
           <Ionicons name="menu" size={24} color={COLORS.text} />
         </TouchableOpacity>
         
