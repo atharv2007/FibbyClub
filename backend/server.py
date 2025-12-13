@@ -1022,6 +1022,44 @@ IMPORTANT: Always return valid JSON. The frontend will display only the summary 
         raise HTTPException(status_code=500, detail=str(e))
 
 # ============= CHAT HISTORY ROUTES =============
+
+def detect_conversation_category(user_message: str, assistant_message: str, card_type: str = None) -> str:
+    """
+    Automatically detect conversation category based on message content and card type
+    Returns: 'budget', 'goals', 'investments', or 'status'
+    """
+    # Combine messages for analysis
+    combined_text = f"{user_message} {assistant_message}".lower()
+    
+    # Card type-based detection (most reliable)
+    if card_type:
+        if 'budget' in card_type or 'spending' in card_type:
+            return 'budget'
+        elif 'goal' in card_type:
+            return 'goals'
+        elif 'investment' in card_type or 'portfolio' in card_type or 'stock' in card_type:
+            return 'investments'
+    
+    # Keyword-based detection
+    budget_keywords = ['budget', 'spend', 'spending', 'expense', 'monthly', 'save', 'saving', 'afford', 'cut back']
+    goal_keywords = ['goal', 'target', 'trip', 'laptop', 'car', 'home', 'wedding', 'emergency fund']
+    investment_keywords = ['invest', 'portfolio', 'stock', 'mutual fund', 'sip', 'returns', 'equity', 'debt']
+    
+    # Count keyword matches
+    budget_score = sum(1 for kw in budget_keywords if kw in combined_text)
+    goal_score = sum(1 for kw in goal_keywords if kw in combined_text)
+    investment_score = sum(1 for kw in investment_keywords if kw in combined_text)
+    
+    # Return category with highest score
+    if goal_score > budget_score and goal_score > investment_score:
+        return 'goals'
+    elif investment_score > budget_score:
+        return 'investments'
+    elif budget_score > 0:
+        return 'budget'
+    else:
+        return 'status'  # Default category
+
 @api_router.post("/chat/conversations")
 async def create_or_update_conversation(request: dict):
     """Create a new conversation or update existing one"""
@@ -1035,6 +1073,9 @@ async def create_or_update_conversation(request: dict):
         
         if not user_id or not conversation_id or not user_message or not assistant_message:
             raise HTTPException(status_code=400, detail="Missing required fields")
+        
+        # Detect category automatically
+        category = detect_conversation_category(user_message, assistant_message, card_type)
         
         # Find existing conversation
         existing_conv = await db.chat_conversations.find_one({
