@@ -640,7 +640,7 @@ async def get_user_context(user_id: str, query: str) -> str:
                 active_sips = [mf for mf in mutual_funds if mf.get('sip_amount', 0) > 0]
                 if active_sips:
                     total_sip = sum(mf.get('sip_amount', 0) for mf in active_sips)
-                    context_parts.append(f"Active SIPs: {len(active_sips)} ({₹{total_sip:,.0f}/month)")
+                    context_parts.append(f"Active SIPs: {len(active_sips)} (₹{total_sip:,.0f}/month)")
         
         # Goal-related queries
         if any(word in query_lower for word in ['goal', 'save', 'saving', 'target']):
