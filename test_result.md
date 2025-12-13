@@ -395,3 +395,24 @@ agent_communication:
       
       All APIs return proper data structures with expected fields and correct amounts.
       Backend implementation is solid and ready for frontend integration.
+
+  - agent: "testing"
+    message: |
+      🎉 INVESTMENT APIs TESTING COMPLETE - ALL TESTS PASSED!
+      
+      Comprehensive testing of all Investment APIs for Fibby app with user ID: 693d2626a878e575aaf43c0a
+      
+      ✅ Portfolio Summary: Returns complete portfolio with ₹1,150,298 total value, 10.79% returns
+      ✅ Stock Holdings: 6 holdings (RELIANCE, TCS, INFY, HDFCBANK, SBIN, TATAMOTORS) with correct P&L
+      ✅ Mutual Funds: 4 funds with proper folio numbers and fund names
+      ✅ Active SIPs: 3 SIPs with amounts ₹5,000, ₹3,000, ₹2,000
+      ✅ Other Investments: 9 investments across crypto, FD, bonds, real estate, NPS, PPF, insurance
+      ✅ Filtered Investments: Crypto filter returns 2 Bitcoin/Ethereum investments correctly
+      ✅ AI + Rule Recommendations: Both AI (GPT-powered) and rule-based recommendations working
+      
+      ISSUES FIXED DURING TESTING:
+      - Fixed investment data initialization logic in server.py (was only creating data for new accounts)
+      - Fixed LlmChat session_id parameter for AI recommendations
+      - Updated test expectations to match actual API field names (fund vs fund_name)
+      
+      All investment APIs are production-ready with proper data structures and calculations.
