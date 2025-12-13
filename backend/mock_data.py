@@ -161,7 +161,7 @@ def generate_mock_goals(user_id: str) -> List[dict]:
         {
             "user_id": user_id,
             "name": "Goa Trip",
-            "icon": "beach",
+            "icon": "airplane",
             "target_amount": 30000.0,
             "saved_amount": 12500.0,
             "deadline": datetime.utcnow() + timedelta(days=90),
@@ -181,12 +181,62 @@ def generate_mock_goals(user_id: str) -> List[dict]:
         {
             "user_id": user_id,
             "name": "Emergency Fund",
-            "icon": "shield",
+            "icon": "shield-checkmark",
             "target_amount": 100000.0,
             "saved_amount": 45000.0,
             "deadline": None,
             "auto_save_enabled": True,
             "auto_save_amount": 2000.0
+        },
+        {
+            "user_id": user_id,
+            "name": "Dream Car",
+            "icon": "car-sport",
+            "target_amount": 500000.0,
+            "saved_amount": 150000.0,
+            "deadline": datetime.utcnow() + timedelta(days=730),
+            "auto_save_enabled": True,
+            "auto_save_amount": 5000.0
+        },
+        {
+            "user_id": user_id,
+            "name": "New iPhone",
+            "icon": "phone-portrait",
+            "target_amount": 120000.0,
+            "saved_amount": 85000.0,
+            "deadline": datetime.utcnow() + timedelta(days=120),
+            "auto_save_enabled": False,
+            "auto_save_amount": None
+        },
+        {
+            "user_id": user_id,
+            "name": "Home Down Payment",
+            "icon": "home",
+            "target_amount": 1500000.0,
+            "saved_amount": 320000.0,
+            "deadline": datetime.utcnow() + timedelta(days=1095),
+            "auto_save_enabled": True,
+            "auto_save_amount": 10000.0
+        },
+        {
+            "user_id": user_id,
+            "name": "Wedding Fund",
+            "icon": "heart",
+            "target_amount": 800000.0,
+            "saved_amount": 200000.0,
+            "deadline": datetime.utcnow() + timedelta(days=900),
+            "auto_save_enabled": True,
+            "auto_save_amount": 8000.0
+        },
+        {
+            "user_id": user_id,
+            "name": "Study Abroad",
+            "icon": "school",
+            "target_amount": 2000000.0,
+            "saved_amount": 450000.0,
+            "deadline": datetime.utcnow() + timedelta(days=1460),
+            "auto_save_enabled": True,
+            "auto_save_amount": 15000.0
         }
     ]
 
