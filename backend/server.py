@@ -93,6 +93,19 @@ async def initialize_user():
             insights = generate_mock_insights(user_id)
             if insights:
                 await db.insights.insert_many(insights)
+            
+            # Create investment data
+            holdings = generate_mock_holdings(user_id)
+            if holdings:
+                await db.investment_holdings.insert_many(holdings)
+            
+            mutual_funds = generate_mock_mutual_funds(user_id)
+            if mutual_funds:
+                await db.mutual_funds.insert_many(mutual_funds)
+            
+            other_investments = generate_mock_other_investments(user_id)
+            if other_investments:
+                await db.other_investments.insert_many(other_investments)
         
         return {"status": "success", "user_id": user_id, "message": "User initialized"}
     except Exception as e:
