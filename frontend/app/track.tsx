@@ -19,6 +19,12 @@ import { MerchantLeaderboard } from '../components/track/MerchantLeaderboard';
 import { BudgetCard } from '../components/track/BudgetCard';
 import { CategoryLimits } from '../components/track/CategoryLimits';
 import { CreditCard } from '../components/track/CreditCard';
+import { PortfolioCard } from '../components/invest/PortfolioCard';
+import { AssetAllocationChart } from '../components/invest/AssetAllocationChart';
+import { HoldingCard } from '../components/invest/HoldingCard';
+import { SIPCard } from '../components/invest/SIPCard';
+import { InvestmentCard } from '../components/invest/InvestmentCard';
+import { RecommendationCard } from '../components/invest/RecommendationCard';
 
 type TabType = 'budget' | 'spend' | 'invest' | 'credit';
 
@@ -34,6 +40,13 @@ export default function TrackScreen() {
   const [selectedMonthNum, setSelectedMonthNum] = useState<number | undefined>();
   const [selectedYear, setSelectedYear] = useState<number | undefined>();
   const [timePeriod, setTimePeriod] = useState('6mnth');
+  
+  // Investment state
+  const [portfolio, setPortfolio] = useState<any>(null);
+  const [holdings, setHoldings] = useState<any[]>([]);
+  const [sips, setSips] = useState<any[]>([]);
+  const [otherInvestments, setOtherInvestments] = useState<any[]>([]);
+  const [recommendations, setRecommendations] = useState<any[]>([]);
 
   // Initialize user if not exists
   useEffect(() => {
