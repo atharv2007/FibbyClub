@@ -12,7 +12,8 @@ import {
 import { COLORS, SPACING } from '../constants/theme';
 import { useDashboard } from '../hooks/useDashboard';
 import { Header } from '../components/home/Header';
-import { BankStack } from '../components/home/BankStack';
+import { BankCarousel } from '../components/home/BankCarousel';
+import { AddBankModal } from '../components/home/AddBankModal';
 import { AgentChips } from '../components/home/AgentChips';
 import { CategoryDonutChart } from '../components/home/CategoryDonutChart';
 import { InsightsFeed } from '../components/home/InsightsFeed';
