@@ -1,15 +1,20 @@
-// Fibby Design System - Cinematic Look
+// Fibby Design System - Gen-Z Finance Companion
 
 export const COLORS = {
   // Brand Colors
-  primary: '#966866', // Muted Clay/Rose
-  primaryLight: '#B08886',
-  primaryDark: '#7A5454',
+  primary: '#608BB6', // Modern Blue
+  primaryLight: '#7FA5C9',
+  primaryDark: '#4A6B8F',
   
   // Backgrounds
   background: '#FAFAFA',
   surface: '#FFFFFF',
   surfaceVariant: '#F5F5F5',
+  
+  // Glassmorphism
+  glass: 'rgba(255, 255, 255, 0.7)',
+  glassBorder: 'rgba(255, 255, 255, 0.3)',
+  glassShadow: 'rgba(96, 139, 182, 0.1)',
   
   // Semantic Colors
   success: '#10B981',
@@ -28,7 +33,7 @@ export const COLORS = {
   disabled: '#D1D5DB',
   
   // Chart Colors
-  chart1: '#966866',
+  chart1: '#608BB6',
   chart2: '#3B82F6',
   chart3: '#10B981',
   chart4: '#F59E0B',
@@ -46,6 +51,8 @@ export const SPACING = {
 };
 
 export const RADIUS = {
+  button: 12, // Button radius
+  card: 16,   // Card radius
   sm: 8,
   md: 12,
   lg: 16,
@@ -54,32 +61,42 @@ export const RADIUS = {
 };
 
 export const SHADOWS = {
-  sm: {
-    shadowColor: '#000',
+  soft: {
+    shadowColor: '#608BB6',
     shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.05,
+    shadowOpacity: 0.08,
     shadowRadius: 8,
     elevation: 2,
   },
-  md: {
-    shadowColor: '#000',
+  card: {
+    shadowColor: '#608BB6',
     shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.08,
-    shadowRadius: 12,
-    elevation: 4,
-  },
-  lg: {
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 8 },
     shadowOpacity: 0.1,
-    shadowRadius: 20,
-    elevation: 8,
+    shadowRadius: 12,
+    elevation: 3,
+  },
+  elevated: {
+    shadowColor: '#608BB6',
+    shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 0.12,
+    shadowRadius: 16,
+    elevation: 5,
   },
 };
 
 export const TYPOGRAPHY = {
-  // You'll need to load these fonts
-  heading: 'Urbanist-Bold',
-  body: 'Urbanist-Regular',
-  data: 'System', // Using system font for now, can load Rethink Sans
+  // Font families
+  heading: 'Urbanist',
+  body: 'Urbanist',
+  data: 'System', // Rethink Sans (using system for now)
+  
+  // Font sizes
+  h1: 28,
+  h2: 24,
+  h3: 20,
+  h4: 18,
+  body: 16,
+  bodySmall: 14,
+  caption: 12,
+  tiny: 10,
 };
