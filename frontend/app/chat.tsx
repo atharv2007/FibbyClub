@@ -52,75 +52,59 @@ export default function ChatScreen() {
   const [inputText, setInputText] = useState('');
   const [showWelcome, setShowWelcome] = useState(true);
   
-  // Animation values for scrolling rows
+  // Animation values for scrolling rows - Initialize all to 0
   const scrollAnim1 = useRef(new Animated.Value(0)).current;
   const scrollAnim2 = useRef(new Animated.Value(0)).current;
   const scrollAnim3 = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
-    // Calculate the width needed for one complete set of chips
-    const row1Width = suggestionChipsRow1.length * CHIP_WIDTH;
-    const row2Width = suggestionChipsRow2.length * CHIP_WIDTH;
-    const row3Width = suggestionChipsRow3.length * CHIP_WIDTH;
-
-    // Row 1 - Scroll left (negative direction) - infinite loop
-    const anim1 = Animated.loop(
-      Animated.sequence([
+    // Continuous scrolling animation for Row 1 (Left direction)
+    const startRow1Animation = () => {
+      scrollAnim1.setValue(0);
+      Animated.loop(
         Animated.timing(scrollAnim1, {
-          toValue: -row1Width,
-          duration: 30000,
+          toValue: -SCREEN_WIDTH * 2,
+          duration: 40000,
           useNativeDriver: true,
-        }),
-        Animated.timing(scrollAnim1, {
-          toValue: 0,
-          duration: 0,
-          useNativeDriver: true,
-        }),
-      ])
-    );
-    anim1.start();
+        })
+      ).start();
+    };
 
-    // Row 2 - Scroll right (positive direction) - infinite loop
-    // Create a separate animation that goes from 0 to positive for right scrolling
-    const anim2 = Animated.loop(
-      Animated.sequence([
-        Animated.timing(scrollAnim2, {
-          toValue: row2Width,
-          duration: 30000,
-          useNativeDriver: true,
-        }),
+    // Continuous scrolling animation for Row 2 (Right direction)
+    const startRow2Animation = () => {
+      scrollAnim2.setValue(-SCREEN_WIDTH * 2);
+      Animated.loop(
         Animated.timing(scrollAnim2, {
           toValue: 0,
-          duration: 0,
+          duration: 40000,
           useNativeDriver: true,
-        }),
-      ])
-    );
-    anim2.start();
+        })
+      ).start();
+    };
 
-    // Row 3 - Scroll left (negative direction) - infinite loop
-    const anim3 = Animated.loop(
-      Animated.sequence([
+    // Continuous scrolling animation for Row 3 (Left direction)
+    const startRow3Animation = () => {
+      scrollAnim3.setValue(0);
+      Animated.loop(
         Animated.timing(scrollAnim3, {
-          toValue: -row3Width,
-          duration: 30000,
+          toValue: -SCREEN_WIDTH * 2,
+          duration: 40000,
           useNativeDriver: true,
-        }),
-        Animated.timing(scrollAnim3, {
-          toValue: 0,
-          duration: 0,
-          useNativeDriver: true,
-        }),
-      ])
-    );
-    anim3.start();
+        })
+      ).start();
+    };
+
+    // Start all animations
+    startRow1Animation();
+    startRow2Animation();
+    startRow3Animation();
 
     return () => {
-      anim1.stop();
-      anim2.stop();
-      anim3.stop();
+      scrollAnim1.stopAnimation();
+      scrollAnim2.stopAnimation();
+      scrollAnim3.stopAnimation();
     };
-  }, []);
+  }, [scrollAnim1, scrollAnim2, scrollAnim3]);
 
   const handleSend = () => {
     if (inputText.trim()) {
