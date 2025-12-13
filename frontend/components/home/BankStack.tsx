@@ -17,7 +17,7 @@ interface BankStackProps {
   account: BankAccount;
 }
 
-export const BankStack: React.FC<BankStackProps> = ({ account }) => {
+export function BankStack({ account }: BankStackProps) {
   const lastUpdated = new Date(account.last_updated).toLocaleTimeString('en-IN', {
     hour: '2-digit',
     minute: '2-digit',

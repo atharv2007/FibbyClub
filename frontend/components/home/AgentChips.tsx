@@ -22,7 +22,7 @@ const AGENT_CHIPS: AgentChip[] = [
   { id: 'budget', icon: 'pie-chart', label: 'Budget', action: () => {} },
 ];
 
-export const AgentChips: React.FC<AgentChipsProps> = ({ onChipPress }) => {
+export function AgentChips({ onChipPress }: AgentChipsProps) {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Quick Actions</Text>

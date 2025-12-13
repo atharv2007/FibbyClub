@@ -43,7 +43,7 @@ const CATEGORY_COLORS: Record<string, string> = {
   default: COLORS.primary,
 };
 
-export const CategoryIcon: React.FC<CategoryIconProps> = ({ category, size = 40, color }) => {
+export function CategoryIcon({ category, size = 40, color }: CategoryIconProps) {
   const iconName = CATEGORY_ICONS[category] || CATEGORY_ICONS.default;
   const backgroundColor = color || CATEGORY_COLORS[category] || CATEGORY_COLORS.default;
   

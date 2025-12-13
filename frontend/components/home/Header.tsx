@@ -9,7 +9,7 @@ interface HeaderProps {
   spendPercentage?: number;
 }
 
-export const Header: React.FC<HeaderProps> = ({ userName, spendPercentage = 50 }) => {
+export function Header({ userName, spendPercentage = 50 }: HeaderProps) {
   const greeting = getGreeting();
   const mood = getMoneyMood(spendPercentage);
   

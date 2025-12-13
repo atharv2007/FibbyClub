@@ -39,7 +39,7 @@ const INSIGHT_CONFIG = {
   },
 };
 
-export const InsightsFeed: React.FC<InsightsFeedProps> = ({ insights }) => {
+export function InsightsFeed({ insights }: InsightsFeedProps) {
   if (insights.length === 0) {
     return null;
   }
