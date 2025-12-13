@@ -167,6 +167,24 @@ const mockChatHistory: ChatHistoryItem[] = [
 export default function ChatHistoryDrawer({ visible, onClose, onNewChat, onSelectChat }: ChatHistoryDrawerProps) {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
+  const slideAnim = useRef(new Animated.Value(-DRAWER_WIDTH)).current;
+
+  useEffect(() => {
+    if (visible) {
+      Animated.spring(slideAnim, {
+        toValue: 0,
+        useNativeDriver: true,
+        tension: 65,
+        friction: 11,
+      }).start();
+    } else {
+      Animated.timing(slideAnim, {
+        toValue: -DRAWER_WIDTH,
+        duration: 250,
+        useNativeDriver: true,
+      }).start();
+    }
+  }, [visible]);
 
   // Filter chats based on search and category
   const filteredChats = mockChatHistory.filter((chat) => {
@@ -177,37 +195,50 @@ export default function ChatHistoryDrawer({ visible, onClose, onNewChat, onSelec
     return matchesSearch && matchesCategory;
   });
 
-  // Group chats by time period
+  // Group chats by time period with realistic labels
   const groupChatsByDate = (chats: ChatHistoryItem[]) => {
-    const today = new Date();
+    const now = new Date();
+    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
     const yesterday = new Date(today);
     yesterday.setDate(yesterday.getDate() - 1);
-    const lastWeek = new Date(today);
-    lastWeek.setDate(lastWeek.getDate() - 7);
-    const lastMonth = new Date(today);
-    lastMonth.setDate(lastMonth.getDate() - 30);
+    
+    const startOfWeek = new Date(today);
+    startOfWeek.setDate(today.getDate() - today.getDay()); // Start of this week (Sunday)
+    
+    const startOfLastWeek = new Date(startOfWeek);
+    startOfLastWeek.setDate(startOfLastWeek.getDate() - 7);
+    
+    const startOfThisMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+    const startOfLastMonth = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+    const startOfTwoMonthsAgo = new Date(now.getFullYear(), now.getMonth() - 2, 1);
 
     const groups: { [key: string]: ChatHistoryItem[] } = {
-      TODAY: [],
-      'THIS WEEK': [],
-      'LAST WEEK': [],
-      OLDER: [],
+      'Today': [],
+      'Yesterday': [],
+      'This Week': [],
+      'Last Week': [],
+      'This Month': [],
+      'Last Month': [],
+      'Older': [],
     };
 
     chats.forEach((chat) => {
-      const chatDate = chat.date;
-      const isToday = chatDate.toDateString() === today.toDateString();
-      const isThisWeek = chatDate >= lastWeek && chatDate < today;
-      const isLastWeek = chatDate >= lastMonth && chatDate < lastWeek;
-
-      if (isToday) {
-        groups.TODAY.push(chat);
-      } else if (isThisWeek) {
-        groups['THIS WEEK'].push(chat);
-      } else if (isLastWeek) {
-        groups['LAST WEEK'].push(chat);
+      const chatDate = new Date(chat.date.getFullYear(), chat.date.getMonth(), chat.date.getDate());
+      
+      if (chatDate.getTime() === today.getTime()) {
+        groups['Today'].push(chat);
+      } else if (chatDate.getTime() === yesterday.getTime()) {
+        groups['Yesterday'].push(chat);
+      } else if (chatDate >= startOfWeek && chatDate < yesterday) {
+        groups['This Week'].push(chat);
+      } else if (chatDate >= startOfLastWeek && chatDate < startOfWeek) {
+        groups['Last Week'].push(chat);
+      } else if (chatDate >= startOfThisMonth && chatDate < startOfWeek) {
+        groups['This Month'].push(chat);
+      } else if (chatDate >= startOfLastMonth && chatDate < startOfThisMonth) {
+        groups['Last Month'].push(chat);
       } else {
-        groups.OLDER.push(chat);
+        groups['Older'].push(chat);
       }
     });
 
