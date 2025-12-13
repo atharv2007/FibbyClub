@@ -179,6 +179,79 @@ async def get_merchant_leaderboard(user_id: str, limit: int = 10):
     results = await db.transactions.aggregate(pipeline).to_list(limit)
     return results
 
+@api_router.get("/analytics/monthly-spending")
+async def get_monthly_spending(user_id: str, months: int = 6):
+    """Get monthly spending aggregation"""
+    start_date = datetime.utcnow() - timedelta(days=30 * months)
+    
+    pipeline = [
+        {"$match": {
+            "user_id": user_id,
+            "transaction_type": "expense",
+            "date": {"$gte": start_date}
+        }},
+        {"$group": {
+            "_id": {
+                "year": {"$year": "$date"},
+                "month": {"$month": "$date"}
+            },
+            "total": {"$sum": "$amount"}
+        }},
+        {"$sort": {"_id.year": 1, "_id.month": 1}}
+    ]
+    
+    results = await db.transactions.aggregate(pipeline).to_list(100)
+    
+    # Format month names
+    month_names = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+    formatted = []
+    for item in results:
+        month_num = item["_id"]["month"]
+        formatted.append({
+            "month": month_names[month_num - 1],
+            "amount": item["total"],
+            "year": item["_id"]["year"],
+            "month_num": month_num
+        })
+    
+    return formatted
+
+@api_router.get("/analytics/monthly-income")
+async def get_monthly_income(user_id: str, months: int = 6):
+    """Get monthly income aggregation"""
+    start_date = datetime.utcnow() - timedelta(days=30 * months)
+    
+    pipeline = [
+        {"$match": {
+            "user_id": user_id,
+            "transaction_type": "income",
+            "date": {"$gte": start_date}
+        }},
+        {"$group": {
+            "_id": {
+                "year": {"$year": "$date"},
+                "month": {"$month": "$date"}
+            },
+            "total": {"$sum": "$amount"}
+        }},
+        {"$sort": {"_id.year": 1, "_id.month": 1}}
+    ]
+    
+    results = await db.transactions.aggregate(pipeline).to_list(100)
+    
+    month_names = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+    formatted = []
+    for item in results:
+        month_num = item["_id"]["month"]
+        formatted.append({
+            "month": month_names[month_num - 1],
+            "amount": item["total"],
+            "year": item["_id"]["year"],
+            "month_num": month_num
+        })
+    
+    return formatted
+
 @api_router.get("/analytics/spend-velocity")
 async def get_spend_velocity(user_id: str):
     """Get spending comparison: current month vs last month"""
