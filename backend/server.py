@@ -1014,6 +1014,154 @@ IMPORTANT: Always return valid JSON. The frontend will display only the summary 
         logger.error(f"Chat error: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
+# ============= CHAT HISTORY ROUTES =============
+@api_router.post("/chat/conversations")
+async def create_or_update_conversation(request: dict):
+    """Create a new conversation or update existing one"""
+    try:
+        user_id = request.get("user_id")
+        conversation_id = request.get("conversation_id")
+        user_message = request.get("user_message")
+        assistant_message = request.get("assistant_message")
+        card_type = request.get("card_type")
+        metrics = request.get("metrics")
+        
+        if not user_id or not conversation_id or not user_message or not assistant_message:
+            raise HTTPException(status_code=400, detail="Missing required fields")
+        
+        # Find existing conversation
+        existing_conv = await db.chat_conversations.find_one({
+            "user_id": user_id,
+            "conversation_id": conversation_id
+        })
+        
+        # Create message objects
+        user_msg = {
+            "role": "user",
+            "content": user_message,
+            "timestamp": datetime.utcnow()
+        }
+        
+        assistant_msg = {
+            "role": "assistant",
+            "content": assistant_message,
+            "timestamp": datetime.utcnow(),
+            "card_type": card_type,
+            "metrics": metrics
+        }
+        
+        if existing_conv:
+            # Update existing conversation
+            await db.chat_conversations.update_one(
+                {"_id": existing_conv["_id"]},
+                {
+                    "$push": {
+                        "messages": {
+                            "$each": [user_msg, assistant_msg]
+                        }
+                    },
+                    "$set": {"updated_at": datetime.utcnow()}
+                }
+            )
+            return {"conversation_id": conversation_id, "status": "updated"}
+        else:
+            # Generate title from first user message (first 50 chars)
+            title = user_message[:50] + "..." if len(user_message) > 50 else user_message
+            
+            # Create new conversation
+            new_conv = {
+                "user_id": user_id,
+                "conversation_id": conversation_id,
+                "title": title,
+                "messages": [user_msg, assistant_msg],
+                "created_at": datetime.utcnow(),
+                "updated_at": datetime.utcnow()
+            }
+            
+            await db.chat_conversations.insert_one(new_conv)
+            return {"conversation_id": conversation_id, "status": "created"}
+    
+    except Exception as e:
+        logger.error(f"Error saving conversation: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@api_router.get("/chat/conversations")
+async def get_conversations(user_id: str):
+    """Get all conversations for a user, grouped by date"""
+    try:
+        conversations = await db.chat_conversations.find(
+            {"user_id": user_id}
+        ).sort("updated_at", -1).to_list(100)
+        
+        # Serialize and group by date
+        now = datetime.utcnow()
+        today_start = now.replace(hour=0, minute=0, second=0, microsecond=0)
+        week_start = today_start - timedelta(days=7)
+        month_start = today_start - timedelta(days=30)
+        
+        grouped = {
+            "today": [],
+            "this_week": [],
+            "this_month": [],
+            "older": []
+        }
+        
+        for conv in conversations:
+            serialized = serialize_doc(conv)
+            updated_at = conv.get("updated_at", conv.get("created_at"))
+            
+            # Categorize by date
+            if updated_at >= today_start:
+                grouped["today"].append(serialized)
+            elif updated_at >= week_start:
+                grouped["this_week"].append(serialized)
+            elif updated_at >= month_start:
+                grouped["this_month"].append(serialized)
+            else:
+                grouped["older"].append(serialized)
+        
+        return grouped
+    
+    except Exception as e:
+        logger.error(f"Error fetching conversations: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@api_router.get("/chat/conversations/{conversation_id}")
+async def get_conversation(conversation_id: str, user_id: str):
+    """Get a specific conversation with all messages"""
+    try:
+        conversation = await db.chat_conversations.find_one({
+            "user_id": user_id,
+            "conversation_id": conversation_id
+        })
+        
+        if not conversation:
+            raise HTTPException(status_code=404, detail="Conversation not found")
+        
+        return serialize_doc(conversation)
+    
+    except Exception as e:
+        logger.error(f"Error fetching conversation: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@api_router.delete("/chat/conversations/{conversation_id}")
+async def delete_conversation(conversation_id: str, user_id: str):
+    """Delete a conversation"""
+    try:
+        result = await db.chat_conversations.delete_one({
+            "user_id": user_id,
+            "conversation_id": conversation_id
+        })
+        
+        if result.deleted_count == 0:
+            raise HTTPException(status_code=404, detail="Conversation not found")
+        
+        return {"message": "Conversation deleted successfully"}
+    
+    except Exception as e:
+        logger.error(f"Error deleting conversation: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
+
 # ============= DASHBOARD ROUTES =============
 @api_router.get("/dashboard")
 async def get_dashboard_data(user_id: str):
