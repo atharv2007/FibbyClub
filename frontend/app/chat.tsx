@@ -123,6 +123,18 @@ export default function ChatScreen() {
     // TODO: Auto-send or let user edit
   };
 
+  const handleNewChat = () => {
+    setShowWelcome(true);
+    setInputText('');
+    setShowChatHistory(false);
+  };
+
+  const handleSelectChat = (chatId: string) => {
+    // TODO: Load selected chat conversation
+    console.log('Selected chat:', chatId);
+    setShowWelcome(false);
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       {/* Header */}
