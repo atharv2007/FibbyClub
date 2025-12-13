@@ -16,6 +16,9 @@ import { api } from '../utils/api';
 import { MonthlyBarChart } from '../components/track/MonthlyBarChart';
 import { CategoryList } from '../components/track/CategoryList';
 import { MerchantLeaderboard } from '../components/track/MerchantLeaderboard';
+import { BudgetCard } from '../components/track/BudgetCard';
+import { CategoryLimits } from '../components/track/CategoryLimits';
+import { CreditCard } from '../components/track/CreditCard';
 
 type TabType = 'budget' | 'spend' | 'credit';
 
@@ -101,29 +104,29 @@ export default function TrackScreen() {
       {/* Tabs */}
       <View style={styles.tabs}>
         <TouchableOpacity
+          style={[styles.tab, activeTab === 'budget' && styles.activeTab]}
+          onPress={() => setActiveTab('budget')}
+        >
+          <Text style={[styles.tabText, activeTab === 'budget' && styles.activeTabText]}>
+            Budget
+          </Text>
+        </TouchableOpacity>
+        
+        <TouchableOpacity
           style={[styles.tab, activeTab === 'spend' && styles.activeTab]}
           onPress={() => setActiveTab('spend')}
         >
           <Text style={[styles.tabText, activeTab === 'spend' && styles.activeTabText]}>
-            Spend Analysis
+            Spending
           </Text>
         </TouchableOpacity>
         
         <TouchableOpacity
-          style={[styles.tab, activeTab === 'income' && styles.activeTab]}
-          onPress={() => setActiveTab('income')}
+          style={[styles.tab, activeTab === 'credit' && styles.activeTab]}
+          onPress={() => setActiveTab('credit')}
         >
-          <Text style={[styles.tabText, activeTab === 'income' && styles.activeTabText]}>
-            Income
-          </Text>
-        </TouchableOpacity>
-        
-        <TouchableOpacity
-          style={[styles.tab, activeTab === 'networth' && styles.activeTab]}
-          onPress={() => setActiveTab('networth')}
-        >
-          <Text style={[styles.tabText, activeTab === 'networth' && styles.activeTabText]}>
-            Net Worth
+          <Text style={[styles.tabText, activeTab === 'credit' && styles.activeTabText]}>
+            Credit
           </Text>
         </TouchableOpacity>
       </View>
@@ -134,6 +137,31 @@ export default function TrackScreen() {
         </View>
       ) : (
         <ScrollView style={styles.scrollView} contentContainerStyle={styles.scrollContent}>
+          {activeTab === 'budget' && (
+            <>
+              {/* Budget Card */}
+              <BudgetCard budget={45000} spent={31200} />
+
+              {/* Category Limits */}
+              <CategoryLimits
+                categories={[
+                  { name: 'Food', spent: 8500, limit: 12000, color: '#F43F5E' },
+                  { name: 'Shopping', spent: 4200, limit: 5000, color: '#3B82F6' },
+                  { name: 'Transport', spent: 3100, limit: 6000, color: '#10B981' },
+                  { name: 'Entertainment', spent: 2400, limit: 3000, color: '#8B5CF6' },
+                ]}
+              />
+
+              {/* Monthly Bar Chart Toggle */}
+              {monthlyData.length > 0 && (
+                <MonthlyBarChart
+                  data={monthlyData}
+                  onMonthSelect={(month) => setSelectedMonth(month)}
+                />
+              )}
+            </>
+          )}
+
           {activeTab === 'spend' && (
             <>
               {/* Monthly Bar Chart */}
@@ -155,34 +183,22 @@ export default function TrackScreen() {
                   merchants={merchants}
                   onMerchantPress={(merchantId) => {
                     console.log('Merchant pressed:', merchantId);
-                    // TODO: Navigate to merchant details
                   }}
                 />
               )}
             </>
           )}
 
-          {activeTab === 'income' && (
-            <>
-              {monthlyData.length > 0 && (
-                <MonthlyBarChart
-                  data={monthlyData}
-                  onMonthSelect={(month) => setSelectedMonth(month)}
-                />
-              )}
-              
-              <View style={styles.comingSoon}>
-                <Ionicons name="cash-outline" size={48} color={COLORS.textTertiary} />
-                <Text style={styles.comingSoonText}>Income breakdown coming soon!</Text>
-              </View>
-            </>
-          )}
-
-          {activeTab === 'networth' && (
-            <View style={styles.comingSoon}>
-              <Ionicons name="trending-up-outline" size={48} color={COLORS.textTertiary} />
-              <Text style={styles.comingSoonText}>Net worth tracking coming soon!</Text>
-            </View>
+          {activeTab === 'credit' && (
+            <CreditCard
+              creditInfo={{
+                score: 785,
+                totalLimit: 300000,
+                availableCredit: 238000,
+                currentSpend: 62000,
+                points: 12450,
+              }}
+            />
           )}
 
           <View style={styles.bottomPadding} />
