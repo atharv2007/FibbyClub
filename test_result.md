@@ -135,11 +135,14 @@ backend:
     file: "backend/server.py"
     stuck_count: 0
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
       - working: "NA"
         agent: "main"
         comment: "Implemented period=1mnth parameter. Returns 5 weekly bars (W1-W5) with week_start and week_end ISO timestamps for filtering."
+      - working: true
+        agent: "testing"
+        comment: "✅ TESTED SUCCESSFULLY: API returns exactly 5 weekly bars with correct structure. All expected fields present: month (W1-W5), week_num, week_start, week_end (ISO timestamps), date, and amount. Sample shows W1 with 7318.96 amount and proper date range '10-17 Nov'."
   
   - task: "API endpoint for 1 year spending (bi-monthly breakdown)"
     implemented: true
