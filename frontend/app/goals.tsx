@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -8,7 +8,7 @@ import {
   SafeAreaView,
   ActivityIndicator,
   Alert,
-  Animated,
+  Dimensions,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import Svg, { Circle } from 'react-native-svg';
@@ -17,6 +17,9 @@ import { useAppStore } from '../store/useAppStore';
 import { api } from '../utils/api';
 import { formatINRFull } from '../utils/format';
 import AddGoalModal from '../components/goals/AddGoalModal';
+
+const { width: SCREEN_WIDTH } = Dimensions.get('window');
+const CARD_WIDTH = (SCREEN_WIDTH - SPACING.md * 3) / 2;
 
 interface Goal {
   _id: string;
@@ -34,7 +37,6 @@ export default function GoalsScreen() {
   const [loading, setLoading] = useState(true);
   const [showAddModal, setShowAddModal] = useState(false);
   const [editingGoal, setEditingGoal] = useState<Goal | null>(null);
-  const fabScale = useRef(new Animated.Value(1)).current;
 
   useEffect(() => {
     if (user?._id) {
@@ -61,14 +63,11 @@ export default function GoalsScreen() {
     
     try {
       if (editingGoal?._id) {
-        // Update existing goal
         await api.updateGoal(user._id, editingGoal._id, goalData);
       } else {
-        // Create new goal
         await api.createGoal(user._id, goalData);
       }
       
-      // Reload goals
       await loadGoals();
       setShowAddModal(false);
       setEditingGoal(null);
@@ -103,21 +102,6 @@ export default function GoalsScreen() {
   const handleCloseModal = () => {
     setShowAddModal(false);
     setEditingGoal(null);
-  };
-
-  const animateFab = () => {
-    Animated.sequence([
-      Animated.timing(fabScale, {
-        toValue: 0.9,
-        duration: 100,
-        useNativeDriver: true,
-      }),
-      Animated.timing(fabScale, {
-        toValue: 1,
-        duration: 100,
-        useNativeDriver: true,
-      }),
-    ]).start();
   };
 
   const getIconName = (icon: string): keyof typeof Ionicons.glyphMap => {
@@ -167,13 +151,15 @@ export default function GoalsScreen() {
     <SafeAreaView style={styles.container}>
       {/* Header */}
       <View style={styles.header}>
-        <View>
-          <Text style={styles.headerTitle}>Your Goals</Text>
-          <Text style={styles.headerSubtitle}>Track your financial targets</Text>
-        </View>
+        <Text style={styles.headerTitle}>Your Goals</Text>
+        <Text style={styles.headerSubtitle}>Track and achieve your financial targets</Text>
       </View>
 
-      <ScrollView style={styles.scrollView} contentContainerStyle={styles.scrollContent}>
+      <ScrollView 
+        style={styles.scrollView} 
+        contentContainerStyle={styles.scrollContent}
+        showsVerticalScrollIndicator={false}
+      >
         {goals.length === 0 ? (
           /* Empty State */
           <View style={styles.emptyState}>
@@ -191,52 +177,43 @@ export default function GoalsScreen() {
           </View>
         ) : (
           <>
-            {/* Overall Achievement Card */}
-            <View style={styles.achievementCard}>
-              <View style={styles.achievementHeader}>
-                <Ionicons name="bar-chart" size={24} color={COLORS.primary} />
-                <Text style={styles.achievementTitle}>Overall Progress</Text>
+            {/* Overall Achievement Summary */}
+            <View style={styles.summaryCard}>
+              <View style={styles.summaryHeader}>
+                <View>
+                  <Text style={styles.summaryTitle}>Overall Progress</Text>
+                  <Text style={styles.summarySubtitle}>{goals.length} Active Goals</Text>
+                </View>
+                <TouchableOpacity style={styles.addButton} onPress={handleAddNew}>
+                  <Ionicons name="add" size={20} color={COLORS.surface} />
+                </TouchableOpacity>
               </View>
-              <View style={styles.achievementContent}>
+              
+              <View style={styles.progressSection}>
                 <View style={styles.progressBarContainer}>
                   <View style={[styles.progressBarFill, { width: `${overallProgress}%` }]} />
                 </View>
-                <Text style={styles.progressLabel}>{overallProgress}% Complete</Text>
+                <Text style={styles.progressText}>{overallProgress}% Complete</Text>
               </View>
-              <View style={styles.achievementStats}>
-                <View style={styles.statItem}>
+
+              <View style={styles.statsRow}>
+                <View style={styles.statBox}>
                   <Text style={styles.statLabel}>Saved</Text>
                   <Text style={styles.statValue}>{formatINRFull(totalSaved)}</Text>
                 </View>
                 <View style={styles.statDivider} />
-                <View style={styles.statItem}>
+                <View style={styles.statBox}>
                   <Text style={styles.statLabel}>Target</Text>
                   <Text style={styles.statValue}>{formatINRFull(totalTarget)}</Text>
-                </View>
-                <View style={styles.statDivider} />
-                <View style={styles.statItem}>
-                  <Text style={styles.statLabel}>Goals</Text>
-                  <Text style={styles.statValue}>{goals.length}</Text>
                 </View>
               </View>
             </View>
 
-            {/* Add Goal CTA Button */}
-            <TouchableOpacity style={styles.addGoalCTA} onPress={handleAddNew} activeOpacity={0.8}>
-              <Ionicons name="add-circle" size={24} color={COLORS.primary} />
-              <Text style={styles.addGoalCTAText}>Add New Goal</Text>
-            </TouchableOpacity>
-
-            {/* Section Header */}
-            <View style={styles.sectionHeader}>
-              <Text style={styles.sectionTitle}>All Goals</Text>
-            </View>
-
-            {/* Goals Grid */}
+            {/* Goals Grid - 2x3 Layout */}
             <View style={styles.goalsGrid}>
-              {goals.map((goal) => {
+              {goals.map((goal, index) => {
                 const progress = Math.min((goal.saved_amount / goal.target_amount) * 100, 100);
-                const circumference = 2 * Math.PI * 50;
+                const circumference = 2 * Math.PI * 45;
                 const strokeDashoffset = circumference - (progress / 100) * circumference;
 
                 return (
@@ -248,30 +225,30 @@ export default function GoalsScreen() {
                   >
                     {/* Progress Ring */}
                     <View style={styles.progressRing}>
-                      <Svg width={120} height={120}>
+                      <Svg width={100} height={100}>
                         <Circle
-                          cx="60"
-                          cy="60"
-                          r="50"
+                          cx="50"
+                          cy="50"
+                          r="45"
                           stroke={COLORS.border}
-                          strokeWidth="8"
+                          strokeWidth="6"
                           fill="transparent"
                         />
                         <Circle
-                          cx="60"
-                          cy="60"
-                          r="50"
+                          cx="50"
+                          cy="50"
+                          r="45"
                           stroke={COLORS.success}
-                          strokeWidth="8"
+                          strokeWidth="6"
                           fill="transparent"
                           strokeDasharray={circumference}
                           strokeDashoffset={strokeDashoffset}
                           strokeLinecap="round"
-                          transform="rotate(-90 60 60)"
+                          transform="rotate(-90 50 50)"
                         />
                       </Svg>
                       <View style={styles.progressContent}>
-                        <Ionicons name={getIconName(goal.icon)} size={32} color={COLORS.success} />
+                        <Ionicons name={getIconName(goal.icon)} size={28} color={COLORS.success} />
                         <Text style={styles.progressPercent}>{Math.round(progress)}%</Text>
                       </View>
                     </View>
@@ -290,8 +267,6 @@ export default function GoalsScreen() {
             </View>
           </>
         )}
-
-        <View style={styles.bottomPadding} />
       </ScrollView>
 
       {/* Add/Edit Goal Modal */}
@@ -317,38 +292,36 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'flex-start',
     paddingHorizontal: SPACING.md,
-    paddingVertical: SPACING.md,
-    backgroundColor: COLORS.surface,
-    borderBottomWidth: 1,
-    borderBottomColor: COLORS.border,
+    paddingTop: SPACING.md,
+    paddingBottom: SPACING.sm,
+    backgroundColor: COLORS.background,
   },
   headerTitle: {
     fontSize: 28,
-    fontWeight: 'bold',
+    fontWeight: '700',
     color: COLORS.text,
     marginBottom: 4,
+    fontFamily: 'Urbanist',
   },
   headerSubtitle: {
-    fontSize: 15,
+    fontSize: 14,
     color: COLORS.textSecondary,
+    fontFamily: 'Urbanist',
   },
   scrollView: {
     flex: 1,
   },
   scrollContent: {
-    padding: SPACING.md,
-    flexGrow: 1,
+    paddingHorizontal: SPACING.md,
+    paddingBottom: SPACING.xl,
   },
   emptyState: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
     paddingHorizontal: SPACING.xl,
-    paddingTop: 60,
+    paddingTop: 80,
   },
   emptyIconContainer: {
     width: 120,
@@ -365,6 +338,7 @@ const styles = StyleSheet.create({
     color: COLORS.text,
     marginBottom: SPACING.xs,
     textAlign: 'center',
+    fontFamily: 'Urbanist',
   },
   emptySubtitle: {
     fontSize: 15,
@@ -372,6 +346,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginBottom: SPACING.xl,
     lineHeight: 22,
+    fontFamily: 'Urbanist',
   },
   emptyButton: {
     flexDirection: 'row',
@@ -387,30 +362,46 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '600',
     color: COLORS.surface,
+    fontFamily: 'Urbanist',
   },
-  achievementCard: {
+  summaryCard: {
     backgroundColor: COLORS.surface,
-    borderRadius: RADIUS.lg,
+    borderRadius: RADIUS.card,
     padding: SPACING.md,
     marginBottom: SPACING.md,
-    ...SHADOWS.card,
+    ...SHADOWS.soft,
   },
-  achievementHeader: {
+  summaryHeader: {
     flexDirection: 'row',
+    justifyContent: 'space-between',
     alignItems: 'center',
-    gap: SPACING.xs,
     marginBottom: SPACING.md,
   },
-  achievementTitle: {
-    fontSize: 18,
+  summaryTitle: {
+    fontSize: 20,
     fontWeight: '700',
     color: COLORS.text,
+    fontFamily: 'Urbanist',
   },
-  achievementContent: {
+  summarySubtitle: {
+    fontSize: 13,
+    color: COLORS.textSecondary,
+    marginTop: 2,
+    fontFamily: 'Urbanist',
+  },
+  addButton: {
+    width: 40,
+    height: 40,
+    borderRadius: RADIUS.button,
+    backgroundColor: COLORS.primary,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  progressSection: {
     marginBottom: SPACING.md,
   },
   progressBarContainer: {
-    height: 12,
+    height: 10,
     backgroundColor: COLORS.border,
     borderRadius: RADIUS.full,
     overflow: 'hidden',
@@ -421,18 +412,18 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.success,
     borderRadius: RADIUS.full,
   },
-  progressLabel: {
+  progressText: {
     fontSize: 14,
     fontWeight: '600',
     color: COLORS.text,
     textAlign: 'center',
+    fontFamily: 'System',
   },
-  achievementStats: {
+  statsRow: {
     flexDirection: 'row',
-    justifyContent: 'space-around',
     alignItems: 'center',
   },
-  statItem: {
+  statBox: {
     flex: 1,
     alignItems: 'center',
   },
@@ -440,97 +431,76 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: COLORS.textSecondary,
     marginBottom: 4,
+    fontFamily: 'Urbanist',
   },
   statValue: {
     fontSize: 16,
     fontWeight: '700',
     color: COLORS.text,
+    fontFamily: 'System',
   },
   statDivider: {
     width: 1,
     height: 40,
     backgroundColor: COLORS.border,
   },
-  addGoalCTA: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: SPACING.xs,
-    backgroundColor: COLORS.surface,
-    borderRadius: RADIUS.button,
-    paddingVertical: SPACING.md,
-    marginTop: SPACING.md,
-    marginBottom: SPACING.md,
-    borderWidth: 2,
-    borderColor: COLORS.primary,
-    borderStyle: 'dashed',
-  },
-  addGoalCTAText: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: COLORS.primary,
-  },
-  sectionHeader: {
-    marginBottom: SPACING.sm,
-  },
-  sectionTitle: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: COLORS.text,
-  },
   goalsGrid: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    gap: SPACING.md,
+    marginHorizontal: -SPACING.xs,
   },
   goalCard: {
-    width: '48%',
+    width: CARD_WIDTH,
     backgroundColor: COLORS.surface,
     borderRadius: RADIUS.card,
     padding: SPACING.md,
+    marginHorizontal: SPACING.xs,
+    marginBottom: SPACING.sm,
     alignItems: 'center',
-    gap: SPACING.sm,
     ...SHADOWS.soft,
   },
   progressRing: {
     position: 'relative',
-    width: 120,
-    height: 120,
+    width: 100,
+    height: 100,
     justifyContent: 'center',
     alignItems: 'center',
+    marginBottom: SPACING.sm,
   },
   progressContent: {
     position: 'absolute',
     justifyContent: 'center',
     alignItems: 'center',
-    gap: 4,
+    gap: 2,
   },
   progressPercent: {
-    fontSize: 16,
-    fontWeight: 'bold',
+    fontSize: 14,
+    fontWeight: '700',
     color: COLORS.text,
+    fontFamily: 'System',
   },
   goalName: {
-    fontSize: 15,
+    fontSize: 14,
     fontWeight: '600',
     color: COLORS.text,
     textAlign: 'center',
-    minHeight: 38,
+    marginBottom: SPACING.xs,
+    minHeight: 34,
+    fontFamily: 'Urbanist',
   },
   goalAmounts: {
     alignItems: 'center',
     gap: 2,
   },
   savedAmount: {
-    fontSize: 16,
-    fontWeight: 'bold',
+    fontSize: 15,
+    fontWeight: '700',
     color: COLORS.text,
+    fontFamily: 'System',
   },
   targetAmount: {
-    fontSize: 12,
+    fontSize: 11,
     color: COLORS.textSecondary,
-  },
-  bottomPadding: {
-    height: 100,
+    fontFamily: 'System',
   },
 });
