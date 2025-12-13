@@ -180,11 +180,14 @@ backend:
     file: "backend/server.py"
     stuck_count: 0
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
       - working: "NA"
         agent: "main"
         comment: "Already supports start_date_str and end_date_str query parameters for filtering by date range."
+      - working: true
+        agent: "testing"
+        comment: "✅ TESTED SUCCESSFULLY: API correctly filters merchants by date range and returns top 10 as requested. Returns 4 merchants with proper structure: _id (merchant name like 'IRCTC'), total (1644.06), count (1), and category ('Travel'). Date filtering and limit parameter work correctly."
 
 frontend:
   - task: "Chart component displays all time periods correctly"
