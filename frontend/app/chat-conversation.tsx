@@ -27,6 +27,7 @@ interface Message {
     label: string;
     action: string;
   };
+  card?: any; // Card data for visual components
 }
 
 export default function ChatConversationScreen() {
