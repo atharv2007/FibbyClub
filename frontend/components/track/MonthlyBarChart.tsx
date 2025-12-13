@@ -48,7 +48,7 @@ export function MonthlyBarChart({ data, onMonthSelect, onPeriodChange, selectedP
     <View style={styles.container}>
       <View style={styles.header}>
         <View>
-          <Text style={styles.title}>Monthly Spending</Text>
+          <Text style={styles.title}>Spending Matrix</Text>
           <Text style={styles.subtitle}>Tap on a bar to filter below</Text>
         </View>
       </View>
