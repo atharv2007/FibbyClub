@@ -266,11 +266,14 @@ export default function ChatHistoryDrawer({ visible, onClose, onNewChat, onSelec
           ]}
           onStartShouldSetResponder={() => true}
         >
-          {/* Header */}
+          {/* Header with close button */}
           <View style={styles.header}>
-            <Text style={styles.headerTitle}>Chat History</Text>
+            <View>
+              <Text style={styles.headerTitle}>Conversations</Text>
+              <Text style={styles.headerSubtitle}>{filteredChats.length} chats</Text>
+            </View>
             <TouchableOpacity onPress={onClose} style={styles.closeButton}>
-              <Ionicons name="close" size={24} color={COLORS.text} />
+              <Ionicons name="close-circle" size={32} color={COLORS.textSecondary} />
             </TouchableOpacity>
           </View>
 
