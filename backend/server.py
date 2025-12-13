@@ -655,17 +655,39 @@ async def get_user_context(user_id: str, query: str) -> str:
         # Weekend/recent spending
         if any(word in query_lower for word in ['weekend', 'week', 'recent', 'today', 'yesterday']):
             from datetime import datetime, timedelta
-            last_7_days = datetime.now() - timedelta(days=7)
             
-            recent_txns = list(await db.transactions.find({
+            # Get last weekend (Saturday & Sunday)
+            now = datetime.now()
+            days_since_sunday = (now.weekday() + 1) % 7
+            last_sunday = now - timedelta(days=days_since_sunday)
+            last_saturday = last_sunday - timedelta(days=1)
+            
+            # Set time boundaries
+            weekend_start = last_saturday.replace(hour=0, minute=0, second=0, microsecond=0)
+            weekend_end = last_sunday.replace(hour=23, minute=59, second=59, microsecond=999999)
+            
+            weekend_txns = list(await db.transactions.find({
                 "user_id": user_id,
-                "date": {"$gte": last_7_days}
-            }).to_list(length=50))
+                "date": {"$gte": weekend_start, "$lte": weekend_end}
+            }).to_list(length=100))
             
-            if recent_txns:
-                total_recent = sum(t.get('amount', 0) for t in recent_txns if t.get('amount', 0) > 0)
-                context_parts.append(f"Last 7 Days Spending: ₹{total_recent:,.0f}")
-                context_parts.append(f"Transactions: {len(recent_txns)}")
+            if weekend_txns:
+                total_weekend = sum(t.get('amount', 0) for t in weekend_txns if t.get('amount', 0) > 0)
+                
+                # Category breakdown for weekend
+                weekend_categories = {}
+                for t in weekend_txns:
+                    if t.get('amount', 0) > 0:
+                        cat = t.get('category', 'Other')
+                        weekend_categories[cat] = weekend_categories.get(cat, 0) + t.get('amount', 0)
+                
+                context_parts.append(f"Weekend Spending (Sat-Sun): ₹{total_weekend:,.0f}")
+                context_parts.append(f"Weekend Transactions: {len(weekend_txns)}")
+                
+                # Top weekend categories
+                if weekend_categories:
+                    top_weekend = sorted(weekend_categories.items(), key=lambda x: x[1], reverse=True)[:3]
+                    context_parts.append(f"Top Weekend Categories: {', '.join([f'{cat} ₹{amt:,.0f}' for cat, amt in top_weekend])}")
         
         if not context_parts:
             context_parts.append("No specific financial data found for this query.")
