@@ -82,17 +82,16 @@ export default function ChatScreen() {
     anim1.start();
 
     // Row 2 - Scroll right (positive direction) - infinite loop
-    // Start from negative position and animate to 0 for right-scrolling effect
-    scrollAnim2.setValue(-row2Width);
+    // Create a separate animation that goes from 0 to positive for right scrolling
     const anim2 = Animated.loop(
       Animated.sequence([
         Animated.timing(scrollAnim2, {
-          toValue: 0,
+          toValue: row2Width,
           duration: 30000,
           useNativeDriver: true,
         }),
         Animated.timing(scrollAnim2, {
-          toValue: -row2Width,
+          toValue: 0,
           duration: 0,
           useNativeDriver: true,
         }),
