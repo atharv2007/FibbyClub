@@ -131,10 +131,33 @@ export default function TrackScreen() {
     await loadFilteredData(monthNum, year);
   };
 
-  const handlePeriodChange = (period: string) => {
+  const handlePeriodChange = async (period: string) => {
     setTimePeriod(period);
-    console.log('Period changed to:', period);
-    // TODO: Implement different time period data loading (1wk, 1mnth, 1yr)
+    setLoading(true);
+    
+    try {
+      if (!user?._id) return;
+      
+      // Load data for the new period
+      const url = `${process.env.EXPO_PUBLIC_BACKEND_URL}/api/analytics/spending-by-period?user_id=${user._id}&period=${period}`;
+      const response = await fetch(url);
+      const data = await response.json();
+      
+      setMonthlyData(data);
+      
+      // Reset selection to latest period
+      if (data.length > 0) {
+        const latestMonth = data[data.length - 1];
+        setSelectedMonth(latestMonth.month);
+        setSelectedMonthNum(latestMonth.month_num);
+        setSelectedYear(latestMonth.year);
+      }
+      
+    } catch (error) {
+      console.error('Error loading period data:', error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
