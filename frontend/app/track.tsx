@@ -151,7 +151,13 @@ export default function TrackScreen() {
 
               {/* Merchant Leaderboard */}
               {merchants.length > 0 && (
-                <MerchantLeaderboard merchants={merchants} />
+                <MerchantLeaderboard 
+                  merchants={merchants}
+                  onMerchantPress={(merchantId) => {
+                    console.log('Merchant pressed:', merchantId);
+                    // TODO: Navigate to merchant details
+                  }}
+                />
               )}
             </>
           )}
