@@ -181,7 +181,7 @@ class InvestmentAPITester:
                 if data:
                     fund = data[0]
                     required_fields = [
-                        "folio", "fund_name", "quantity", "average_price", 
+                        "folio", "fund", "quantity", "average_price", 
                         "last_price", "pnl", "is_sip"
                     ]
                     
