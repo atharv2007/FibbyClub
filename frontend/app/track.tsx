@@ -122,13 +122,61 @@ export default function TrackScreen() {
     }
   };
 
-  const handleMonthSelect = async (month: string, monthNum?: number, year?: number) => {
-    setSelectedMonth(month);
-    setSelectedMonthNum(monthNum);
-    setSelectedYear(year);
+  const handleMonthSelect = async (item: any) => {
+    setSelectedMonth(item.month);
+    setSelectedMonthNum(item.month_num);
+    setSelectedYear(item.year);
     
-    // Load filtered data for the selected month
-    await loadFilteredData(monthNum, year);
+    // Determine filter parameters based on time period and item data
+    let filterParams = {};
+    
+    if (timePeriod === '1wk' && item.day && item.month_num && item.year) {
+      // Daily filter: filter by specific day
+      const startDate = new Date(item.year, item.month_num - 1, item.day);
+      const endDate = new Date(item.year, item.month_num - 1, item.day + 1);
+      filterParams = {
+        start_date_str: startDate.toISOString(),
+        end_date_str: endDate.toISOString()
+      };
+    } else if (timePeriod === '1mnth' && item.week_num) {
+      // Weekly filter: would need week start/end dates from backend
+      // For now, use month filter as approximation
+      filterParams = { months: 1 };
+    } else if (item.month_num && item.year) {
+      // Monthly filter
+      filterParams = {
+        month: item.month_num,
+        year: item.year
+      };
+    }
+    
+    // Load filtered data
+    await loadFilteredDataWithParams(filterParams);
+  };
+
+  const loadFilteredDataWithParams = async (params: any) => {
+    if (!user?._id) return;
+    
+    try {
+      const baseUrl = process.env.EXPO_PUBLIC_BACKEND_URL;
+      const queryString = new URLSearchParams({
+        user_id: user._id,
+        ...params
+      }).toString();
+      
+      const [catResponse, merchResponse] = await Promise.all([
+        fetch(`${baseUrl}/api/transactions/category-breakdown?${queryString}`),
+        fetch(`${baseUrl}/api/transactions/merchant-leaderboard?${queryString}&limit=10`),
+      ]);
+      
+      const categoryData = await catResponse.json();
+      const merchantData = await merchResponse.json();
+      
+      setCategories(categoryData);
+      setMerchants(merchantData);
+    } catch (error) {
+      console.error('Error loading filtered data:', error);
+    }
   };
 
   const handlePeriodChange = async (period: string) => {
