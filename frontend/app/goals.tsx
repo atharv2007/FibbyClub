@@ -168,61 +168,149 @@ export default function GoalsScreen() {
 
   return (
     <SafeAreaView style={styles.container}>
+      {/* Header */}
       <View style={styles.header}>
-        <Text style={styles.headerTitle}>Goals</Text>
-        <Text style={styles.headerSubtitle}>Your financial targets</Text>
+        <View>
+          <Text style={styles.headerTitle}>Goals</Text>
+          <Text style={styles.headerSubtitle}>Your financial targets</Text>
+        </View>
+        {goals.length > 0 && (
+          <View style={styles.goalsSummary}>
+            <Text style={styles.goalCount}>{goals.length}</Text>
+            <Text style={styles.goalCountLabel}>Active</Text>
+          </View>
+        )}
       </View>
 
       <ScrollView style={styles.scrollView} contentContainerStyle={styles.scrollContent}>
-        <View style={styles.goalsGrid}>
-          {goals.map((goal) => {
-            const progress = (goal.saved_amount / goal.target_amount) * 100;
-            const circumference = 2 * Math.PI * 50;
-            const strokeDashoffset = circumference - (progress / 100) * circumference;
+        {goals.length === 0 ? (
+          /* Empty State */
+          <View style={styles.emptyState}>
+            <View style={styles.emptyIconContainer}>
+              <Ionicons name="trophy" size={64} color={COLORS.primary} />
+            </View>
+            <Text style={styles.emptyTitle}>No Goals Yet</Text>
+            <Text style={styles.emptySubtitle}>
+              Start planning your financial future by creating your first goal
+            </Text>
+            <TouchableOpacity style={styles.emptyButton} onPress={handleAddNew}>
+              <Ionicons name="add-circle" size={24} color={COLORS.surface} />
+              <Text style={styles.emptyButtonText}>Create Your First Goal</Text>
+            </TouchableOpacity>
+          </View>
+        ) : (
+          /* Goals Grid */
+          <View style={styles.goalsGrid}>
+            {goals.map((goal) => {
+              const progress = Math.min((goal.saved_amount / goal.target_amount) * 100, 100);
+              const circumference = 2 * Math.PI * 50;
+              const strokeDashoffset = circumference - (progress / 100) * circumference;
 
-            return (
-              <TouchableOpacity key={goal._id} style={styles.goalCard}>
-                <View style={styles.progressRing}>
-                  <Svg width={120} height={120}>
-                    <Circle
-                      cx="60"
-                      cy="60"
-                      r="50"
-                      stroke={COLORS.border}
-                      strokeWidth="8"
-                      fill="transparent"
-                    />
-                    <Circle
-                      cx="60"
-                      cy="60"
-                      r="50"
-                      stroke={COLORS.primary}
-                      strokeWidth="8"
-                      fill="transparent"
-                      strokeDasharray={circumference}
-                      strokeDashoffset={strokeDashoffset}
-                      strokeLinecap="round"
-                      transform="rotate(-90 60 60)"
-                    />
-                  </Svg>
-                  <View style={styles.progressContent}>
-                    <Ionicons name={getIconName(goal.icon)} size={28} color={COLORS.primary} />
-                    <Text style={styles.progressPercent}>{Math.round(progress)}%</Text>
+              return (
+                <TouchableOpacity
+                  key={goal._id}
+                  style={styles.goalCard}
+                  onLongPress={() => {
+                    Alert.alert(
+                      goal.name,
+                      'Choose an action',
+                      [
+                        {
+                          text: 'Edit',
+                          onPress: () => handleEditGoal(goal),
+                        },
+                        {
+                          text: 'Delete',
+                          style: 'destructive',
+                          onPress: () => handleDeleteGoal(goal),
+                        },
+                        { text: 'Cancel', style: 'cancel' },
+                      ]
+                    );
+                  }}
+                  activeOpacity={0.7}
+                >
+                  {/* Edit Button */}
+                  <TouchableOpacity
+                    style={styles.editButton}
+                    onPress={() => handleEditGoal(goal)}
+                  >
+                    <Ionicons name="pencil" size={16} color={COLORS.primary} />
+                  </TouchableOpacity>
+
+                  <View style={styles.progressRing}>
+                    <Svg width={120} height={120}>
+                      <Circle
+                        cx="60"
+                        cy="60"
+                        r="50"
+                        stroke={COLORS.border}
+                        strokeWidth="8"
+                        fill="transparent"
+                      />
+                      <Circle
+                        cx="60"
+                        cy="60"
+                        r="50"
+                        stroke={COLORS.primary}
+                        strokeWidth="8"
+                        fill="transparent"
+                        strokeDasharray={circumference}
+                        strokeDashoffset={strokeDashoffset}
+                        strokeLinecap="round"
+                        transform="rotate(-90 60 60)"
+                      />
+                    </Svg>
+                    <View style={styles.progressContent}>
+                      <Ionicons name={getIconName(goal.icon)} size={28} color={COLORS.primary} />
+                      <Text style={styles.progressPercent}>{Math.round(progress)}%</Text>
+                    </View>
                   </View>
-                </View>
 
-                <Text style={styles.goalName}>{goal.name}</Text>
-                <View style={styles.goalAmounts}>
-                  <Text style={styles.savedAmount}>{formatINRFull(goal.saved_amount)}</Text>
-                  <Text style={styles.targetAmount}>of {formatINRFull(goal.target_amount)}</Text>
-                </View>
-              </TouchableOpacity>
-            );
-          })}
-        </View>
+                  <Text style={styles.goalName} numberOfLines={2}>{goal.name}</Text>
+                  <View style={styles.goalAmounts}>
+                    <Text style={styles.savedAmount}>{formatINRFull(goal.saved_amount)}</Text>
+                    <Text style={styles.targetAmount}>of {formatINRFull(goal.target_amount)}</Text>
+                  </View>
+                  
+                  {goal.deadline && (
+                    <View style={styles.deadlineContainer}>
+                      <Ionicons name="calendar-outline" size={12} color={COLORS.textSecondary} />
+                      <Text style={styles.deadlineText}>{goal.deadline}</Text>
+                    </View>
+                  )}
+                </TouchableOpacity>
+              );
+            })}
+          </View>
+        )}
 
         <View style={styles.bottomPadding} />
       </ScrollView>
+
+      {/* Floating Add Button */}
+      {goals.length > 0 && (
+        <Animated.View style={[styles.fab, { transform: [{ scale: fabScale }] }]}>
+          <TouchableOpacity
+            style={styles.fabButton}
+            onPress={() => {
+              animateFab();
+              handleAddNew();
+            }}
+            activeOpacity={0.8}
+          >
+            <Ionicons name="add" size={32} color={COLORS.surface} />
+          </TouchableOpacity>
+        </Animated.View>
+      )}
+
+      {/* Add/Edit Goal Modal */}
+      <AddGoalModal
+        visible={showAddModal}
+        onClose={handleCloseModal}
+        onSave={handleSaveGoal}
+        editGoal={editingGoal}
+      />
     </SafeAreaView>
   );
 }
