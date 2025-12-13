@@ -271,10 +271,22 @@ const styles = StyleSheet.create({
     color: COLORS.text,
     marginRight: SPACING.xs,
   },
-  balanceInput: {
-    flex: 1,
-    fontSize: TYPOGRAPHY.h3,
-    fontWeight: '600',
+  helpText: {
+    fontSize: 12,
+    color: COLORS.textSecondary,
+    marginTop: SPACING.xs,
+  },
+  featuresContainer: {
+    marginTop: SPACING.lg,
+    gap: SPACING.sm,
+  },
+  featureItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: SPACING.xs,
+  },
+  featureText: {
+    fontSize: TYPOGRAPHY.bodySmall,
     color: COLORS.text,
   },
   bottomSpacing: {
