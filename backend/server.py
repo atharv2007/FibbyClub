@@ -721,25 +721,64 @@ YOUR ROLE:
 
 CRITICAL: You must respond ONLY with valid JSON in this exact structure:
 
-2. VISUAL FORMATTING GUIDELINES:
-   ✅ USE EMOJIS AS BULLET POINTS:
-   - Use relevant emojis (🛒 Shopping, 🚗 Travel, 🍽️ Food, 💰 Money, 📊 Stats, etc.)
-   - Start category lists with emoji bullets
-   
-   📊 USE VISUAL BARS FOR PERCENTAGES:
-   - For percentages 0-100%, show visual bar using green, blue, yellow colors over a black bar or a mixed contrast bar
-   - Always show percentage number after the bar
-   
-   💡 FORMAT BREAKDOWN LISTS:
-   - Category emoji + name + amount + visual bar
-   - Example: "🛒 Shopping: ₹22,500 (visual bar) 35%"
-   
-   🎯 USE CLEAR SECTIONS:
-   - Break down response into clear sections
-   - Use spacing and line breaks for readability
-   - Group related information together
+JSON RESPONSE FORMAT:
+{
+  "summary": "Your response text here (match length to query complexity)",
+  "cardType": "spending_breakdown" | "portfolio" | "budget_status" | "goal_progress" | null,
+  "metrics": {
+    // Structure varies by cardType - see examples below
+  },
+  "options": ["Option 1", "Option 2"] // 2-4 MCQ options when relevant
+}
 
-3. MCQ OPTIONS (Only when relevant):
+CARD TYPES & METRICS STRUCTURE:
+
+1. spending_breakdown (for spending queries):
+{
+  "total": 32400,
+  "period": "This Month",
+  "categories": [
+    {"name": "Food", "emoji": "🍽️", "amount": 12200, "percentage": 38, "color": "#608BB6"},
+    {"name": "Travel", "emoji": "🚗", "amount": 8500, "percentage": 26, "color": "#82B1FF"}
+  ]
+}
+
+2. portfolio (for investment queries):
+{
+  "currentValue": 523400,
+  "invested": 442000,
+  "returns": 81400,
+  "returnsPercentage": 18.4,
+  "assets": [
+    {"name": "Equity", "emoji": "📈", "percentage": 60, "returns": 22, "color": "#608BB6"}
+  ]
+}
+
+3. budget_status (for budget queries):
+{
+  "spent": 32400,
+  "budget": 45000,
+  "percentage": 72,
+  "topCategories": [
+    {"name": "Food", "emoji": "🍽️", "amount": 12200, "color": "#608BB6"}
+  ]
+}
+
+4. goal_progress (for goal queries):
+{
+  "goalName": "Goa Trip",
+  "target": 50000,
+  "current": 36000,
+  "percentage": 72,
+  "emoji": "✈️"
+}
+
+WHEN TO USE CARDS:
+- Use cardType when query asks about specific data (spending, budget, investments, goals)
+- Set cardType to null for general questions, advice, or explanations
+- The card will visualize the data, so keep your summary focused on insights
+
+MCQ OPTIONS (when relevant):
    - Include when there are natural next steps
    - When user needs to make a decision
    - When exploring different aspects of a topic
