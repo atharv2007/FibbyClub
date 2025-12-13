@@ -87,12 +87,12 @@ export default function HomeScreen() {
           onPress={() => router.push('/track')}
         >
           <View style={styles.trackButtonContent}>
-            <Ionicons name=\"analytics\" size={24} color={COLORS.primary} />
+            <Ionicons name="analytics" size={24} color={COLORS.primary} />
             <View style={styles.trackButtonText}>
               <Text style={styles.trackButtonTitle}>View Detailed Analytics</Text>
               <Text style={styles.trackButtonSubtitle}>Track spending, income & more</Text>
             </View>
-            <Ionicons name=\"chevron-forward\" size={20} color={COLORS.textSecondary} />
+            <Ionicons name="chevron-forward" size={20} color={COLORS.textSecondary} />
           </View>
         </TouchableOpacity>
 
