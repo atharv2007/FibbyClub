@@ -304,16 +304,6 @@ const styles = StyleSheet.create({
   logo: {
     width: 40,
     height: 40,
-    borderRadius: 20,
-    backgroundColor: COLORS.primary,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  logoText: {
-    fontSize: 20,
-    fontWeight: '700',
-    color: COLORS.surface,
-    fontFamily: TYPOGRAPHY.heading,
   },
   headerTitle: {
     fontSize: TYPOGRAPHY.h4,
