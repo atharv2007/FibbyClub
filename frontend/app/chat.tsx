@@ -134,9 +134,11 @@ export default function ChatScreen() {
         </TouchableOpacity>
         
         <View style={styles.headerCenter}>
-          <View style={styles.logo}>
-            <Text style={styles.logoText}>F</Text>
-          </View>
+          <Image 
+            source={require('../assets/fibbylogo.png')} 
+            style={styles.logo}
+            resizeMode="contain"
+          />
           <View>
             <Text style={styles.headerTitle}>Fibby</Text>
             <Text style={styles.headerSubtitle}>Your money buddy</Text>
