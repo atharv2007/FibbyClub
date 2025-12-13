@@ -11,7 +11,12 @@ interface MonthlyData {
   day?: number;
   date?: string;
   week_num?: number;
-  period?: string;
+  week_start?: string;
+  week_end?: string;
+  period_start?: string;
+  period_end?: string;
+  start_month?: number;
+  start_year?: number;
 }
 
 interface MonthlyBarChartProps {
@@ -182,16 +187,18 @@ const styles = StyleSheet.create({
   },
   chartScrollContent: {
     paddingHorizontal: SPACING.md,
+    paddingRight: SPACING.xxl,
   },
   chartContainer: {
     flexDirection: 'row',
     alignItems: 'flex-end',
     height: 200,
     paddingTop: SPACING.md,
-    gap: SPACING.sm,
+    gap: SPACING.md,
+    minWidth: '100%',
   },
   barWrapper: {
-    width: 50,
+    width: 60,
     alignItems: 'center',
     gap: SPACING.xs,
   },
