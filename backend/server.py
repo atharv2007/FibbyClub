@@ -772,6 +772,7 @@ async def get_investment_recommendations(user_id: str):
             
             chat = LlmChat(
                 api_key=os.environ.get("EMERGENT_LLM_KEY"),
+                session_id=f"investment_rec_{user_id}",
                 system_message="""You are a financial advisor specializing in Indian investments. 
                 Analyze the portfolio and provide 2-3 specific, actionable investment recommendations.
                 Focus on:
