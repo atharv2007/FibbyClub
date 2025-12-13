@@ -1,6 +1,6 @@
 import { View, Text, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { COLORS, SPACING, RADIUS } from '../../constants/theme';
+import { COLORS, SPACING, RADIUS, SHADOWS, TYPOGRAPHY } from '../../constants/theme';
 import { formatINR } from '../../utils/format';
 
 interface InvestmentCardProps {
@@ -25,12 +25,22 @@ const TYPE_ICONS: Record<string, string> = {
 
 const TYPE_COLORS: Record<string, string> = {
   crypto: '#F59E0B',
-  fd: '#10B981',
+  fd: COLORS.success,
   bond: '#3B82F6',
   real_estate: '#8B5CF6',
   nps: '#06B6D4',
-  ppf: '#10B981',
+  ppf: COLORS.success,
   insurance: '#EC4899',
+};
+
+const TYPE_LABELS: Record<string, string> = {
+  crypto: 'Crypto',
+  fd: 'Fixed Deposit',
+  bond: 'Bonds',
+  real_estate: 'Real Estate',
+  nps: 'NPS',
+  ppf: 'PPF',
+  insurance: 'Insurance',
 };
 
 export function InvestmentCard({
@@ -45,21 +55,29 @@ export function InvestmentCard({
   const isProfit = returns >= 0;
   const iconName = TYPE_ICONS[type] || 'cash';
   const color = TYPE_COLORS[type] || COLORS.primary;
+  const typeLabel = TYPE_LABELS[type] || type;
 
   return (
     <View style={styles.container}>
+      {/* Header */}
       <View style={styles.header}>
         <View style={[styles.iconContainer, { backgroundColor: color + '20' }]}>
-          <Ionicons name={iconName as any} size={18} color={color} />
+          <Ionicons name={iconName as any} size={20} color={color} />
         </View>
-        <View style={styles.titleContainer}>
-          <Text style={styles.name} numberOfLines={1}>{name}</Text>
-          {metadata?.platform && (
-            <Text style={styles.platform}>{metadata.platform}</Text>
-          )}
+        <View style={styles.typeBadge}>
+          <Text style={[styles.typeText, { color }]}>{typeLabel}</Text>
         </View>
       </View>
 
+      <Text style={styles.name} numberOfLines={2}>{name}</Text>
+      
+      {metadata?.platform && (
+        <Text style={styles.platform}>via {metadata.platform}</Text>
+      )}
+
+      <View style={styles.divider} />
+
+      {/* Stats */}
       <View style={styles.statsRow}>
         <View style={styles.stat}>
           <Text style={styles.statLabel}>Invested</Text>
@@ -69,12 +87,12 @@ export function InvestmentCard({
           <Text style={styles.statLabel}>Current</Text>
           <Text style={styles.statValue}>{formatINR(currentValue)}</Text>
         </View>
-        <View style={styles.stat}>
-          <Text style={styles.statLabel}>Returns</Text>
-          <Text style={[styles.statValue, { color: isProfit ? '#10B981' : '#F43F5E' }]}>
-            {returnsPct.toFixed(1)}%
-          </Text>
-        </View>
+      </View>
+
+      <View style={[styles.returnBadge, { backgroundColor: isProfit ? COLORS.success + '15' : COLORS.danger + '15' }]}>
+        <Text style={[styles.returnText, { color: isProfit ? COLORS.success : COLORS.danger }]}>
+          {isProfit ? '+' : ''}{returnsPct.toFixed(2)}% returns
+        </Text>
       </View>
     </View>
   );
@@ -82,59 +100,88 @@ export function InvestmentCard({
 
 const styles = StyleSheet.create({
   container: {
-    width: 240,
+    width: 220,
     backgroundColor: COLORS.surface,
-    borderRadius: RADIUS.lg,
-    padding: SPACING.md,
+    borderRadius: RADIUS.card,
+    padding: SPACING.lg,
     marginRight: SPACING.md,
     borderWidth: 1,
-    borderColor: COLORS.border,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.05,
-    shadowRadius: 4,
-    elevation: 2,
+    borderColor: COLORS.glassBorder,
+    ...SHADOWS.card,
   },
   header: {
     flexDirection: 'row',
-    gap: SPACING.sm,
+    justifyContent: 'space-between',
+    alignItems: 'center',
     marginBottom: SPACING.md,
   },
   iconContainer: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
+    width: 40,
+    height: 40,
+    borderRadius: 20,
     alignItems: 'center',
     justifyContent: 'center',
   },
-  titleContainer: {
-    flex: 1,
-    justifyContent: 'center',
+  typeBadge: {
+    paddingHorizontal: SPACING.sm,
+    paddingVertical: 4,
+    borderRadius: RADIUS.sm,
+    backgroundColor: COLORS.surfaceVariant,
+  },
+  typeText: {
+    fontSize: TYPOGRAPHY.tiny,
+    fontWeight: '600',
+    fontFamily: TYPOGRAPHY.body,
   },
   name: {
-    fontSize: 13,
-    fontWeight: '600',
+    fontSize: TYPOGRAPHY.bodySmall,
+    fontWeight: '700',
     color: COLORS.text,
-    marginBottom: 2,
+    fontFamily: TYPOGRAPHY.heading,
+    marginBottom: SPACING.xs,
+    lineHeight: 18,
   },
   platform: {
-    fontSize: 10,
+    fontSize: TYPOGRAPHY.tiny,
     color: COLORS.textSecondary,
+    fontFamily: TYPOGRAPHY.body,
+  },
+  divider: {
+    height: 1,
+    backgroundColor: COLORS.border,
+    marginVertical: SPACING.md,
   },
   statsRow: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    gap: SPACING.md,
+    marginBottom: SPACING.sm,
   },
-  stat: {},
+  stat: {
+    flex: 1,
+  },
   statLabel: {
-    fontSize: 10,
+    fontSize: TYPOGRAPHY.tiny,
     color: COLORS.textSecondary,
-    marginBottom: 2,
+    marginBottom: SPACING.xs,
+    fontFamily: TYPOGRAPHY.body,
+    textTransform: 'uppercase',
+    letterSpacing: 0.5,
   },
   statValue: {
-    fontSize: 12,
+    fontSize: TYPOGRAPHY.caption,
     fontWeight: '700',
     color: COLORS.text,
-    fontFamily: 'Rethink Sans',
+    fontFamily: TYPOGRAPHY.data,
+  },
+  returnBadge: {
+    paddingHorizontal: SPACING.sm,
+    paddingVertical: SPACING.xs,
+    borderRadius: RADIUS.sm,
+    alignItems: 'center',
+  },
+  returnText: {
+    fontSize: TYPOGRAPHY.caption,
+    fontWeight: '700',
+    fontFamily: TYPOGRAPHY.data,
   },
 });

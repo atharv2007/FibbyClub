@@ -1,5 +1,5 @@
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
-import { COLORS, SPACING, RADIUS } from '../../constants/theme';
+import { COLORS, SPACING, RADIUS, SHADOWS, TYPOGRAPHY } from '../../constants/theme';
 import { formatINR } from '../../utils/format';
 
 interface HoldingCardProps {
@@ -29,16 +29,17 @@ export function HoldingCard({
 
   return (
     <TouchableOpacity style={styles.container} onPress={onPress} activeOpacity={0.7}>
+      {/* Header */}
       <View style={styles.header}>
         <View>
           <Text style={styles.symbol}>{tradingsymbol}</Text>
-          <Text style={styles.quantity}>Qty: {quantity}</Text>
+          <Text style={styles.quantity}>{quantity} shares</Text>
         </View>
         <View style={styles.priceContainer}>
           <Text style={styles.currentPrice}>{formatINR(lastPrice)}</Text>
-          <View style={styles.changeRow}>
-            <Text style={[styles.dayChange, { color: isProfitDay ? '#10B981' : '#F43F5E' }]}>
-              {isProfitDay ? '+' : ''}{dayChangePct.toFixed(2)}%
+          <View style={[styles.changeBadge, { backgroundColor: isProfitDay ? COLORS.success + '20' : COLORS.danger + '20' }]}>
+            <Text style={[styles.dayChange, { color: isProfitDay ? COLORS.success : COLORS.danger }]}>
+              {isProfitDay ? '▲' : '▼'} {Math.abs(dayChangePct).toFixed(2)}%
             </Text>
           </View>
         </View>
@@ -46,18 +47,15 @@ export function HoldingCard({
 
       <View style={styles.divider} />
 
-      <View style={styles.footer}>
-        <View style={styles.stat}>
-          <Text style={styles.statLabel}>Invested</Text>
-          <Text style={styles.statValue}>{formatINR(averagePrice * quantity)}</Text>
-        </View>
+      {/* Stats */}
+      <View style={styles.statsRow}>
         <View style={styles.stat}>
           <Text style={styles.statLabel}>Current</Text>
           <Text style={styles.statValue}>{formatINR(currentValue)}</Text>
         </View>
         <View style={styles.stat}>
           <Text style={styles.statLabel}>P&L</Text>
-          <Text style={[styles.statValue, { color: isProfitTotal ? '#10B981' : '#F43F5E' }]}>
+          <Text style={[styles.statValue, { color: isProfitTotal ? COLORS.success : COLORS.danger }]}>
             {isProfitTotal ? '+' : ''}{formatINR(pnl)}
           </Text>
         </View>
@@ -68,18 +66,14 @@ export function HoldingCard({
 
 const styles = StyleSheet.create({
   container: {
-    width: 280,
+    width: 260,
     backgroundColor: COLORS.surface,
-    borderRadius: RADIUS.lg,
-    padding: SPACING.md,
+    borderRadius: RADIUS.card,
+    padding: SPACING.lg,
     marginRight: SPACING.md,
     borderWidth: 1,
-    borderColor: COLORS.border,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.05,
-    shadowRadius: 4,
-    elevation: 2,
+    borderColor: COLORS.glassBorder,
+    ...SHADOWS.card,
   },
   header: {
     flexDirection: 'row',
@@ -87,52 +81,61 @@ const styles = StyleSheet.create({
     alignItems: 'flex-start',
   },
   symbol: {
-    fontSize: 16,
+    fontSize: TYPOGRAPHY.h4,
     fontWeight: '700',
     color: COLORS.text,
-    marginBottom: 2,
+    fontFamily: TYPOGRAPHY.heading,
+    marginBottom: SPACING.xs,
   },
   quantity: {
-    fontSize: 11,
+    fontSize: TYPOGRAPHY.caption,
     color: COLORS.textSecondary,
+    fontFamily: TYPOGRAPHY.body,
   },
   priceContainer: {
     alignItems: 'flex-end',
   },
   currentPrice: {
-    fontSize: 18,
+    fontSize: TYPOGRAPHY.h3,
     fontWeight: '700',
     color: COLORS.text,
-    fontFamily: 'Rethink Sans',
+    fontFamily: TYPOGRAPHY.data,
+    marginBottom: SPACING.xs,
   },
-  changeRow: {
-    marginTop: 2,
+  changeBadge: {
+    paddingHorizontal: SPACING.sm,
+    paddingVertical: 4,
+    borderRadius: RADIUS.sm,
   },
   dayChange: {
-    fontSize: 12,
-    fontWeight: '600',
+    fontSize: TYPOGRAPHY.tiny,
+    fontWeight: '700',
+    fontFamily: TYPOGRAPHY.data,
   },
   divider: {
     height: 1,
     backgroundColor: COLORS.border,
-    marginVertical: SPACING.sm,
+    marginVertical: SPACING.md,
   },
-  footer: {
+  statsRow: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    gap: SPACING.lg,
   },
   stat: {
     flex: 1,
   },
   statLabel: {
-    fontSize: 10,
+    fontSize: TYPOGRAPHY.tiny,
     color: COLORS.textSecondary,
-    marginBottom: 2,
+    marginBottom: SPACING.xs,
+    fontFamily: TYPOGRAPHY.body,
+    textTransform: 'uppercase',
+    letterSpacing: 0.5,
   },
   statValue: {
-    fontSize: 12,
-    fontWeight: '600',
+    fontSize: TYPOGRAPHY.bodySmall,
+    fontWeight: '700',
     color: COLORS.text,
-    fontFamily: 'Rethink Sans',
+    fontFamily: TYPOGRAPHY.data,
   },
 });
