@@ -185,6 +185,7 @@ class ChatConversation(BaseModel):
     user_id: str
     conversation_id: str  # Unique identifier for the conversation
     title: str  # Auto-generated or user-defined title
+    category: str = "status"  # Category tag: budget, goals, investments, status
     messages: List[ChatMessage] = []
     created_at: datetime = Field(default_factory=datetime.utcnow)
     updated_at: datetime = Field(default_factory=datetime.utcnow)
