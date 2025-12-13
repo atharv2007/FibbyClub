@@ -299,6 +299,14 @@ export default function ChatScreen() {
           <Ionicons name="send" size={20} color={COLORS.surface} />
         </TouchableOpacity>
       </View>
+
+      {/* Chat History Drawer */}
+      <ChatHistoryDrawer
+        visible={showChatHistory}
+        onClose={() => setShowChatHistory(false)}
+        onNewChat={handleNewChat}
+        onSelectChat={handleSelectChat}
+      />
     </SafeAreaView>
   );
 }
