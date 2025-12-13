@@ -568,6 +568,9 @@ Examples:
             widget_data=None,
             session_id=session_id
         )
+    except Exception as e:
+        logger.error(f"Chat error: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
 
 @api_router.post("/chat/message")
 async def chat_message(request: dict):
