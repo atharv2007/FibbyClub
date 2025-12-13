@@ -52,6 +52,34 @@ export const api = {
     return response.json();
   },
   
+  // Create goal
+  createGoal: async (userId: string, goalData: any) => {
+    const response = await fetch(`${API_URL}/api/goals?user_id=${userId}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(goalData),
+    });
+    return response.json();
+  },
+  
+  // Update goal
+  updateGoal: async (userId: string, goalId: string, goalData: any) => {
+    const response = await fetch(`${API_URL}/api/goals/${goalId}?user_id=${userId}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(goalData),
+    });
+    return response.json();
+  },
+  
+  // Delete goal
+  deleteGoal: async (userId: string, goalId: string) => {
+    const response = await fetch(`${API_URL}/api/goals/${goalId}?user_id=${userId}`, {
+      method: 'DELETE',
+    });
+    return response.json();
+  },
+  
   // Chat with Fibby
   chat: async (message: string, sessionId?: string) => {
     const response = await fetch(`${API_URL}/api/chat`, {
