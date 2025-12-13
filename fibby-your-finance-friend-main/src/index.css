@@ -1,0 +1,182 @@
+@import url('https://fonts.googleapis.com/css2?family=Urbanist:wght@400;500;600;700;800&family=Rethink+Sans:wght@400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 98%;
+    --foreground: 240 10% 12%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 240 10% 12%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 240 10% 12%;
+
+    --primary: 210 35% 55%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 220 14% 96%;
+    --secondary-foreground: 240 10% 12%;
+
+    --muted: 220 14% 96%;
+    --muted-foreground: 220 9% 46%;
+
+    --accent: 210 40% 92%;
+    --accent-foreground: 210 35% 45%;
+
+    --destructive: 350 89% 60%;
+    --destructive-foreground: 0 0% 100%;
+
+    --safe: 160 84% 39%;
+    --safe-foreground: 0 0% 100%;
+
+    --border: 220 13% 91%;
+    --input: 220 13% 91%;
+    --ring: 210 35% 55%;
+
+    --radius: 1rem;
+    --radius-card: 16px;
+    --radius-button: 12px;
+
+    /* Fibby Custom Tokens */
+    --fibby-bubble: 0 0% 100%;
+    --fibby-bubble-foreground: 240 10% 12%;
+    --user-bubble: 220 14% 96%;
+    --user-bubble-foreground: 240 10% 12%;
+    
+    --fibby-avatar-bg: 210 40% 92%;
+    --fibby-avatar-icon: 210 35% 55%;
+    
+    --nav-active: 210 35% 55%;
+    --nav-inactive: 220 9% 60%;
+    
+    --chip-bg: 0 0% 100%;
+    --chip-border: 220 13% 88%;
+    --chip-text: 240 10% 25%;
+    
+    --progress-safe: 160 84% 39%;
+    --progress-warning: 38 92% 50%;
+    --progress-danger: 350 89% 60%;
+    
+    --widget-bg: 0 0% 100%;
+    --widget-border: 220 13% 92%;
+
+    --sidebar-background: 0 0% 98%;
+    --sidebar-foreground: 240 5.3% 26.1%;
+    --sidebar-primary: 210 35% 55%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 240 4.8% 95.9%;
+    --sidebar-accent-foreground: 240 5.9% 10%;
+    --sidebar-border: 220 13% 91%;
+    --sidebar-ring: 210 35% 55%;
+    
+    /* Glass effect */
+    --glass-bg: 0 0% 100% / 0.7;
+    --glass-border: 0 0% 100% / 0.3;
+  }
+
+  .dark {
+    --background: 240 10% 8%;
+    --foreground: 0 0% 95%;
+
+    --card: 240 10% 10%;
+    --card-foreground: 0 0% 95%;
+
+    --popover: 240 10% 10%;
+    --popover-foreground: 0 0% 95%;
+
+    --primary: 210 40% 60%;
+    --primary-foreground: 240 10% 8%;
+
+    --secondary: 240 8% 16%;
+    --secondary-foreground: 0 0% 95%;
+
+    --muted: 240 8% 16%;
+    --muted-foreground: 220 9% 60%;
+
+    --accent: 210 30% 25%;
+    --accent-foreground: 210 40% 80%;
+
+    --destructive: 350 62% 45%;
+    --destructive-foreground: 0 0% 95%;
+
+    --safe: 160 70% 35%;
+    --safe-foreground: 0 0% 95%;
+
+    --border: 240 8% 18%;
+    --input: 240 8% 18%;
+    --ring: 210 40% 60%;
+
+    --fibby-bubble: 240 10% 14%;
+    --fibby-bubble-foreground: 0 0% 95%;
+    --user-bubble: 240 8% 18%;
+    --user-bubble-foreground: 0 0% 95%;
+    
+    --fibby-avatar-bg: 210 30% 25%;
+    --fibby-avatar-icon: 210 40% 70%;
+    
+    --nav-active: 210 40% 60%;
+    --nav-inactive: 220 9% 50%;
+    
+    --chip-bg: 240 10% 12%;
+    --chip-border: 240 8% 22%;
+    --chip-text: 0 0% 85%;
+    
+    --widget-bg: 240 10% 12%;
+    --widget-border: 240 8% 20%;
+
+    --sidebar-background: 240 5.9% 10%;
+    --sidebar-foreground: 240 4.8% 95.9%;
+    --sidebar-primary: 210 40% 60%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 240 3.7% 15.9%;
+    --sidebar-accent-foreground: 240 4.8% 95.9%;
+    --sidebar-border: 240 3.7% 15.9%;
+    --sidebar-ring: 210 40% 60%;
+    
+    --glass-bg: 240 10% 10% / 0.7;
+    --glass-border: 240 10% 20% / 0.3;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-family: 'Urbanist', sans-serif;
+  }
+}
+
+@layer utilities {
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+  
+  .font-data {
+    font-family: 'Rethink Sans', sans-serif;
+  }
+  
+  .glass {
+    background: hsl(var(--glass-bg));
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid hsl(var(--glass-border));
+  }
+  
+  .glass-strong {
+    background: hsl(var(--glass-bg));
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid hsl(var(--glass-border));
+  }
+}
