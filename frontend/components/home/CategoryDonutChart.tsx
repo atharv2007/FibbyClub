@@ -1,7 +1,5 @@
-import React from 'react';
-import { View, Text, StyleSheet, Dimensions } from 'react-native';
-import { VictoryPie, VictoryLabel } from 'victory-native';
-import Svg from 'react-native-svg';
+import { View, Text, StyleSheet } from 'react-native';
+import Svg, { Circle, G } from 'react-native-svg';
 import { Card } from '../common/Card';
 import { COLORS, SPACING } from '../../constants/theme';
 import { formatINR } from '../../utils/format';
@@ -20,28 +18,47 @@ const CHART_COLORS = [
   '#966866', '#3B82F6', '#10B981', '#F59E0B', '#8B5CF6', '#EC4899',
 ];
 
-export const CategoryDonutChart: React.FC<CategoryDonutChartProps> = ({ data }) => {
+export function CategoryDonutChart({ data }: CategoryDonutChartProps) {
   // Take top 3 categories and group rest as "Others"
   const topCategories = data.slice(0, 3);
   const othersTotal = data.slice(3).reduce((sum, item) => sum + item.total, 0);
   
   const chartData = [
     ...topCategories.map((item, index) => ({
-      x: item._id,
-      y: item.total,
+      label: item._id,
+      value: item.total,
       color: CHART_COLORS[index],
     })),
   ];
   
   if (othersTotal > 0) {
     chartData.push({
-      x: 'Others',
-      y: othersTotal,
+      label: 'Others',
+      value: othersTotal,
       color: CHART_COLORS[3],
     });
   }
   
-  const totalSpend = chartData.reduce((sum, item) => sum + item.y, 0);
+  const totalSpend = chartData.reduce((sum, item) => sum + item.value, 0);
+  
+  // Calculate donut segments
+  const radius = 60;
+  const strokeWidth = 30;
+  const circumference = 2 * Math.PI * radius;
+  
+  let accumulatedPercentage = 0;
+  const segments = chartData.map((item) => {
+    const percentage = item.value / totalSpend;
+    const dashOffset = circumference * (1 - accumulatedPercentage);
+    const dashArray = `${circumference * percentage} ${circumference * (1 - percentage)}`;
+    accumulatedPercentage += percentage;
+    
+    return {
+      ...item,
+      dashOffset,
+      dashArray,
+    };
+  });
   
   return (
     <Card style={styles.container}>
@@ -51,21 +68,21 @@ export const CategoryDonutChart: React.FC<CategoryDonutChartProps> = ({ data }) 
       <View style={styles.chartContainer}>
         <View style={styles.chartWrapper}>
           <Svg width={140} height={140}>
-            <VictoryPie
-              standalone={false}
-              data={chartData}
-              width={140}
-              height={140}
-              innerRadius={45}
-              labelRadius={({ innerRadius }) => (innerRadius || 0) + 15}
-              labels={({ datum }) => ``}
-              colorScale={chartData.map(d => d.color)}
-              style={{
-                data: {
-                  fillOpacity: 1,
-                },
-              }}
-            />
+            <G rotation="-90" origin="70, 70">
+              {segments.map((segment, index) => (
+                <Circle
+                  key={index}
+                  cx="70"
+                  cy="70"
+                  r={radius}
+                  stroke={segment.color}
+                  strokeWidth={strokeWidth}
+                  fill="transparent"
+                  strokeDasharray={segment.dashArray}
+                  strokeDashoffset={-segment.dashOffset * circumference}
+                />
+              ))}
+            </G>
           </Svg>
           <View style={styles.centerLabel}>
             <Text style={styles.centerAmount}>{formatINR(totalSpend)}</Text>
@@ -78,8 +95,8 @@ export const CategoryDonutChart: React.FC<CategoryDonutChartProps> = ({ data }) 
             <View key={index} style={styles.legendItem}>
               <View style={[styles.legendDot, { backgroundColor: item.color }]} />
               <View style={styles.legendTextContainer}>
-                <Text style={styles.legendCategory}>{item.x}</Text>
-                <Text style={styles.legendAmount}>{formatINR(item.y)}</Text>
+                <Text style={styles.legendCategory}>{item.label}</Text>
+                <Text style={styles.legendAmount}>{formatINR(item.value)}</Text>
               </View>
             </View>
           ))}
@@ -87,7 +104,7 @@ export const CategoryDonutChart: React.FC<CategoryDonutChartProps> = ({ data }) 
       </View>
     </Card>
   );
-};
+}
 
 const styles = StyleSheet.create({
   container: {},
