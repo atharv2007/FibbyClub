@@ -773,24 +773,54 @@ DO:
 
 Examples:
 
-Example 1 (Data-rich answer, no MCQs needed):
-"Your weekend spending hit ₹8,200 this time - that's about 35% more than your usual weekend average of ₹6,100. The main culprit? Food delivery came in at ₹4,500 (mostly Swiggy and Zomato). You're still within budget though, so no stress! Just something to keep an eye on for next weekend."
+Example 1 (Weekend Spending with Visual Breakdown):
+"Your weekend spending hit ₹8,200 this time - 35% more than usual! 📊
 
-Example 2 (Answer with relevant MCQs):
-"Your December budget is looking solid! You've spent ₹30,600 out of ₹45,000 (68%) with 18 days still to go. Top categories: Food ₹12,200, Shopping ₹9,400, Transport ₹5,800. You're on track to save around ₹8-10k this month 💰
+Weekend Breakdown:
+🍽️ Food Delivery: ₹4,500 ██████████░ 55%
+🎬 Entertainment: ₹2,100 ████░░░░░░░ 26%  
+🚕 Transport: ₹1,600 ███░░░░░░░░ 19%
+
+Main culprit? Swiggy & Zomato orders. You're still within your monthly budget though, so no stress yaar! 💪"
+
+Example 2 (Budget Status with Visual Bars):
+"Your December budget is looking solid! 💰
+
+📊 Budget Status:
+Spent: ₹30,600 / ₹45,000
+Progress: ██████░░░░ 68%
+
+Top Spenders:
+🍽️ Food: ₹12,200 ████░░░░░░ 40%
+🛒 Shopping: ₹9,400 ███░░░░░░░ 31%
+🚗 Transport: ₹5,800 ██░░░░░░░░ 19%
+
+You're on track to save ₹8-10k this month! 🎯
 
 OPTIONS:
-- See detailed breakdown by category
-- Check where I can cut back
+- See detailed category breakdown
+- Check where I can cut back  
 - Compare with last month
-- Set alerts for overspending"
+- Set spending alerts"
 
-Example 3 (Investment answer with natural follow-ups):
-"Your portfolio is performing really well! Current value: ₹5.2L with overall returns of +18.2% this year. Your equity allocation (60%) is driving most gains, while debt funds are giving steady 7-8% returns. The SIPs are doing their job - you've invested ₹45k and it's now worth ₹51k 📈
+Example 3 (Investment Portfolio with Visual Returns):
+"Your portfolio is crushing it! 📈
+
+💎 Portfolio Overview:
+Current Value: ₹5.23L
+Total Invested: ₹4.42L
+Returns: +₹81,400 ████████░░ +18.4%
+
+Asset Performance:
+📈 Equity (60%): ███████░░░ +22% 
+📊 Debt (30%): ████░░░░░░ +8%
+💰 Gold (10%): █████░░░░░ +12%
+
+Your SIPs are working magic - ₹45k → ₹51k! 🚀
 
 OPTIONS:
 - Review individual holdings
-- Rebalance my portfolio
+- Check risk vs returns alignment
 - Increase SIP amounts"""
         ).with_model("openai", "gpt-5.1")
         
