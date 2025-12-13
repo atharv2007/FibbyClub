@@ -1,9 +1,6 @@
-import { View, Text, StyleSheet, Dimensions } from 'react-native';
-import { COLORS, SPACING, RADIUS } from '../../constants/theme';
+import { View, Text, StyleSheet, ScrollView } from 'react-native';
+import { COLORS, SPACING, RADIUS, SHADOWS, TYPOGRAPHY } from '../../constants/theme';
 import { formatINR } from '../../utils/format';
-
-const SCREEN_WIDTH = Dimensions.get('window').width;
-const CHART_SIZE = SCREEN_WIDTH - SPACING.md * 4;
 
 interface AssetAllocation {
   equity: number;
@@ -20,10 +17,10 @@ interface AssetAllocationChartProps {
 }
 
 const ASSET_COLORS = {
-  equity: '#966866',
+  equity: COLORS.primary,
   mutual_funds: '#3B82F6',
   crypto: '#F59E0B',
-  fixed_income: '#10B981',
+  fixed_income: COLORS.success,
   real_estate: '#8B5CF6',
   insurance: '#EC4899',
   nps: '#06B6D4',
@@ -50,20 +47,31 @@ export function AssetAllocationChart({ allocation }: AssetAllocationChartProps) 
       percentage: (value / total) * 100,
       color: ASSET_COLORS[key as keyof AssetAllocation],
       label: ASSET_LABELS[key as keyof AssetAllocation],
-    }));
+    }))
+    .sort((a, b) => b.value - a.value);
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Asset Allocation</Text>
+      <View style={styles.header}>
+        <Text style={styles.title}>Asset Allocation</Text>
+        <Text style={styles.subtitle}>Total: {formatINR(total)}</Text>
+      </View>
       
-      {/* Simple bar representation instead of donut */}
-      <View style={styles.barsContainer}>
+      <ScrollView 
+        style={styles.scrollContainer}
+        contentContainerStyle={styles.scrollContent}
+        showsVerticalScrollIndicator={false}
+      >
         {chartData.map((item, index) => (
-          <View key={index} style={styles.barRow}>
-            <View style={styles.labelRow}>
-              <View style={[styles.colorDot, { backgroundColor: item.color }]} />
-              <Text style={styles.assetLabel}>{item.label}</Text>
+          <View key={index} style={styles.assetCard}>
+            <View style={styles.assetHeader}>
+              <View style={styles.labelRow}>
+                <View style={[styles.colorDot, { backgroundColor: item.color }]} />
+                <Text style={styles.assetLabel}>{item.label}</Text>
+              </View>
+              <Text style={styles.percentage}>{item.percentage.toFixed(1)}%</Text>
             </View>
+            
             <View style={styles.barContainer}>
               <View
                 style={[
@@ -72,13 +80,11 @@ export function AssetAllocationChart({ allocation }: AssetAllocationChartProps) 
                 ]}
               />
             </View>
-            <View style={styles.valueRow}>
-              <Text style={styles.percentage}>{item.percentage.toFixed(1)}%</Text>
-              <Text style={styles.amount}>{formatINR(item.value)}</Text>
-            </View>
+            
+            <Text style={styles.amount}>{formatINR(item.value)}</Text>
           </View>
         ))}
-      </View>
+      </ScrollView>
     </View>
   );
 }
@@ -88,62 +94,80 @@ const styles = StyleSheet.create({
     marginHorizontal: SPACING.md,
     marginTop: SPACING.lg,
     backgroundColor: COLORS.surface,
-    borderRadius: RADIUS.lg,
+    borderRadius: RADIUS.card,
     padding: SPACING.lg,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.05,
-    shadowRadius: 4,
-    elevation: 2,
+    ...SHADOWS.card,
+    borderWidth: 1,
+    borderColor: COLORS.glassBorder,
   },
-  title: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: COLORS.text,
+  header: {
     marginBottom: SPACING.md,
   },
-  barsContainer: {
+  title: {
+    fontSize: TYPOGRAPHY.h3,
+    fontWeight: '700',
+    color: COLORS.text,
+    fontFamily: TYPOGRAPHY.heading,
+    marginBottom: SPACING.xs,
+  },
+  subtitle: {
+    fontSize: TYPOGRAPHY.caption,
+    color: COLORS.textSecondary,
+    fontFamily: TYPOGRAPHY.body,
+  },
+  scrollContainer: {
+    maxHeight: 320,
+  },
+  scrollContent: {
     gap: SPACING.md,
   },
-  barRow: {
-    gap: SPACING.xs,
+  assetCard: {
+    backgroundColor: COLORS.surfaceVariant,
+    borderRadius: RADIUS.button,
+    padding: SPACING.md,
+  },
+  assetHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: SPACING.sm,
   },
   labelRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: SPACING.xs,
+    gap: SPACING.sm,
   },
   colorDot: {
-    width: 8,
-    height: 8,
-    borderRadius: 4,
+    width: 12,
+    height: 12,
+    borderRadius: 6,
   },
   assetLabel: {
-    fontSize: 13,
-    fontWeight: '500',
+    fontSize: TYPOGRAPHY.bodySmall,
+    fontWeight: '600',
     color: COLORS.text,
+    fontFamily: TYPOGRAPHY.heading,
+  },
+  percentage: {
+    fontSize: TYPOGRAPHY.h4,
+    fontWeight: '700',
+    color: COLORS.text,
+    fontFamily: TYPOGRAPHY.data,
   },
   barContainer: {
     height: 8,
     backgroundColor: COLORS.background,
-    borderRadius: 4,
+    borderRadius: RADIUS.sm,
     overflow: 'hidden',
+    marginBottom: SPACING.xs,
   },
   bar: {
     height: '100%',
-    borderRadius: 4,
-  },
-  valueRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-  percentage: {
-    fontSize: 12,
-    fontWeight: '600',
-    color: COLORS.text,
+    borderRadius: RADIUS.sm,
   },
   amount: {
-    fontSize: 11,
+    fontSize: TYPOGRAPHY.caption,
     color: COLORS.textSecondary,
+    fontFamily: TYPOGRAPHY.data,
   },
 });

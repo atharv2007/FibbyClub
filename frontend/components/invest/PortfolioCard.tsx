@@ -1,7 +1,7 @@
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
-import { COLORS, SPACING, RADIUS } from '../../constants/theme';
+import { COLORS, SPACING, RADIUS, SHADOWS, TYPOGRAPHY } from '../../constants/theme';
 import { formatINR } from '../../utils/format';
 
 interface PortfolioCardProps {
@@ -22,56 +22,58 @@ export function PortfolioCard({
   const isProfit = totalPnl >= 0;
 
   return (
-    <LinearGradient
-      colors={['#966866', '#7a5553']}
-      start={{ x: 0, y: 0 }}
-      end={{ x: 1, y: 1 }}
-      style={styles.container}
-    >
-      <View style={styles.header}>
-        <View>
-          <Text style={styles.label}>PORTFOLIO VALUE</Text>
-          <Text style={styles.value}>{formatINR(totalValue)}</Text>
+    <View style={styles.wrapper}>
+      <LinearGradient
+        colors={[COLORS.primary, COLORS.primaryDark]}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 1 }}
+        style={styles.container}
+      >
+        <View style={styles.header}>
+          <View>
+            <Text style={styles.label}>PORTFOLIO VALUE</Text>
+            <Text style={styles.value}>{formatINR(totalValue)}</Text>
+          </View>
+          <TouchableOpacity style={styles.connectButton} onPress={onConnectBroker}>
+            <Ionicons name="link" size={16} color={COLORS.primary} />
+            <Text style={styles.connectText}>Connect Broker</Text>
+          </TouchableOpacity>
         </View>
-        <TouchableOpacity style={styles.connectButton} onPress={onConnectBroker}>
-          <Ionicons name="link" size={16} color={COLORS.surface} />
-          <Text style={styles.connectText}>Connect Broker</Text>
-        </TouchableOpacity>
-      </View>
 
-      <View style={styles.stats}>
-        <View style={styles.stat}>
-          <Text style={styles.statLabel}>Invested</Text>
-          <Text style={styles.statValue}>{formatINR(totalInvested)}</Text>
-        </View>
-        <View style={styles.divider} />
-        <View style={styles.stat}>
-          <Text style={styles.statLabel}>Total Returns</Text>
-          <View style={styles.returnRow}>
-            <Text style={[styles.statValue, { color: isProfit ? '#10B981' : '#F43F5E' }]}>
-              {formatINR(Math.abs(totalPnl))}
-            </Text>
-            <Text style={[styles.returnPct, { color: isProfit ? '#10B981' : '#F43F5E' }]}>
-              {isProfit ? '+' : '-'}{Math.abs(totalReturnsPct).toFixed(2)}%
-            </Text>
+        <View style={styles.stats}>
+          <View style={styles.stat}>
+            <Text style={styles.statLabel}>Invested</Text>
+            <Text style={styles.statValue}>{formatINR(totalInvested)}</Text>
+          </View>
+          <View style={styles.divider} />
+          <View style={styles.stat}>
+            <Text style={styles.statLabel}>Total Returns</Text>
+            <View style={styles.returnRow}>
+              <Text style={[styles.statValue, { color: COLORS.surface }]}>
+                {formatINR(Math.abs(totalPnl))}
+              </Text>
+              <View style={[styles.badge, { backgroundColor: isProfit ? COLORS.success : COLORS.danger }]}>
+                <Text style={styles.badgeText}>
+                  {isProfit ? '+' : '-'}{Math.abs(totalReturnsPct).toFixed(2)}%
+                </Text>
+              </View>
+            </View>
           </View>
         </View>
-      </View>
-    </LinearGradient>
+      </LinearGradient>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
+  wrapper: {
     marginHorizontal: SPACING.md,
-    marginTop: SPACING.md,
-    borderRadius: RADIUS.lg,
+    marginTop: SPACING.lg,
+  },
+  container: {
+    borderRadius: RADIUS.card,
     padding: SPACING.lg,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.15,
-    shadowRadius: 8,
-    elevation: 5,
+    ...SHADOWS.elevated,
   },
   header: {
     flexDirection: 'row',
@@ -80,38 +82,44 @@ const styles = StyleSheet.create({
     marginBottom: SPACING.lg,
   },
   label: {
-    fontSize: 11,
-    fontWeight: '600',
-    color: 'rgba(255,255,255,0.7)',
-    letterSpacing: 0.5,
-    marginBottom: 4,
+    fontSize: TYPOGRAPHY.tiny,
+    fontWeight: '700',
+    color: 'rgba(255,255,255,0.8)',
+    letterSpacing: 1,
+    marginBottom: SPACING.xs,
+    fontFamily: TYPOGRAPHY.heading,
   },
   value: {
-    fontSize: 32,
+    fontSize: 36,
     fontWeight: '700',
     color: COLORS.surface,
-    fontFamily: 'Rethink Sans',
+    fontFamily: TYPOGRAPHY.data,
+    letterSpacing: -0.5,
   },
   connectButton: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 6,
-    backgroundColor: 'rgba(255,255,255,0.2)',
-    paddingHorizontal: 12,
-    paddingVertical: 8,
-    borderRadius: RADIUS.md,
+    gap: SPACING.xs,
+    backgroundColor: COLORS.surface,
+    paddingHorizontal: SPACING.md,
+    paddingVertical: SPACING.sm,
+    borderRadius: RADIUS.button,
+    ...SHADOWS.soft,
   },
   connectText: {
-    fontSize: 12,
+    fontSize: TYPOGRAPHY.caption,
     fontWeight: '600',
-    color: COLORS.surface,
+    color: COLORS.primary,
+    fontFamily: TYPOGRAPHY.heading,
   },
   stats: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: 'rgba(255,255,255,0.1)',
-    borderRadius: RADIUS.md,
+    backgroundColor: 'rgba(255,255,255,0.15)',
+    borderRadius: RADIUS.button,
     padding: SPACING.md,
+    borderWidth: 1,
+    borderColor: 'rgba(255,255,255,0.2)',
   },
   stat: {
     flex: 1,
@@ -119,27 +127,35 @@ const styles = StyleSheet.create({
   divider: {
     width: 1,
     height: '100%',
-    backgroundColor: 'rgba(255,255,255,0.2)',
+    backgroundColor: 'rgba(255,255,255,0.3)',
     marginHorizontal: SPACING.md,
   },
   statLabel: {
-    fontSize: 11,
-    color: 'rgba(255,255,255,0.7)',
-    marginBottom: 4,
+    fontSize: TYPOGRAPHY.tiny,
+    color: 'rgba(255,255,255,0.8)',
+    marginBottom: SPACING.xs,
+    fontFamily: TYPOGRAPHY.body,
   },
   statValue: {
-    fontSize: 16,
+    fontSize: TYPOGRAPHY.h4,
     fontWeight: '700',
     color: COLORS.surface,
-    fontFamily: 'Rethink Sans',
+    fontFamily: TYPOGRAPHY.data,
   },
   returnRow: {
     flexDirection: 'row',
-    alignItems: 'baseline',
-    gap: 6,
+    alignItems: 'center',
+    gap: SPACING.sm,
   },
-  returnPct: {
-    fontSize: 12,
-    fontWeight: '600',
+  badge: {
+    paddingHorizontal: SPACING.sm,
+    paddingVertical: 4,
+    borderRadius: RADIUS.sm,
+  },
+  badgeText: {
+    fontSize: TYPOGRAPHY.tiny,
+    fontWeight: '700',
+    color: COLORS.surface,
+    fontFamily: TYPOGRAPHY.data,
   },
 });
