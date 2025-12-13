@@ -4,6 +4,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { COLORS, SPACING, RADIUS, TYPOGRAPHY } from '../constants/theme';
 import { useRouter } from 'expo-router';
 import { useAppStore } from '../store/useAppStore';
+import ChatHistoryDrawer from '../components/chat/ChatHistoryDrawer';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
