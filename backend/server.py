@@ -838,71 +838,79 @@ IMPORTANT: Always return valid JSON. The frontend will display only the summary 
         user_message = UserMessage(text=context_prompt)
         response_text = await chat.send_message(user_message)
         
-        # Parse response to extract options
-        options = []
-        main_response = response_text
-        
-        # Simple parsing: look for "OPTIONS:" section
-        if "OPTIONS:" in response_text:
-            parts = response_text.split("OPTIONS:")
-            main_response = parts[0].strip()
-            options_text = parts[1].strip()
+        # Parse JSON response from LLM
+        try:
+            import json
+            # Try to parse the response as JSON
+            parsed_response = json.loads(response_text)
             
-            # Extract options (lines starting with -)
-            for line in options_text.split('\n'):
-                line = line.strip()
-                if line.startswith('-'):
-                    option = line[1:].strip()
-                    if option:
-                        options.append(option)
-        
-        # If no options found, provide default exploration options
-        if not options:
-            options = [
-                "Check my spending breakdown",
-                "View my budget status",
-                "See investment portfolio",
-                "Explore financial goals"
-            ]
-        
-        # Generate card data based on query type
-        card_data = None
-        query_lower = message.lower()
-        
-        if any(word in query_lower for word in ['budget', 'spending', 'spend']):
-            # Get spending data for card
-            card_data = {
-                "type": "budget",
-                "spent": 239355,
-                "budget": 45000,
-                "categories": [
-                    {"category": "EMI", "amount": 22500, "percentage": 9.4, "emoji": "🏦", "color": "#608BB6"},
-                    {"category": "Travel", "amount": 12056, "percentage": 5.0, "emoji": "🚗", "color": "#82B1FF"},
-                    {"category": "Food", "amount": 8500, "percentage": 3.6, "emoji": "🍽️", "color": "#FFB74D"},
-                    {"category": "Shopping", "amount": 6200, "percentage": 2.6, "emoji": "🛒", "color": "#81C784"},
+            # Extract components from parsed JSON
+            summary = parsed_response.get("summary", response_text)
+            card_type = parsed_response.get("cardType")
+            metrics = parsed_response.get("metrics")
+            options = parsed_response.get("options", [])
+            
+            # Build card data if cardType is provided
+            card_data = None
+            if card_type and metrics:
+                card_data = {
+                    "type": card_type,
+                    **metrics
+                }
+            
+            # Ensure we have some options
+            if not options:
+                options = [
+                    "Check my spending breakdown",
+                    "View my budget status", 
+                    "See investment portfolio",
+                    "Explore financial goals"
                 ]
+            
+            return {
+                "response": summary,
+                "options": options[:4],  # Limit to 4 options
+                "card": card_data,
+                "cta": None
             }
-        elif any(word in query_lower for word in ['invest', 'portfolio', 'stock', 'sip']):
-            # Get investment data for card
-            card_data = {
-                "type": "investment",
-                "currentValue": 523400,
-                "invested": 442000,
-                "totalReturns": 81400,
-                "returnsPercentage": 18.4,
-                "assets": [
-                    {"asset": "Equity", "percentage": 60, "returns": 22, "emoji": "📈", "color": "#608BB6"},
-                    {"asset": "Debt", "percentage": 30, "returns": 8, "emoji": "📊", "color": "#82B1FF"},
-                    {"asset": "Gold", "percentage": 10, "returns": 12, "emoji": "💰", "color": "#FFD700"},
+            
+        except json.JSONDecodeError:
+            # Fallback to old parsing if JSON parsing fails
+            logger.warning(f"Failed to parse JSON response, falling back to text parsing: {response_text[:100]}...")
+            
+            # Parse response to extract options (old method)
+            options = []
+            main_response = response_text
+            
+            # Simple parsing: look for "OPTIONS:" section
+            if "OPTIONS:" in response_text:
+                parts = response_text.split("OPTIONS:")
+                main_response = parts[0].strip()
+                options_text = parts[1].strip()
+                
+                # Extract options (lines starting with -)
+                for line in options_text.split('\n'):
+                    line = line.strip()
+                    if line.startswith('-'):
+                        option = line[1:].strip()
+                        if option:
+                            options.append(option)
+            
+            # If no options found, provide default exploration options
+            if not options:
+                options = [
+                    "Check my spending breakdown",
+                    "View my budget status",
+                    "See investment portfolio",
+                    "Explore financial goals"
                 ]
+            
+            return {
+                "response": main_response,
+                "options": options[:4],
+                "card": None,
+                "cta": None
             }
-        
-        return {
-            "response": main_response,
-            "options": options[:4],  # Limit to 4 options
-            "card": card_data,
-            "cta": None  # Can be added for specific actions
-        }
         
     except Exception as e:
         logger.error(f"Chat error: {str(e)}")
