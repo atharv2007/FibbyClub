@@ -20,7 +20,11 @@ export default function AuthScreen() {
         {/* Logo/Branding */}
         <View style={styles.header}>
           <View style={styles.logoContainer}>
-            <Ionicons name="wallet" size={64} color={COLORS.primary} />
+            <Image
+              source={require('../assets/fibbylogo.png')}
+              style={styles.logo}
+              resizeMode="contain"
+            />
           </View>
           <Text style={styles.title}>Welcome to Fibby</Text>
           <Text style={styles.subtitle}>Your Gen-Z Finance Companion</Text>
