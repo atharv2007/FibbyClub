@@ -337,23 +337,6 @@ const styles = StyleSheet.create({
     width: 20,
     backgroundColor: COLORS.primary,
   },
-  navButton: {
-    position: 'absolute',
-    top: '40%',
-    width: 36,
-    height: 36,
-    borderRadius: 18,
-    backgroundColor: COLORS.surface,
-    justifyContent: 'center',
-    alignItems: 'center',
-    ...SHADOWS.soft,
-  },
-  navButtonLeft: {
-    left: -10,
-  },
-  navButtonRight: {
-    right: -10,
-  },
   menuOverlay: {
     flex: 1,
     backgroundColor: 'rgba(0, 0, 0, 0.4)',
