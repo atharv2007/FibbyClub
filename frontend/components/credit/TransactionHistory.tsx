@@ -23,11 +23,9 @@ const CATEGORIES = [
   { label: 'All', value: undefined, icon: 'apps' },
   { label: 'Food', value: 'Food & Dining', icon: 'restaurant' },
   { label: 'Shopping', value: 'Shopping', icon: 'cart' },
-  { label: 'Entertainment', value: 'Entertainment', icon: 'film' },
   { label: 'Travel', value: 'Travel', icon: 'airplane' },
   { label: 'Groceries', value: 'Groceries', icon: 'basket' },
-  { label: 'Utilities', value: 'Utilities', icon: 'flash' },
-  { label: 'Fuel', value: 'Fuel', icon: 'car' },
+  { label: 'Bills', value: 'Utilities', icon: 'receipt' },
 ];
 
 export function TransactionHistory({ transactions, onFilterChange }: TransactionHistoryProps) {
@@ -68,7 +66,6 @@ export function TransactionHistory({ transactions, onFilterChange }: Transaction
     return date.toLocaleDateString('en-IN', { day: 'numeric', month: 'short' });
   };
 
-  // Group transactions by date
   const groupedTransactions: { [key: string]: Transaction[] } = {};
   transactions.forEach(transaction => {
     const dateKey = formatDate(transaction.date);
@@ -81,16 +78,13 @@ export function TransactionHistory({ transactions, onFilterChange }: Transaction
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <Ionicons name="receipt" size={20} color={COLORS.primary} />
-        <Text style={styles.title}>Transaction History</Text>
+        <Text style={styles.title}>Transactions</Text>
         <Text style={styles.count}>{transactions.length}</Text>
       </View>
 
-      {/* Category Filters */}
       <ScrollView 
         horizontal 
         showsHorizontalScrollIndicator={false}
-        style={styles.filterScrollView}
         contentContainerStyle={styles.filterContainer}
       >
         {CATEGORIES.map((category, index) => (
@@ -104,8 +98,8 @@ export function TransactionHistory({ transactions, onFilterChange }: Transaction
           >
             <Ionicons 
               name={category.icon as any} 
-              size={16} 
-              color={selectedCategory === category.value ? '#FFFFFF' : COLORS.text} 
+              size={14} 
+              color={selectedCategory === category.value ? '#FFFFFF' : COLORS.textSecondary} 
             />
             <Text style={[
               styles.filterText,
@@ -117,12 +111,11 @@ export function TransactionHistory({ transactions, onFilterChange }: Transaction
         ))}
       </ScrollView>
 
-      {/* Transactions List */}
       <View style={styles.transactionsList}>
         {Object.keys(groupedTransactions).length === 0 ? (
           <View style={styles.emptyState}>
-            <Ionicons name="receipt-outline" size={48} color={COLORS.border} />
-            <Text style={styles.emptyText}>No transactions found</Text>
+            <Ionicons name="receipt-outline" size={40} color={COLORS.border} />
+            <Text style={styles.emptyText}>No transactions</Text>
           </View>
         ) : (
           Object.keys(groupedTransactions).map((dateKey) => (
@@ -132,10 +125,10 @@ export function TransactionHistory({ transactions, onFilterChange }: Transaction
                 const categoryColor = getCategoryColor(transaction.category);
                 return (
                   <View key={index} style={styles.transactionCard}>
-                    <View style={[styles.categoryIcon, { backgroundColor: categoryColor + '20' }]}>
+                    <View style={[styles.categoryIcon, { backgroundColor: categoryColor + '15' }]}>
                       <Ionicons 
                         name={getCategoryIcon(transaction.category) as any} 
-                        size={20} 
+                        size={18} 
                         color={categoryColor} 
                       />
                     </View>
@@ -144,11 +137,11 @@ export function TransactionHistory({ transactions, onFilterChange }: Transaction
                       <Text style={styles.category}>{transaction.category}</Text>
                     </View>
                     <View style={styles.transactionAmount}>
-                      <Text style={styles.amount}>-₹{transaction.amount.toFixed(2)}</Text>
+                      <Text style={styles.amount}>-₹{transaction.amount.toFixed(0)}</Text>
                       {transaction.reward_points > 0 && (
                         <View style={styles.rewardBadge}>
                           <Ionicons name="gift" size={10} color={COLORS.primary} />
-                          <Text style={styles.rewardText}>{transaction.reward_points}</Text>
+                          <Text style={styles.rewardText}>+{transaction.reward_points}</Text>
                         </View>
                       )}
                     </View>
@@ -166,42 +159,39 @@ export function TransactionHistory({ transactions, onFilterChange }: Transaction
 const styles = StyleSheet.create({
   container: {
     paddingHorizontal: SPACING.md,
-    paddingVertical: SPACING.sm,
+    paddingTop: SPACING.lg,
   },
   header: {
     flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'space-between',
     marginBottom: SPACING.md,
-    gap: SPACING.xs,
   },
   title: {
     fontSize: 18,
     fontWeight: '600',
     color: COLORS.text,
-    flex: 1,
   },
   count: {
-    fontSize: 13,
+    fontSize: 12,
     fontWeight: '600',
     color: COLORS.textSecondary,
-    backgroundColor: COLORS.border,
+    backgroundColor: COLORS.surface,
     paddingHorizontal: SPACING.sm,
     paddingVertical: 4,
-    borderRadius: RADIUS.sm,
-  },
-  filterScrollView: {
-    marginBottom: SPACING.md,
+    borderRadius: RADIUS.full,
   },
   filterContainer: {
     gap: SPACING.xs,
+    marginBottom: SPACING.md,
     paddingRight: SPACING.md,
   },
   filterChip: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 6,
+    gap: 5,
     paddingHorizontal: SPACING.sm,
-    paddingVertical: SPACING.xs,
+    paddingVertical: 6,
     borderRadius: RADIUS.full,
     backgroundColor: COLORS.surface,
     borderWidth: 1,
@@ -212,24 +202,24 @@ const styles = StyleSheet.create({
     borderColor: COLORS.primary,
   },
   filterText: {
-    fontSize: 13,
+    fontSize: 12,
     fontWeight: '500',
-    color: COLORS.text,
+    color: COLORS.textSecondary,
   },
   filterTextActive: {
     color: '#FFFFFF',
   },
   transactionsList: {
-    gap: SPACING.lg,
+    gap: SPACING.md,
   },
   dateGroup: {
-    marginBottom: SPACING.md,
+    marginBottom: SPACING.sm,
   },
   dateHeader: {
-    fontSize: 13,
+    fontSize: 12,
     fontWeight: '600',
     color: COLORS.textSecondary,
-    marginBottom: SPACING.sm,
+    marginBottom: SPACING.xs,
     textTransform: 'uppercase',
     letterSpacing: 0.5,
   },
@@ -241,10 +231,12 @@ const styles = StyleSheet.create({
     borderRadius: RADIUS.md,
     marginBottom: SPACING.xs,
     gap: SPACING.sm,
+    borderWidth: 1,
+    borderColor: COLORS.border,
   },
   categoryIcon: {
-    width: 40,
-    height: 40,
+    width: 36,
+    height: 36,
     borderRadius: RADIUS.sm,
     justifyContent: 'center',
     alignItems: 'center',
@@ -259,23 +251,23 @@ const styles = StyleSheet.create({
     marginBottom: 2,
   },
   category: {
-    fontSize: 12,
+    fontSize: 11,
     color: COLORS.textSecondary,
   },
   transactionAmount: {
     alignItems: 'flex-end',
   },
   amount: {
-    fontSize: 15,
+    fontSize: 14,
     fontWeight: '600',
     color: COLORS.text,
-    marginBottom: 2,
+    marginBottom: 3,
   },
   rewardBadge: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 3,
-    backgroundColor: COLORS.primary + '15',
+    backgroundColor: COLORS.primary + '10',
     paddingHorizontal: 6,
     paddingVertical: 2,
     borderRadius: RADIUS.sm,
@@ -291,7 +283,7 @@ const styles = StyleSheet.create({
     paddingVertical: SPACING.xl * 2,
   },
   emptyText: {
-    fontSize: 14,
+    fontSize: 13,
     color: COLORS.textSecondary,
     marginTop: SPACING.sm,
   },
