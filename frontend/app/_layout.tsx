@@ -1,9 +1,10 @@
 import { Stack, useRouter, useSegments } from 'expo-router';
-import { StatusBar, View } from 'react-native';
+import { StatusBar, View, ActivityIndicator } from 'react-native';
 import { useEffect } from 'react';
 import { COLORS } from '../constants/theme';
 import { BottomNav } from '../components/navigation/BottomNav';
 import { AuthProvider, useAuth } from '../context/AuthContext';
+import { useCustomFonts } from '../hooks/useFonts';
 
 function RootLayoutNav() {
   const { isAuthenticated, loading } = useAuth();
