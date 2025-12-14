@@ -88,18 +88,6 @@ export function BankCarousel({ accounts, onAddBank }: BankCarouselProps) {
     });
   };
 
-  const handleNext = () => {
-    if (currentIndex < accounts.length - 1) {
-      goToCard(currentIndex + 1);
-    }
-  };
-
-  const handlePrevious = () => {
-    if (currentIndex > 0) {
-      goToCard(currentIndex - 1);
-    }
-  };
-
   const currentAccount = accounts[currentIndex];
   const lastUpdated = currentAccount
     ? new Date(currentAccount.last_updated).toLocaleTimeString('en-IN', {
