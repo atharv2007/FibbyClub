@@ -21,6 +21,7 @@ import { api } from '../utils/api';
 export default function ProfileScreen() {
   const router = useRouter();
   const { user, logout } = useAuth();
+  const { reset: resetAppStore } = useAppStore();
   const [darkMode, setDarkMode] = useState(false);
   const [showSettingsModal, setShowSettingsModal] = useState(false);
   const [showAboutModal, setShowAboutModal] = useState(false);
