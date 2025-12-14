@@ -543,15 +543,43 @@ export default function TrackScreen() {
           )}
 
           {activeTab === 'credit' && (
-            <CreditCard
-              creditInfo={{
-                score: 785,
-                totalLimit: 300000,
-                availableCredit: 238000,
-                currentSpend: 62000,
-                points: 12450,
-              }}
-            />
+            <>
+              {/* Credit Score Gauge */}
+              {creditScore && (
+                <CreditScoreGauge 
+                  score={creditScore.score} 
+                  scoreRange={creditScore.score_range} 
+                />
+              )}
+
+              {/* Credit Factors - RPG Stats */}
+              {creditScore?.factors && (
+                <CreditFactors factors={creditScore.factors} />
+              )}
+
+              {/* Credit Cards with Feature Modals */}
+              {creditCards.length > 0 && (
+                <CreditCards cards={creditCards} />
+              )}
+
+              {/* Transaction History with Filters */}
+              {creditTransactions.length > 0 && (
+                <TransactionHistory 
+                  transactions={creditTransactions}
+                  onFilterChange={async (cardId, category) => {
+                    if (user?._id) {
+                      const data = await api.getCreditTransactions(user._id, cardId, category);
+                      setCreditTransactions(data.transactions || []);
+                    }
+                  }}
+                />
+              )}
+
+              {/* AI Recommendations */}
+              {creditRecommendations.length > 0 && (
+                <AIRecommendations recommendations={creditRecommendations} />
+              )}
+            </>
           )}
 
           <View style={styles.bottomPadding} />
