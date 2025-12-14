@@ -137,7 +137,7 @@ export default function HomeScreen() {
           <Header
             userName={user.name}
             spendPercentage={spendPercentage}
-            onNotificationPress={() => setActiveFeature('notifications')}
+            onNotificationPress={() => setShowNotifications(true)}
           />
         )}
 
