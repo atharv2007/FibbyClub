@@ -1,13 +1,12 @@
-import React, { useState, useRef } from 'react';
+import React, { useState } from 'react';
 import {
   View,
   Text,
   StyleSheet,
   TouchableOpacity,
   Modal,
-  Animated,
+  ScrollView,
   Dimensions,
-  PanResponder,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { Card } from '../common/Card';
@@ -16,6 +15,7 @@ import { formatINRFull } from '../../utils/format';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 const CARD_WIDTH = SCREEN_WIDTH - (SPACING.md * 2);
+const CARD_SPACING = SPACING.md;
 
 interface BankAccount {
   _id: string;
