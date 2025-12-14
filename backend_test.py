@@ -10,7 +10,7 @@ import sys
 from typing import Dict, Any, List
 
 # Configuration
-BASE_URL = "https://fintech-buddy-6.preview.emergentagent.com/api"
+BASE_URL = "https://smart-finance-241.preview.emergentagent.com/api"
 TEST_USER_ID = "693d2626a878e575aaf43c0a"
 
 class InvestmentAPITester:
