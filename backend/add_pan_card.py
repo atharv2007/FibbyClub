@@ -35,7 +35,7 @@ print("=" * 60)
 
 # Add PAN card to user document
 result = db.users.update_one(
-    {"user_id": user_id},
+    {"_id": user_oid},
     {"$set": {"pan_card": "ABCDE1234F"}}
 )
 
