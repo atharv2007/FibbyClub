@@ -35,8 +35,9 @@ type TabType = 'budget' | 'spend' | 'invest' | 'credit';
 
 export default function TrackScreen() {
   const router = useRouter();
+  const { tab } = useLocalSearchParams<{ tab?: TabType }>();
   const { user, setUser } = useAppStore();
-  const [activeTab, setActiveTab] = useState<TabType>('budget');
+  const [activeTab, setActiveTab] = useState<TabType>(tab || 'budget');
   const [loading, setLoading] = useState(true);
   const [monthlyData, setMonthlyData] = useState([]);
   const [categories, setCategories] = useState([]);
