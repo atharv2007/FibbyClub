@@ -163,4 +163,48 @@ export const api = {
     const response = await fetch(`${API_URL}/api/transactions/merchant-leaderboard?user_id=${userId}&limit=${limit}`);
     return response.json();
   },
+
+  // Authentication
+  sendOTP: async (identifier: string) => {
+    const isEmail = identifier.includes('@');
+    const response = await fetch(`${API_URL}/api/auth/send-otp`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(isEmail ? { email: identifier } : { phone: identifier }),
+    });
+    return response.json();
+  },
+
+  verifyOTP: async (identifier: string, otp: string) => {
+    const isEmail = identifier.includes('@');
+    const response = await fetch(`${API_URL}/api/auth/verify-otp`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        ...(isEmail ? { email: identifier } : { phone: identifier }),
+        otp,
+      }),
+    });
+    return response.json();
+  },
+
+  getBanksByPan: async (panCard: string) => {
+    const response = await fetch(`${API_URL}/api/auth/banks-by-pan/${panCard}`);
+    return response.json();
+  },
+
+  signup: async (data: {
+    name: string;
+    email: string;
+    phone: string;
+    pan_card: string;
+    selected_banks: any[];
+  }) => {
+    const response = await fetch(`${API_URL}/api/auth/signup`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data),
+    });
+    return response.json();
+  },
 };
