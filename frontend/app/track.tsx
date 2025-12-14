@@ -357,7 +357,7 @@ export default function TrackScreen() {
           {activeTab === 'budget' && (
             <>
               {/* Budget Card */}
-              <BudgetCard budget={45000} spent={31200} />
+              <BudgetCard budget={180000} spent={124800} />
 
               {/* Category Limits */}
               <CategoryLimits
