@@ -509,37 +509,6 @@ def generate_credit_recommendations():
         }
     ]
 
-            "auto_save_enabled": True,
-            "auto_save_amount": 10000.0
-        },
-        {
-            "user_id": user_id,
-            "name": "Wedding Fund",
-            "icon": "heart",
-            "target_amount": 800000.0,
-            "saved_amount": 200000.0,
-            "deadline": datetime.utcnow() + timedelta(days=900),
-            "auto_save_enabled": True,
-            "auto_save_amount": 8000.0
-        },
-        {
-            "user_id": user_id,
-            "name": "Study Abroad",
-            "icon": "school",
-            "target_amount": 2000000.0,
-            "saved_amount": 450000.0,
-            "deadline": datetime.utcnow() + timedelta(days=1460),
-            "auto_save_enabled": True,
-            "auto_save_amount": 15000.0
-        }
-    ]
-
-
-def generate_mock_insights(user_id: str) -> List[dict]:
-    """Generate mock insights and nudges"""
-    insights = []
-    current_date = datetime.utcnow()
-    
     # Recent insights
     insights.append({
         "user_id": user_id,
