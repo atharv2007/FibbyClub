@@ -391,7 +391,7 @@ async def delete_account(data: dict):
 async def get_credit_score(user_id: str):
     """Get credit score and factors"""
     try:
-        from mock_data import generate_credit_score_data
+        from credit_data import generate_credit_score_data
         credit_data = generate_credit_score_data(user_id)
         return credit_data
     except Exception as e:
@@ -402,7 +402,7 @@ async def get_credit_score(user_id: str):
 async def get_credit_cards():
     """Get credit cards with features"""
     try:
-        from mock_data import generate_credit_cards
+        from credit_data import generate_credit_cards
         cards = generate_credit_cards()
         return {"cards": cards}
     except Exception as e:
@@ -413,7 +413,7 @@ async def get_credit_cards():
 async def get_credit_transactions(user_id: str, card_id: str = None, category: str = None):
     """Get credit card transactions with optional filters"""
     try:
-        from mock_data import generate_credit_transactions
+        from credit_data import generate_credit_transactions
         transactions = generate_credit_transactions(user_id)
         
         if card_id:
@@ -430,7 +430,7 @@ async def get_credit_transactions(user_id: str, card_id: str = None, category: s
 async def get_credit_recommendations():
     """Get AI recommendations for credit improvement"""
     try:
-        from mock_data import generate_credit_recommendations
+        from credit_data import generate_credit_recommendations
         recommendations = generate_credit_recommendations()
         return {"recommendations": recommendations}
     except Exception as e:
