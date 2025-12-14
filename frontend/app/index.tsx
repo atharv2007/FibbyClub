@@ -154,6 +154,15 @@ export default function HomeScreen() {
           }
         }}
       />
+
+      {/* Feature Modal */}
+      {activeFeature && (
+        <FeatureModal
+          visible={true}
+          feature={FEATURE_CONTENT[activeFeature]}
+          onClose={() => setActiveFeature(null)}
+        />
+      )}
     </SafeAreaView>
   );
 }
