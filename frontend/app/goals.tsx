@@ -302,12 +302,12 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     color: COLORS.text,
     marginBottom: 4,
-    fontFamily: 'Urbanist',
+    fontFamily: 'System',
   },
   headerSubtitle: {
     fontSize: 14,
     color: COLORS.textSecondary,
-    fontFamily: 'Urbanist',
+    fontFamily: 'System',
   },
   scrollView: {
     flex: 1,
@@ -338,7 +338,7 @@ const styles = StyleSheet.create({
     color: COLORS.text,
     marginBottom: SPACING.xs,
     textAlign: 'center',
-    fontFamily: 'Urbanist',
+    fontFamily: 'System',
   },
   emptySubtitle: {
     fontSize: 15,
@@ -346,7 +346,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginBottom: SPACING.xl,
     lineHeight: 22,
-    fontFamily: 'Urbanist',
+    fontFamily: 'System',
   },
   emptyButton: {
     flexDirection: 'row',
@@ -362,7 +362,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '600',
     color: COLORS.surface,
-    fontFamily: 'Urbanist',
+    fontFamily: 'System',
   },
   summaryCard: {
     backgroundColor: COLORS.surface,
@@ -381,13 +381,13 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: '700',
     color: COLORS.text,
-    fontFamily: 'Urbanist',
+    fontFamily: 'System',
   },
   summarySubtitle: {
     fontSize: 13,
     color: COLORS.textSecondary,
     marginTop: 2,
-    fontFamily: 'Urbanist',
+    fontFamily: 'System',
   },
   addButton: {
     width: 40,
@@ -431,7 +431,7 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: COLORS.textSecondary,
     marginBottom: 4,
-    fontFamily: 'Urbanist',
+    fontFamily: 'System',
   },
   statValue: {
     fontSize: 16,
@@ -486,7 +486,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginBottom: SPACING.xs,
     minHeight: 34,
-    fontFamily: 'Urbanist',
+    fontFamily: 'System',
   },
   goalAmounts: {
     alignItems: 'center',
