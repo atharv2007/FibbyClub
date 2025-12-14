@@ -22,7 +22,7 @@ export function AIRecommendations({ recommendations }: AIRecommendationsProps) {
 
   const getPriorityBadge = (priority: string) => {
     const badges: { [key: string]: { bg: string; text: string; label: string } } = {
-      high: { bg: '#FEE2E2', text: '#DC2626', label: 'High Priority' },
+      high: { bg: '#FEE2E2', text: '#DC2626', label: 'High' },
       medium: { bg: '#FEF3C7', text: '#D97706', label: 'Medium' },
       low: { bg: '#DBEAFE', text: '#2563EB', label: 'Low' },
     };
@@ -36,15 +36,15 @@ export function AIRecommendations({ recommendations }: AIRecommendationsProps) {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <Ionicons name="sparkles" size={20} color={COLORS.primary} />
-        <Text style={styles.title}>AI Recommendations</Text>
-        <View style={styles.aibadge}>
-          <Text style={styles.aiBadgeText}>Powered by AI</Text>
+        <Text style={styles.title}>AI Insights</Text>
+        <View style={styles.aiBadge}>
+          <Ionicons name="sparkles" size={10} color={COLORS.primary} />
+          <Text style={styles.aiBadgeText}>AI</Text>
         </View>
       </View>
 
       <Text style={styles.subtitle}>
-        Smart insights to improve your credit health and maximize rewards
+        Personalized tips to improve your credit health
       </Text>
 
       {recommendations.map((rec, index) => {
@@ -61,10 +61,9 @@ export function AIRecommendations({ recommendations }: AIRecommendationsProps) {
             onPress={() => toggleExpand(index)}
             activeOpacity={0.7}
           >
-            {/* Header */}
             <View style={styles.cardHeader}>
-              <View style={[styles.iconContainer, { backgroundColor: rec.color + '20' }]}>
-                <Ionicons name={rec.icon as any} size={24} color={rec.color} />
+              <View style={[styles.iconContainer, { backgroundColor: rec.color + '15' }]}>
+                <Ionicons name={rec.icon as any} size={20} color={rec.color} />
               </View>
               <View style={styles.cardHeaderText}>
                 <Text style={styles.cardTitle}>{rec.title}</Text>
@@ -74,23 +73,22 @@ export function AIRecommendations({ recommendations }: AIRecommendationsProps) {
                       {priorityBadge.label}
                     </Text>
                   </View>
-                  <Text style={styles.category}>{rec.category}</Text>
+                  <Text style={styles.category}>• {rec.category}</Text>
                 </View>
               </View>
               <Ionicons 
                 name={isExpanded ? 'chevron-up' : 'chevron-down'} 
-                size={20} 
+                size={18} 
                 color={COLORS.textSecondary} 
               />
             </View>
 
-            {/* Expandable Description */}
             {isExpanded && (
               <View style={styles.expandedContent}>
                 <Text style={styles.description}>{rec.description}</Text>
                 <TouchableOpacity style={[styles.actionButton, { backgroundColor: rec.color }]}>
                   <Text style={styles.actionButtonText}>{rec.action}</Text>
-                  <Ionicons name="arrow-forward" size={16} color="#FFFFFF" />
+                  <Ionicons name="arrow-forward" size={14} color="#FFFFFF" />
                 </TouchableOpacity>
               </View>
             )}
@@ -104,7 +102,7 @@ export function AIRecommendations({ recommendations }: AIRecommendationsProps) {
 const styles = StyleSheet.create({
   container: {
     paddingHorizontal: SPACING.md,
-    paddingVertical: SPACING.sm,
+    paddingTop: SPACING.lg,
     paddingBottom: SPACING.xl * 2,
   },
   header: {
@@ -117,37 +115,36 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: '600',
     color: COLORS.text,
-    flex: 1,
   },
   aiBadge: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 3,
     backgroundColor: COLORS.primary + '15',
-    paddingHorizontal: SPACING.sm,
-    paddingVertical: 4,
+    paddingHorizontal: SPACING.xs,
+    paddingVertical: 3,
     borderRadius: RADIUS.sm,
   },
   aiBadgeText: {
     fontSize: 10,
     fontWeight: '600',
     color: COLORS.primary,
-    textTransform: 'uppercase',
-    letterSpacing: 0.5,
   },
   subtitle: {
     fontSize: 13,
     color: COLORS.textSecondary,
     marginBottom: SPACING.md,
-    lineHeight: 18,
   },
   recommendationCard: {
     backgroundColor: COLORS.surface,
     borderRadius: RADIUS.lg,
     padding: SPACING.md,
-    marginBottom: SPACING.md,
+    marginBottom: SPACING.sm,
     borderWidth: 1,
     borderColor: COLORS.border,
   },
   recommendationCardExpanded: {
-    borderColor: COLORS.primary,
+    borderColor: COLORS.primary + '40',
   },
   cardHeader: {
     flexDirection: 'row',
@@ -155,8 +152,8 @@ const styles = StyleSheet.create({
     gap: SPACING.sm,
   },
   iconContainer: {
-    width: 48,
-    height: 48,
+    width: 40,
+    height: 40,
     borderRadius: RADIUS.md,
     justifyContent: 'center',
     alignItems: 'center',
@@ -165,23 +162,23 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   cardTitle: {
-    fontSize: 15,
+    fontSize: 14,
     fontWeight: '600',
     color: COLORS.text,
-    marginBottom: 6,
+    marginBottom: 4,
   },
   cardMeta: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: SPACING.xs,
+    gap: 6,
   },
   priorityBadge: {
-    paddingHorizontal: 8,
-    paddingVertical: 3,
+    paddingHorizontal: 6,
+    paddingVertical: 2,
     borderRadius: RADIUS.sm,
   },
   priorityText: {
-    fontSize: 10,
+    fontSize: 9,
     fontWeight: '600',
     textTransform: 'uppercase',
     letterSpacing: 0.5,
@@ -191,16 +188,16 @@ const styles = StyleSheet.create({
     color: COLORS.textSecondary,
   },
   expandedContent: {
-    marginTop: SPACING.md,
-    paddingTop: SPACING.md,
+    marginTop: SPACING.sm,
+    paddingTop: SPACING.sm,
     borderTopWidth: 1,
     borderTopColor: COLORS.border,
   },
   description: {
-    fontSize: 14,
+    fontSize: 13,
     color: COLORS.textSecondary,
-    lineHeight: 20,
-    marginBottom: SPACING.md,
+    lineHeight: 19,
+    marginBottom: SPACING.sm,
   },
   actionButton: {
     flexDirection: 'row',
@@ -211,7 +208,7 @@ const styles = StyleSheet.create({
     borderRadius: RADIUS.md,
   },
   actionButtonText: {
-    fontSize: 14,
+    fontSize: 13,
     fontWeight: '600',
     color: '#FFFFFF',
   },
