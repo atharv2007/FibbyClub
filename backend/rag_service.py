@@ -107,7 +107,9 @@ class RAGService:
             for query in queries:
                 try:
                     # Generate query embedding
-                    query_embedding = self.embedder.model.encode([query])[0].tolist()
+                    embedding_result = self.embedder.model.encode([query])[0]
+                    # Handle both numpy arrays and lists
+                    query_embedding = embedding_result.tolist() if hasattr(embedding_result, 'tolist') else embedding_result
                     
                     # Search vector database with user filter
                     results = self.embedder.collection.query(
