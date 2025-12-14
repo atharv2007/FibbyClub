@@ -1,17 +1,17 @@
 """
 Embedder Agent Service
-Fetches user data from MongoDB and updates embeddings in ChromaDB using OpenAI Embeddings API
+Fetches user data from MongoDB and updates embeddings in ChromaDB
+Supports multiple embedding backends with graceful fallback
 """
 import os
 import asyncio
 import logging
 from datetime import datetime
-from typing import Dict, List
+from typing import Dict, List, Optional
 from pathlib import Path
 
 import chromadb
 from chromadb.config import Settings
-from openai import OpenAI
 from motor.motor_asyncio import AsyncIOMotorClient
 from bson import ObjectId
 from dotenv import load_dotenv
@@ -24,58 +24,101 @@ logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO)
 
 
-class OpenAIEmbedder:
-    """OpenAI Embeddings wrapper for generating text embeddings via Emergent proxy"""
-    
-    def __init__(self, api_key: str):
-        # Check if using Emergent LLM key (starts with sk-emergent)
-        if api_key and api_key.startswith("sk-emergent"):
-            # Use Emergent integration proxy for embeddings
-            base_url = "https://integrations.emergentagent.com/llm"
-        else:
-            # Standard OpenAI endpoint
-            base_url = "https://api.openai.com/v1"
-        
-        self.client = OpenAI(
-            api_key=api_key,
-            base_url=base_url
-        )
-        self.model = "text-embedding-3-small"
-        self.dimensions = 1536  # Default dimension for text-embedding-3-small
+class BaseEmbedder:
+    """Base class for embedders"""
     
     def encode(self, texts: List[str], show_progress_bar: bool = False) -> List[List[float]]:
-        """
-        Generate embeddings for a list of texts using OpenAI API
+        raise NotImplementedError
+
+
+class SentenceTransformerEmbedder(BaseEmbedder):
+    """Local sentence-transformers embedder (if available)"""
+    
+    def __init__(self):
+        from sentence_transformers import SentenceTransformer
+        self.model = SentenceTransformer('all-MiniLM-L6-v2')
+        self.dimensions = 384
+    
+    def encode(self, texts: List[str], show_progress_bar: bool = False) -> List[List[float]]:
+        return self.model.encode(texts, show_progress_bar=show_progress_bar).tolist()
+
+
+class OpenAIEmbedder(BaseEmbedder):
+    """OpenAI Embeddings wrapper (requires valid OpenAI API key)"""
+    
+    def __init__(self, api_key: str, base_url: str = None):
+        from openai import OpenAI
         
-        Args:
-            texts: List of text strings to embed
-            show_progress_bar: Ignored (kept for compatibility)
+        if base_url:
+            self.client = OpenAI(api_key=api_key, base_url=base_url)
+        else:
+            self.client = OpenAI(api_key=api_key)
         
-        Returns:
-            List of embedding vectors
-        """
+        self.model_name = "text-embedding-3-small"
+        self.dimensions = 1536
+    
+    def encode(self, texts: List[str], show_progress_bar: bool = False) -> List[List[float]]:
         if not texts:
             return []
         
-        try:
-            # OpenAI API can handle batch requests
-            response = self.client.embeddings.create(
-                model=self.model,
-                input=texts,
-                encoding_format="float"
-            )
-            
-            # Extract embeddings in order
-            embeddings = [item.embedding for item in response.data]
-            return embeddings
+        response = self.client.embeddings.create(
+            model=self.model_name,
+            input=texts,
+            encoding_format="float"
+        )
         
+        return [item.embedding for item in response.data]
+
+
+class NoOpEmbedder(BaseEmbedder):
+    """Fallback embedder that returns empty - used when no embedding backend is available"""
+    
+    def __init__(self):
+        self.dimensions = 384
+        logger.warning("Using NoOp embedder - RAG will not work but chat will still function")
+    
+    def encode(self, texts: List[str], show_progress_bar: bool = False) -> List[List[float]]:
+        # Return empty embeddings - this will effectively disable RAG
+        return [[0.0] * self.dimensions for _ in texts]
+
+
+def get_embedder() -> BaseEmbedder:
+    """
+    Get the best available embedder with fallback chain:
+    1. Try sentence-transformers (best for local/deployment)
+    2. Try OpenAI embeddings (if valid API key)
+    3. Fall back to NoOp (RAG disabled but app still works)
+    """
+    
+    # Option 1: Try sentence-transformers (preferred for deployment)
+    try:
+        embedder = SentenceTransformerEmbedder()
+        logger.info("Using sentence-transformers embedder (all-MiniLM-L6-v2)")
+        return embedder
+    except ImportError:
+        logger.info("sentence-transformers not available, trying alternatives...")
+    except Exception as e:
+        logger.warning(f"Failed to initialize sentence-transformers: {e}")
+    
+    # Option 2: Try OpenAI embeddings with standard API key
+    openai_key = os.environ.get("OPENAI_API_KEY")
+    if openai_key and not openai_key.startswith("sk-emergent"):
+        try:
+            embedder = OpenAIEmbedder(openai_key)
+            # Test with a simple embedding
+            embedder.encode(["test"])
+            logger.info("Using OpenAI embeddings (text-embedding-3-small)")
+            return embedder
         except Exception as e:
-            logger.error(f"Error generating OpenAI embeddings: {str(e)}")
-            raise
+            logger.warning(f"Failed to initialize OpenAI embedder: {e}")
+    
+    # Option 3: Fall back to NoOp
+    logger.warning("No embedding backend available - using NoOp embedder")
+    return NoOpEmbedder()
 
 
 class EmbedderAgent:
-    """Agent that embeds user financial data into vector database using OpenAI"""
+    """Agent that embeds user financial data into vector database"""
     
     def __init__(self):
         # Initialize ChromaDB client (persistent storage)
@@ -90,14 +133,13 @@ class EmbedderAgent:
             metadata={"description": "User financial data embeddings for Fibby"}
         )
         
-        # Initialize OpenAI embedding model
-        api_key = os.environ.get("EMERGENT_LLM_KEY")
-        if not api_key:
-            raise ValueError("EMERGENT_LLM_KEY environment variable is required for embeddings")
+        # Initialize embedding model with fallback chain
+        logger.info("Initializing embedding model...")
+        self.model = get_embedder()
+        logger.info(f"Embedding model initialized: {type(self.model).__name__}")
         
-        logger.info("Initializing OpenAI embeddings (text-embedding-3-small)...")
-        self.model = OpenAIEmbedder(api_key)
-        logger.info("OpenAI embedding model initialized successfully")
+        # Track if RAG is functional
+        self.rag_enabled = not isinstance(self.model, NoOpEmbedder)
         
         # MongoDB connection
         mongo_url = os.environ['MONGO_URL']
@@ -106,6 +148,10 @@ class EmbedderAgent:
         
         # Transaction ID tracking (user_id -> transaction_id)
         self.user_transactions: Dict[str, str] = {}
+    
+    def is_rag_enabled(self) -> bool:
+        """Check if RAG functionality is available"""
+        return self.rag_enabled
     
     async def fetch_user_data(self, user_id: str) -> Dict:
         """Fetch all relevant data for a user from MongoDB"""
@@ -341,11 +387,15 @@ class EmbedderAgent:
         
         return chunks
     
-    async def update_user_embeddings(self, user_id: str) -> str:
+    async def update_user_embeddings(self, user_id: str) -> Optional[str]:
         """
-        Fetch user data, create embeddings using OpenAI, and update vector DB
-        Returns transaction_id for this update
+        Fetch user data, create embeddings, and update vector DB
+        Returns transaction_id for this update, or None if RAG is disabled
         """
+        if not self.rag_enabled:
+            logger.info(f"RAG disabled - skipping embedding update for user {user_id}")
+            return None
+        
         try:
             logger.info(f"Updating embeddings for user: {user_id}")
             
@@ -383,8 +433,8 @@ class EmbedderAgent:
                 for chunk in chunks
             ]
             
-            # Generate embeddings using OpenAI API
-            logger.info(f"Generating OpenAI embeddings for {len(texts)} chunks...")
+            # Generate embeddings
+            logger.info(f"Generating embeddings for {len(texts)} chunks...")
             embeddings = self.model.encode(texts, show_progress_bar=False)
             
             # Add to ChromaDB
@@ -408,6 +458,10 @@ class EmbedderAgent:
     
     async def update_all_users(self):
         """Update embeddings for all users in the database"""
+        if not self.rag_enabled:
+            logger.info("RAG disabled - skipping embedding updates for all users")
+            return
+        
         try:
             # Get all users
             users = await self.db.users.find().to_list(1000)
@@ -416,7 +470,7 @@ class EmbedderAgent:
             for user in users:
                 user_id = str(user["_id"])
                 await self.update_user_embeddings(user_id)
-                await asyncio.sleep(0.5)  # Rate limiting for OpenAI API
+                await asyncio.sleep(0.5)  # Rate limiting
             
             logger.info("Completed embedding updates for all users")
         
@@ -432,9 +486,10 @@ class EmbedderAgent:
         print("\n" + "="*80)
         print("VECTOR DATABASE - USER TRANSACTION IDs")
         print("="*80)
+        print(f"RAG Enabled: {self.rag_enabled}")
+        print(f"Embedder: {type(self.model).__name__}")
         print(f"Total Users: {len(self.user_transactions)}")
         print(f"Vector DB Location: {ROOT_DIR / 'chroma_db'}")
-        print(f"Embedding Model: OpenAI text-embedding-3-small")
         print(f"Total Documents in DB: {self.collection.count()}")
         print("="*80)
         print(f"{'User ID':<30} {'Transaction ID':<50}")
