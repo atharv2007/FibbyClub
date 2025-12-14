@@ -25,12 +25,20 @@ logging.basicConfig(level=logging.INFO)
 
 
 class OpenAIEmbedder:
-    """OpenAI Embeddings wrapper for generating text embeddings"""
+    """OpenAI Embeddings wrapper for generating text embeddings via Emergent proxy"""
     
     def __init__(self, api_key: str):
+        # Check if using Emergent LLM key (starts with sk-emergent)
+        if api_key and api_key.startswith("sk-emergent"):
+            # Use Emergent integration proxy for embeddings
+            base_url = "https://integrations.emergentagent.com/llm"
+        else:
+            # Standard OpenAI endpoint
+            base_url = "https://api.openai.com/v1"
+        
         self.client = OpenAI(
             api_key=api_key,
-            base_url="https://api.openai.com/v1"  # Standard OpenAI endpoint
+            base_url=base_url
         )
         self.model = "text-embedding-3-small"
         self.dimensions = 1536  # Default dimension for text-embedding-3-small
