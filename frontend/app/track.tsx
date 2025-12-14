@@ -108,6 +108,19 @@ export default function TrackScreen() {
         
         // Load category and merchant data based on selected month
         await loadFilteredData(selectedMonthNum, selectedYear);
+      } else if (activeTab === 'credit') {
+        // Load credit data
+        const [scoreData, cardsData, transactionsData, creditRecsData] = await Promise.all([
+          api.getCreditScore(user._id),
+          api.getCreditCards(),
+          api.getCreditTransactions(user._id),
+          api.getCreditRecommendations(),
+        ]);
+
+        setCreditScore(scoreData);
+        setCreditCards(cardsData.cards || []);
+        setCreditTransactions(transactionsData.transactions || []);
+        setCreditRecommendations(creditRecsData.recommendations || []);
       } else if (activeTab === 'invest') {
         // Progressive Loading: Load fast data first, recommendations separately
         const baseUrl = process.env.EXPO_PUBLIC_BACKEND_URL;
