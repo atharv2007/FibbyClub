@@ -225,4 +225,28 @@ export const api = {
     });
     return response.json();
   },
+
+  // Credit APIs
+  getCreditScore: async (userId: string) => {
+    const response = await fetch(`${API_URL}/api/credit/score?user_id=${userId}`);
+    return response.json();
+  },
+
+  getCreditCards: async () => {
+    const response = await fetch(`${API_URL}/api/credit/cards`);
+    return response.json();
+  },
+
+  getCreditTransactions: async (userId: string, cardId?: string, category?: string) => {
+    let url = `${API_URL}/api/credit/transactions?user_id=${userId}`;
+    if (cardId) url += `&card_id=${cardId}`;
+    if (category) url += `&category=${category}`;
+    const response = await fetch(url);
+    return response.json();
+  },
+
+  getCreditRecommendations: async () => {
+    const response = await fetch(`${API_URL}/api/credit/recommendations`);
+    return response.json();
+  },
 };
