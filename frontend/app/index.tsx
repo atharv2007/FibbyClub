@@ -50,6 +50,7 @@ const FEATURE_CONTENT = {
 };
 
 export default function HomeScreen() {
+  const router = useRouter();
   const {
     user,
     accounts,
