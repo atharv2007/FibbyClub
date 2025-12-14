@@ -29,53 +29,45 @@ export default function ProfileScreen() {
   const [loggingOut, setLoggingOut] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  const handleLogout = async () => {
-    Alert.alert(
-      'Logout',
-      'Are you sure you want to logout?',
-      [
-        { text: 'Cancel', style: 'cancel' },
-        {
-          text: 'Logout',
-          style: 'destructive',
-          onPress: async () => {
-            try {
-              setLoggingOut(true);
-              console.log('Starting logout process...');
-              
-              // Show splash for 2 seconds then logout
-              setTimeout(async () => {
-                try {
-                  console.log('Clearing auth data...');
-                  
-                  // Clear app store
-                  resetAppStore();
-                  console.log('App store cleared');
-                  
-                  // Clear auth context and async storage
-                  await logout();
-                  console.log('Auth data cleared, navigating to auth screen...');
-                  
-                  setLoggingOut(false);
-                  
-                  // Force navigation after a small delay
-                  setTimeout(() => {
-                    router.replace('/auth');
-                  }, 100);
-                } catch (error) {
-                  console.error('Logout error:', error);
-                  setLoggingOut(false);
-                  Alert.alert('Error', 'Failed to logout. Please try again.');
-                }
-              }, 2000);
-            } catch (error) {
-              console.error('Error starting logout:', error);
-              setLoggingOut(false);
-            }
-          },
-        },
-      ]
-    );
+  const handleLogout = () => {
+    console.log('Logout button clicked');
+    setShowLogoutConfirm(true);
+  };
+
+  const confirmLogout = async () => {
+    try {
+      setShowLogoutConfirm(false);
+      setLoggingOut(true);
+      console.log('Starting logout process...');
+      
+      // Show splash for 2 seconds then logout
+      setTimeout(async () => {
+        try {
+          console.log('Clearing auth data...');
+          
+          // Clear app store
+          resetAppStore();
+          console.log('App store cleared');
+          
+          // Clear auth context and async storage
+          await logout();
+          console.log('Auth data cleared, navigating to auth screen...');
+          
+          setLoggingOut(false);
+          
+          // Force navigation after a small delay
+          setTimeout(() => {
+            router.replace('/auth');
+          }, 100);
+        } catch (error) {
+          console.error('Logout error:', error);
+          setLoggingOut(false);
+        }
+      }, 2000);
+    } catch (error) {
+      console.error('Error starting logout:', error);
+      setLoggingOut(false);
+    }
   };
 
   const handleDisableAccount = () => {
