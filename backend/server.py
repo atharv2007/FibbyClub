@@ -132,6 +132,184 @@ async def get_user(user_id: str):
         raise HTTPException(status_code=404, detail="User not found")
     return serialize_doc(user)
 
+
+# ============= AUTHENTICATION ROUTES =============
+@api_router.post("/auth/send-otp")
+async def send_otp(data: dict):
+    """Send OTP to user's phone (mock)"""
+    try:
+        identifier = data.get("email") or data.get("phone")
+        if not identifier:
+            raise HTTPException(status_code=400, detail="Email or phone required")
+        
+        # Check if user exists in mock data
+        if identifier in MOCK_USERS:
+            logger.info(f"Mock OTP sent to {identifier}: 123456")
+            return {
+                "status": "success",
+                "message": "OTP sent successfully",
+                "otp": "123456"  # For testing only
+            }
+        else:
+            # Check if user exists in database
+            user = await db.users.find_one({
+                "$or": [
+                    {"email": identifier},
+                    {"phone": identifier}
+                ]
+            })
+            if user:
+                logger.info(f"Mock OTP sent to {identifier}: 123456")
+                return {
+                    "status": "success",
+                    "message": "OTP sent successfully",
+                    "otp": "123456"  # For testing only
+                }
+            else:
+                raise HTTPException(status_code=404, detail="User not found. Please sign up.")
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error sending OTP: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@api_router.post("/auth/verify-otp")
+async def verify_otp(data: dict):
+    """Verify OTP and login user (mock)"""
+    try:
+        identifier = data.get("email") or data.get("phone")
+        otp = data.get("otp")
+        
+        if not identifier or not otp:
+            raise HTTPException(status_code=400, detail="Email/phone and OTP required")
+        
+        # Verify OTP (always accept 123456 for mock)
+        if otp != "123456":
+            raise HTTPException(status_code=401, detail="Invalid OTP")
+        
+        # Find user in database
+        user = await db.users.find_one({
+            "$or": [
+                {"email": identifier},
+                {"phone": identifier}
+            ]
+        })
+        
+        if not user:
+            raise HTTPException(status_code=404, detail="User not found")
+        
+        return {
+            "status": "success",
+            "message": "Login successful",
+            "user": serialize_doc(user)
+        }
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error verifying OTP: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@api_router.get("/auth/banks-by-pan/{pan_card}")
+async def get_banks_by_pan_card(pan_card: str):
+    """Get banks associated with PAN card (mock Account Aggregator)"""
+    try:
+        banks = get_banks_by_pan(pan_card)
+        if not banks:
+            raise HTTPException(status_code=404, detail="No banks found for this PAN card")
+        
+        return {
+            "status": "success",
+            "pan_card": pan_card,
+            "banks": banks
+        }
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error fetching banks by PAN: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@api_router.post("/auth/signup")
+async def signup(data: dict):
+    """Sign up new user with selected bank accounts"""
+    try:
+        name = data.get("name")
+        email = data.get("email")
+        phone = data.get("phone")
+        pan_card = data.get("pan_card")
+        selected_banks = data.get("selected_banks", [])
+        
+        if not all([name, email, phone, pan_card]):
+            raise HTTPException(status_code=400, detail="All fields required")
+        
+        # Check if user already exists
+        existing_user = await db.users.find_one({
+            "$or": [
+                {"email": email},
+                {"phone": phone},
+                {"pan_card": pan_card}
+            ]
+        })
+        
+        if existing_user:
+            raise HTTPException(status_code=409, detail="User already exists")
+        
+        # Create new user
+        user_data = {
+            "name": name,
+            "email": email,
+            "phone": phone,
+            "pan_card": pan_card,
+            "avatar": None,
+            "location": "India",
+            "hinglish_mode": True,
+            "dark_mode": False,
+            "biometric_lock": False,
+            "created_at": datetime.utcnow()
+        }
+        
+        result = await db.users.insert_one(user_data)
+        user_id = str(result.inserted_id)
+        
+        # Create bank accounts from selected banks
+        for bank_data in selected_banks:
+            account_data = {
+                "user_id": user_id,
+                "bank_name": bank_data.get("bank_name"),
+                "bank_logo": None,
+                "account_number": bank_data.get("account_number"),
+                "account_type": bank_data.get("account_type", "Savings"),
+                "balance": bank_data.get("balance", 0.0),
+                "currency": "INR",
+                "last_updated": datetime.utcnow(),
+                "status": "active",
+                "consent_given": True,
+                "pan_card": pan_card
+            }
+            await db.bank_accounts.insert_one(account_data)
+        
+        # Initialize goals, transactions, and insights
+        goals = generate_mock_goals(user_id)
+        if goals:
+            await db.goals.insert_many(goals)
+        
+        insights = generate_mock_insights(user_id)
+        if insights:
+            await db.insights.insert_many(insights)
+        
+        # Fetch the created user
+        user = await db.users.find_one({"_id": result.inserted_id})
+        
+        return {
+            "status": "success",
+            "message": "Signup successful",
+            "user": serialize_doc(user)
+        }
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error during signup: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
 # ============= BANK ACCOUNT ROUTES =============
 @api_router.get("/accounts")
 async def get_accounts(user_id: str):
