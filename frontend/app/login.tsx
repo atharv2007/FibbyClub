@@ -130,6 +130,7 @@ export default function LoginScreen() {
                 <TextInput
                   style={styles.input}
                   placeholder="Enter 6-digit OTP"
+                  placeholderTextColor={COLORS.textTertiary}
                   value={otp}
                   onChangeText={setOtp}
                   keyboardType="number-pad"
