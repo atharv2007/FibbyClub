@@ -21,7 +21,7 @@ print("=" * 60)
 print("STEP 1: Checking current user document")
 print("=" * 60)
 
-user = db.users.find_one({"user_id": user_id})
+user = db.users.find_one({"_id": user_oid})
 if user:
     print(f"✓ Found user: {user.get('name', 'Unknown')}")
     print(f"Current PAN Card: {user.get('pan_card', 'NOT SET')}")
@@ -45,7 +45,7 @@ else:
     print("⚠ User already had this PAN Card value")
 
 # Verify
-user = db.users.find_one({"user_id": user_id})
+user = db.users.find_one({"_id": user_oid})
 print(f"Updated PAN Card: {user.get('pan_card')}")
 
 print("\n" + "=" * 60)
