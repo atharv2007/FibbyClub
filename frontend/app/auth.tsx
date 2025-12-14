@@ -79,6 +79,11 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: SPACING.lg,
+    overflow: 'hidden',
+  },
+  logo: {
+    width: 80,
+    height: 80,
   },
   title: {
     fontSize: 32,
