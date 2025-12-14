@@ -384,6 +384,59 @@ async def delete_account(data: dict):
 
         raise HTTPException(status_code=500, detail=str(e))
 
+
+
+# ============= CREDIT SCORE ROUTES =============
+@api_router.get("/credit/score")
+async def get_credit_score(user_id: str):
+    """Get credit score and factors"""
+    try:
+        from mock_data import generate_credit_score_data
+        credit_data = generate_credit_score_data(user_id)
+        return credit_data
+    except Exception as e:
+        logger.error(f"Error fetching credit score: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@api_router.get("/credit/cards")
+async def get_credit_cards():
+    """Get credit cards with features"""
+    try:
+        from mock_data import generate_credit_cards
+        cards = generate_credit_cards()
+        return {"cards": cards}
+    except Exception as e:
+        logger.error(f"Error fetching credit cards: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@api_router.get("/credit/transactions")
+async def get_credit_transactions(user_id: str, card_id: str = None, category: str = None):
+    """Get credit card transactions with optional filters"""
+    try:
+        from mock_data import generate_credit_transactions
+        transactions = generate_credit_transactions(user_id)
+        
+        if card_id:
+            transactions = [t for t in transactions if t['card_id'] == card_id]
+        if category:
+            transactions = [t for t in transactions if t['category'] == category]
+        
+        return {"transactions": transactions}
+    except Exception as e:
+        logger.error(f"Error fetching credit transactions: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@api_router.get("/credit/recommendations")
+async def get_credit_recommendations():
+    """Get AI recommendations for credit improvement"""
+    try:
+        from mock_data import generate_credit_recommendations
+        recommendations = generate_credit_recommendations()
+        return {"recommendations": recommendations}
+    except Exception as e:
+        logger.error(f"Error fetching credit recommendations: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
 # ============= BANK ACCOUNT ROUTES =============
 @api_router.get("/accounts")
 async def get_accounts(user_id: str):
