@@ -58,10 +58,21 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const logout = async () => {
     try {
-      await AsyncStorage.removeItem(AUTH_KEY);
+      console.log('AuthContext: Starting logout...');
+      // Clear user from state first
       setUser(null);
+      
+      // Remove from AsyncStorage
+      await AsyncStorage.removeItem(AUTH_KEY);
+      
+      // Clear all async storage for a clean logout (optional but thorough)
+      await AsyncStorage.clear();
+      
+      console.log('AuthContext: Logout complete, user cleared');
     } catch (error) {
-      console.error('Error removing user:', error);
+      console.error('Error during logout:', error);
+      // Even if there's an error, clear the user state
+      setUser(null);
       throw error;
     }
   };
