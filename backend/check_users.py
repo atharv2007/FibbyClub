@@ -7,8 +7,10 @@ load_dotenv()
 
 # Connect to MongoDB
 mongo_url = os.getenv('MONGO_URL')
+db_name = os.getenv('DB_NAME', 'test_database')
 client = MongoClient(mongo_url)
-db = client['financeApp']
+db = client[db_name]
+print(f"Connected to MongoDB database: {db_name}\n")
 
 print("=" * 60)
 print("Checking all users in database")
