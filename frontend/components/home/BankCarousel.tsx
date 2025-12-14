@@ -124,44 +124,14 @@ export function BankCarousel({ accounts, onAddBank }: BankCarouselProps) {
 
 const styles = StyleSheet.create({
   container: {
-    marginHorizontal: SPACING.md,
     marginVertical: SPACING.sm,
-    height: 200,
-    position: 'relative',
   },
-  carouselContainer: {
-    height: '100%',
-    position: 'relative',
+  scrollContent: {
+    paddingHorizontal: SPACING.md,
+    gap: CARD_SPACING,
   },
-  shadowCard: {
-    position: 'absolute',
-    top: 10,
-    height: 168,
-    width: CARD_WIDTH * 0.85,
-    backgroundColor: COLORS.surfaceVariant,
-    borderRadius: RADIUS.lg,
-    borderWidth: 2,
-    borderStyle: 'dashed',
-    borderColor: COLORS.border,
-  },
-  shadowCardLeft: {
-    left: -20,
-    transform: [{ rotate: '-5deg' }],
-  },
-  shadowCardRight: {
-    right: -20,
-    transform: [{ rotate: '5deg' }],
-  },
-  shadowCardInner: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  mainCardWrapper: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
+  cardContainer: {
+    width: CARD_WIDTH,
   },
   mainCard: {
     height: 180,
