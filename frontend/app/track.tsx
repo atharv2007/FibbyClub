@@ -25,6 +25,11 @@ import { HoldingCard } from '../components/invest/HoldingCard';
 import { SIPCard } from '../components/invest/SIPCard';
 import { InvestmentCard } from '../components/invest/InvestmentCard';
 import { RecommendationAccordion } from '../components/invest/RecommendationAccordion';
+import { CreditScoreGauge } from '../components/credit/CreditScoreGauge';
+import { CreditFactors } from '../components/credit/CreditFactors';
+import { CreditCards } from '../components/credit/CreditCards';
+import { TransactionHistory } from '../components/credit/TransactionHistory';
+import { AIRecommendations } from '../components/credit/AIRecommendations';
 
 type TabType = 'budget' | 'spend' | 'invest' | 'credit';
 
