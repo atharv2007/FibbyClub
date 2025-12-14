@@ -54,6 +54,12 @@ export default function TrackScreen() {
   const [recommendations, setRecommendations] = useState<any[]>([]);
   const [loadingRecommendations, setLoadingRecommendations] = useState(false);
 
+  // Credit state
+  const [creditScore, setCreditScore] = useState<any>(null);
+  const [creditCards, setCreditCards] = useState<any[]>([]);
+  const [creditTransactions, setCreditTransactions] = useState<any[]>([]);
+  const [creditRecommendations, setCreditRecommendations] = useState<any[]>([]);
+
   // Initialize user if not exists
   useEffect(() => {
     const initUser = async () => {
