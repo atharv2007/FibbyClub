@@ -61,12 +61,86 @@ def generate_mock_user():
     return {
         "name": "Mohit",
         "email": "mohit@example.com",
+        "phone": "+919876543210",
+        "pan_card": "ABCDE1234F",
         "avatar": None,
         "location": "Bangalore",
         "hinglish_mode": True,
         "dark_mode": False,
         "biometric_lock": False
     }
+
+
+# Mock user data for authentication
+MOCK_USERS = {
+    "mohit@example.com": {
+        "name": "Mohit",
+        "email": "mohit@example.com",
+        "phone": "+919876543210",
+        "pan_card": "ABCDE1234F"
+    },
+    "+919876543210": {
+        "name": "Mohit",
+        "email": "mohit@example.com",
+        "phone": "+919876543210",
+        "pan_card": "ABCDE1234F"
+    }
+}
+
+# Mock Account Aggregator data - Banks by PAN
+MOCK_AA_DATA = {
+    "CTHPG0072G": [
+        {
+            "bank_name": "ICICI Bank",
+            "account_number": "XXXX8901",
+            "account_type": "Savings",
+            "balance": 45230.50,
+            "ifsc": "ICIC0001234"
+        },
+        {
+            "bank_name": "HDFC Bank",
+            "account_number": "XXXX4567",
+            "account_type": "Savings",
+            "balance": 82750.00,
+            "ifsc": "HDFC0001234"
+        }
+    ],
+    "ABCDE1234F": [
+        {
+            "bank_name": "HDFC Bank",
+            "account_number": "XXXX4567",
+            "account_type": "Savings",
+            "balance": 24540.00,
+            "ifsc": "HDFC0001234"
+        },
+        {
+            "bank_name": "ICICI Bank",
+            "account_number": "XXXX8901",
+            "account_type": "Savings",
+            "balance": 45230.50,
+            "ifsc": "ICIC0001234"
+        },
+        {
+            "bank_name": "State Bank of India",
+            "account_number": "XXXX2345",
+            "account_type": "Savings",
+            "balance": 28750.00,
+            "ifsc": "SBIN0001234"
+        },
+        {
+            "bank_name": "Axis Bank",
+            "account_number": "XXXX6789",
+            "account_type": "Current",
+            "balance": 67890.25,
+            "ifsc": "UTIB0001234"
+        }
+    ]
+}
+
+
+def get_banks_by_pan(pan_card: str) -> List[dict]:
+    """Get banks associated with PAN card (mock Account Aggregator)"""
+    return MOCK_AA_DATA.get(pan_card, [])
 
 
 def generate_mock_bank_account(user_id: str):
