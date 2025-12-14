@@ -15,6 +15,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { COLORS, SPACING, RADIUS } from '../constants/theme';
 import { useAuth } from '../context/AuthContext';
+import { useAppStore } from '../store/useAppStore';
 import { api } from '../utils/api';
 
 export default function ProfileScreen() {
