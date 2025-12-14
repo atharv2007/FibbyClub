@@ -103,6 +103,7 @@ export default function LoginScreen() {
                 <TextInput
                   style={styles.input}
                   placeholder="mohit@example.com or +919876543210"
+                  placeholderTextColor={COLORS.textTertiary}
                   value={identifier}
                   onChangeText={setIdentifier}
                   keyboardType="email-address"
