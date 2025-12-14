@@ -94,6 +94,7 @@ export default function HomeScreen() {
   
   const [showAddBankModal, setShowAddBankModal] = React.useState(false);
   const [activeFeature, setActiveFeature] = React.useState<keyof typeof FEATURE_CONTENT | null>(null);
+  const [showNotifications, setShowNotifications] = React.useState(false);
 
   if (loading && !user) {
     return (
