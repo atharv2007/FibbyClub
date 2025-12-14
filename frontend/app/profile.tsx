@@ -611,4 +611,60 @@ const styles = StyleSheet.create({
     color: COLORS.text,
     marginTop: SPACING.md,
   },
+  // Logout Confirmation Modal
+  confirmModalContent: {
+    backgroundColor: COLORS.surface,
+    borderRadius: RADIUS.xl,
+    marginHorizontal: SPACING.xl,
+    padding: SPACING.xl,
+    alignItems: 'center',
+  },
+  confirmIcon: {
+    width: 80,
+    height: 80,
+    borderRadius: 40,
+    backgroundColor: '#FF3B30' + '15',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: SPACING.lg,
+  },
+  confirmTitle: {
+    fontSize: 22,
+    fontWeight: 'bold',
+    color: COLORS.text,
+    marginBottom: SPACING.sm,
+  },
+  confirmMessage: {
+    fontSize: 15,
+    color: COLORS.textSecondary,
+    textAlign: 'center',
+    marginBottom: SPACING.xl,
+  },
+  confirmButtons: {
+    flexDirection: 'row',
+    gap: SPACING.md,
+    width: '100%',
+  },
+  confirmButton: {
+    flex: 1,
+    paddingVertical: SPACING.md,
+    borderRadius: RADIUS.lg,
+    alignItems: 'center',
+  },
+  cancelButton: {
+    backgroundColor: COLORS.border,
+  },
+  cancelButtonText: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: COLORS.text,
+  },
+  logoutConfirmButton: {
+    backgroundColor: '#FF3B30',
+  },
+  logoutConfirmButtonText: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#FFFFFF',
+  },
 });
