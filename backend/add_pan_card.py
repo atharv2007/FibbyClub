@@ -6,11 +6,16 @@ load_dotenv()
 
 # Connect to MongoDB
 mongo_url = os.getenv('MONGO_URL')
+db_name = os.getenv('DB_NAME', 'test_database')
 client = MongoClient(mongo_url)
-db = client['financeApp']
+db = client[db_name]
 
-# User ID
+print(f"Connected to MongoDB database: {db_name}\n")
+
+# User ID (as ObjectId)
+from bson import ObjectId
 user_id = "693d2626a878e575aaf43c0a"
+user_oid = ObjectId(user_id)
 
 print("=" * 60)
 print("STEP 1: Checking current user document")
