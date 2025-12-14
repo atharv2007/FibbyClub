@@ -85,10 +85,10 @@ export const SHADOWS = {
 };
 
 export const TYPOGRAPHY = {
-  // Font families
-  heading: 'Urbanist',
-  body: 'Urbanist',
-  data: 'System', // Rethink Sans (using system for now)
+  // Font families - Temporarily using System fonts to debug
+  heading: 'System',
+  body: 'System',
+  data: 'System',
   
   // Font sizes
   h1: 28,
