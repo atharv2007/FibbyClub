@@ -204,28 +204,6 @@ export function BankCarousel({ accounts, onAddBank }: BankCarouselProps) {
         </Animated.View>
       </View>
 
-      {/* Navigation arrows (optional - visible when multiple accounts) */}
-      {accounts.length > 1 && (
-        <>
-          {currentIndex > 0 && (
-            <TouchableOpacity
-              style={[styles.navButton, styles.navButtonLeft]}
-              onPress={handlePrevious}
-            >
-              <Ionicons name="chevron-back" size={24} color={COLORS.primary} />
-            </TouchableOpacity>
-          )}
-          {currentIndex < accounts.length - 1 && (
-            <TouchableOpacity
-              style={[styles.navButton, styles.navButtonRight]}
-              onPress={handleNext}
-            >
-              <Ionicons name="chevron-forward" size={24} color={COLORS.primary} />
-            </TouchableOpacity>
-          )}
-        </>
-      )}
-
       {/* 3-dot menu dropdown */}
       <Modal
         visible={showMenu}
