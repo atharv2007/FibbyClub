@@ -102,6 +102,7 @@ export default function HomeScreen() {
           <Header
             userName={user.name}
             spendPercentage={spendPercentage}
+            onNotificationPress={() => setActiveFeature('notifications')}
           />
         )}
 
@@ -113,11 +114,13 @@ export default function HomeScreen() {
           />
         )}
 
-        {/* Agent Chips */}
-        <AgentChips
+        {/* Quick Actions / Agent Chips */}
+        <AgentChips 
           onChipPress={(chipId) => {
-            console.log('Chip pressed:', chipId);
-            // TODO: Implement chip actions
+            if (chipId === 'scan') setActiveFeature('scan');
+            else if (chipId === 'split') setActiveFeature('split');
+            else if (chipId === 'forecast') setActiveFeature('forecast');
+            else if (chipId === 'audit') setActiveFeature('audit');
           }}
         />
 
