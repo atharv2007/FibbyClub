@@ -201,6 +201,17 @@ export default function HomeScreen() {
           onClose={() => setActiveFeature(null)}
         />
       )}
+
+      {/* Notification Dropdown */}
+      <NotificationDropdown
+        visible={showNotifications}
+        onClose={() => setShowNotifications(false)}
+        notifications={MOCK_NOTIFICATIONS}
+        onNotificationPress={(notification) => {
+          console.log('Notification pressed:', notification);
+          // Handle notification press - could navigate or show details
+        }}
+      />
     </SafeAreaView>
   );
 }
