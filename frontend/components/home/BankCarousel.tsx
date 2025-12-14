@@ -35,15 +35,71 @@ interface BankCarouselProps {
 export function BankCarousel({ accounts, onAddBank }: BankCarouselProps) {
   const [showMenu, setShowMenu] = useState(false);
   const [selectedAccountIndex, setSelectedAccountIndex] = useState(0);
+  const scrollViewRef = useRef<ScrollView>(null);
+  const [currentIndex, setCurrentIndex] = useState(1); // Start at 1 (first real card)
+  const isScrolling = useRef(false);
 
-  const renderBankCard = (account: BankAccount, index: number) => {
+  // Create infinite loop by adding last card at start and first card at end
+  const infiniteAccounts = accounts.length > 1 
+    ? [accounts[accounts.length - 1], ...accounts, accounts[0]]
+    : accounts;
+
+  // Initialize scroll position to first real card
+  useEffect(() => {
+    if (accounts.length > 1) {
+      setTimeout(() => {
+        scrollViewRef.current?.scrollTo({
+          x: (CARD_WIDTH + CARD_SPACING) * 1,
+          animated: false,
+        });
+      }, 100);
+    }
+  }, [accounts.length]);
+
+  const handleScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
+    const offsetX = event.nativeEvent.contentOffset.x;
+    const index = Math.round(offsetX / (CARD_WIDTH + CARD_SPACING));
+    setCurrentIndex(index);
+  };
+
+  const handleScrollEnd = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
+    if (accounts.length <= 1 || isScrolling.current) return;
+
+    const offsetX = event.nativeEvent.contentOffset.x;
+    const index = Math.round(offsetX / (CARD_WIDTH + CARD_SPACING));
+
+    // If at the duplicate last card (index 0), jump to real last card
+    if (index === 0) {
+      isScrolling.current = true;
+      setTimeout(() => {
+        scrollViewRef.current?.scrollTo({
+          x: (CARD_WIDTH + CARD_SPACING) * accounts.length,
+          animated: false,
+        });
+        isScrolling.current = false;
+      }, 50);
+    }
+    // If at the duplicate first card (index = accounts.length + 1), jump to real first card
+    else if (index === accounts.length + 1) {
+      isScrolling.current = true;
+      setTimeout(() => {
+        scrollViewRef.current?.scrollTo({
+          x: (CARD_WIDTH + CARD_SPACING) * 1,
+          animated: false,
+        });
+        isScrolling.current = false;
+      }, 50);
+    }
+  };
+
+  const renderBankCard = (account: BankAccount, displayIndex: number, originalIndex: number) => {
     const lastUpdated = new Date(account.last_updated).toLocaleTimeString('en-IN', {
       hour: '2-digit',
       minute: '2-digit',
     });
 
     return (
-      <View key={account._id} style={styles.cardContainer}>
+      <View key={`${account._id}-${displayIndex}`} style={styles.cardContainer}>
         <Card style={styles.mainCard} shadow="md">
           <View style={styles.header}>
             <View style={styles.bankInfo}>
@@ -61,7 +117,7 @@ export function BankCarousel({ accounts, onAddBank }: BankCarouselProps) {
             {/* 3-dot menu */}
             <TouchableOpacity
               onPress={() => {
-                setSelectedAccountIndex(index);
+                setSelectedAccountIndex(originalIndex);
                 setShowMenu(true);
               }}
               style={styles.menuButton}
@@ -84,14 +140,31 @@ export function BankCarousel({ accounts, onAddBank }: BankCarouselProps) {
   return (
     <View style={styles.container}>
       <ScrollView
+        ref={scrollViewRef}
         horizontal
         showsHorizontalScrollIndicator={false}
         pagingEnabled
         snapToInterval={CARD_WIDTH + CARD_SPACING}
         decelerationRate="fast"
         contentContainerStyle={styles.scrollContent}
+        onScroll={handleScroll}
+        onMomentumScrollEnd={handleScrollEnd}
+        scrollEventThrottle={16}
       >
-        {accounts.map((account, index) => renderBankCard(account, index))}
+        {infiniteAccounts.map((account, displayIndex) => {
+          // Calculate the original index for the menu
+          let originalIndex = displayIndex;
+          if (accounts.length > 1) {
+            if (displayIndex === 0) {
+              originalIndex = accounts.length - 1; // Last card duplicate
+            } else if (displayIndex === accounts.length + 1) {
+              originalIndex = 0; // First card duplicate
+            } else {
+              originalIndex = displayIndex - 1; // Real cards
+            }
+          }
+          return renderBankCard(account, displayIndex, originalIndex);
+        })}
       </ScrollView>
 
       {/* 3-dot menu dropdown */}
