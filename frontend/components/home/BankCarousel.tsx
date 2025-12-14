@@ -190,23 +190,6 @@ const styles = StyleSheet.create({
     fontSize: 11,
     color: COLORS.textTertiary,
   },
-  indicatorContainer: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    gap: 6,
-    marginTop: SPACING.sm,
-  },
-  indicator: {
-    width: 6,
-    height: 6,
-    borderRadius: 3,
-    backgroundColor: COLORS.border,
-  },
-  indicatorActive: {
-    width: 20,
-    backgroundColor: COLORS.primary,
-  },
   menuOverlay: {
     flex: 1,
     backgroundColor: 'rgba(0, 0, 0, 0.4)',
