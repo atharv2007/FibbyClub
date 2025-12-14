@@ -300,3 +300,53 @@ def generate_mock_goals(user_id: str) -> List[dict]:
 
 
 
+
+
+def generate_mock_insights(user_id: str) -> List[dict]:
+    """Generate mock insights and nudges"""
+    insights = []
+    current_date = datetime.utcnow()
+    
+    # Recent insights
+    insights.append({
+        "user_id": user_id,
+        "type": "alert",
+        "message": "Netflix price hike detected. New plan: ₹649",
+        "category": "Subscriptions",
+        "amount": 649.0,
+        "date": current_date - timedelta(days=1),
+        "is_read": False
+    })
+    
+    insights.append({
+        "user_id": user_id,
+        "type": "habit",
+        "message": "Zomato order #4 this week. Ghar ka khana? 🍛",
+        "category": "Food & Dining",
+        "amount": None,
+        "date": current_date - timedelta(days=2),
+        "is_read": False
+    })
+    
+    insights.append({
+        "user_id": user_id,
+        "type": "tip",
+        "message": "You can save ₹2,400 by switching to annual Spotify!",
+        "category": "Subscriptions",
+        "amount": 2400.0,
+        "date": current_date - timedelta(days=3),
+        "is_read": False
+    })
+    
+    insights.append({
+        "user_id": user_id,
+        "type": "achievement",
+        "message": "Relax bro! You're 20% under budget this month 📈",
+        "category": None,
+        "amount": None,
+        "date": current_date - timedelta(days=5),
+        "is_read": True
+    })
+    
+    return insights
+
