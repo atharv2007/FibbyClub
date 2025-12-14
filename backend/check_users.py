@@ -14,12 +14,25 @@ print("=" * 60)
 print("Checking all users in database")
 print("=" * 60)
 
+# Also check with the specific ObjectId
+specific_user_id = "693d2626a878e575aaf43c0a"
+print(f"\nSearching for user with _id as string: {specific_user_id}")
+user_by_str = db.users.find_one({"_id": specific_user_id})
+print(f"Found by string: {user_by_str is not None}")
+
+print(f"\nSearching for user with _id as ObjectId: {specific_user_id}")
+try:
+    user_by_oid = db.users.find_one({"_id": ObjectId(specific_user_id)})
+    print(f"Found by ObjectId: {user_by_oid is not None}")
+except:
+    print("Invalid ObjectId format")
+
 users = list(db.users.find({}))
-print(f"\nFound {len(users)} user(s):\n")
+print(f"\nFound {len(users)} user(s) total:\n")
 
 for idx, user in enumerate(users, 1):
     print(f"User {idx}:")
-    print(f"  _id: {user.get('_id')}")
+    print(f"  _id: {user.get('_id')} (type: {type(user.get('_id')).__name__})")
     print(f"  user_id: {user.get('user_id', 'NOT SET')}")
     print(f"  name: {user.get('name', 'NOT SET')}")
     print(f"  email: {user.get('email', 'NOT SET')}")
