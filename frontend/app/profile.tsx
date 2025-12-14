@@ -46,8 +46,15 @@ export default function ProfileScreen() {
               setTimeout(async () => {
                 try {
                   console.log('Clearing auth data...');
+                  
+                  // Clear app store
+                  resetAppStore();
+                  console.log('App store cleared');
+                  
+                  // Clear auth context and async storage
                   await logout();
                   console.log('Auth data cleared, navigating to auth screen...');
+                  
                   setLoggingOut(false);
                   
                   // Force navigation after a small delay
