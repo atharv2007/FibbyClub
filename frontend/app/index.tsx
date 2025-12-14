@@ -11,6 +11,7 @@ import {
 } from 'react-native';
 import { COLORS, SPACING } from '../constants/theme';
 import { useDashboard } from '../hooks/useDashboard';
+import { api } from '../utils/api';
 import { Header } from '../components/home/Header';
 import { BankCarousel } from '../components/home/BankCarousel';
 import { AddBankModal } from '../components/home/AddBankModal';
