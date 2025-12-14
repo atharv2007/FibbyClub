@@ -207,4 +207,22 @@ export const api = {
     });
     return response.json();
   },
+
+  disableAccount: async (userId: string) => {
+    const response = await fetch(`${API_URL}/api/auth/disable-account`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ user_id: userId }),
+    });
+    return response.json();
+  },
+
+  deleteAccount: async (userId: string) => {
+    const response = await fetch(`${API_URL}/api/auth/delete-account`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ user_id: userId }),
+    });
+    return response.json();
+  },
 };
