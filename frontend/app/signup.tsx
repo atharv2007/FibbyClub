@@ -85,6 +85,7 @@ export default function SignupScreen() {
             <TextInput
               style={styles.input}
               placeholder="Atharv Ganla"
+              placeholderTextColor={COLORS.textTertiary}
               value={name}
               onChangeText={setName}
               autoCapitalize="words"
@@ -94,6 +95,7 @@ export default function SignupScreen() {
             <TextInput
               style={styles.input}
               placeholder="atharv@example.com"
+              placeholderTextColor={COLORS.textTertiary}
               value={email}
               onChangeText={setEmail}
               keyboardType="email-address"
@@ -105,6 +107,7 @@ export default function SignupScreen() {
             <TextInput
               style={styles.input}
               placeholder="+919876543210"
+              placeholderTextColor={COLORS.textTertiary}
               value={phone}
               onChangeText={setPhone}
               keyboardType="phone-pad"
@@ -114,6 +117,7 @@ export default function SignupScreen() {
             <TextInput
               style={styles.input}
               placeholder="CTHPG0072G"
+              placeholderTextColor={COLORS.textTertiary}
               value={panCard}
               onChangeText={(text) => setPanCard(text.toUpperCase())}
               autoCapitalize="characters"
