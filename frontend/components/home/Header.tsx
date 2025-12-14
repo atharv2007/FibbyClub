@@ -7,9 +7,10 @@ import { getGreeting, getMoneyMood } from '../../utils/format';
 interface HeaderProps {
   userName: string;
   spendPercentage?: number;
+  onNotificationPress?: () => void;
 }
 
-export function Header({ userName, spendPercentage = 50 }: HeaderProps) {
+export function Header({ userName, spendPercentage = 50, onNotificationPress }: HeaderProps) {
   const greeting = getGreeting();
   const mood = getMoneyMood(spendPercentage);
   
@@ -30,7 +31,7 @@ export function Header({ userName, spendPercentage = 50 }: HeaderProps) {
           <Text style={styles.moodEmoji}>{mood.emoji}</Text>
           <Text style={[styles.moodText, { color: mood.color }]}>{mood.text}</Text>
         </View>
-        <TouchableOpacity style={styles.notificationButton}>
+        <TouchableOpacity style={styles.notificationButton} onPress={onNotificationPress}>
           <Ionicons name="notifications-outline" size={24} color={COLORS.text} />
           <View style={styles.badge} />
         </TouchableOpacity>
