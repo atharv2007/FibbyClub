@@ -9,6 +9,7 @@ import {
   SafeAreaView,
   StatusBar,
 } from 'react-native';
+import { useRouter } from 'expo-router';
 import { COLORS, SPACING } from '../constants/theme';
 import { useDashboard } from '../hooks/useDashboard';
 import { api } from '../utils/api';
