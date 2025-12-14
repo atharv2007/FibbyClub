@@ -308,6 +308,80 @@ async def signup(data: dict):
         raise
     except Exception as e:
         logger.error(f"Error during signup: {e}")
+
+
+@api_router.post("/auth/disable-account")
+async def disable_account(data: dict):
+    """Disable user account (hibernation mode)"""
+    try:
+        user_id = data.get("user_id")
+        if not user_id:
+            raise HTTPException(status_code=400, detail="User ID required")
+        
+        from bson import ObjectId
+        # Update user status to disabled
+        result = await db.users.update_one(
+            {"_id": ObjectId(user_id)},
+            {"$set": {"status": "disabled", "disabled_at": datetime.utcnow()}}
+        )
+        
+        if result.modified_count == 0:
+            raise HTTPException(status_code=404, detail="User not found")
+        
+        return {
+            "status": "success",
+            "message": "Account disabled successfully"
+        }
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error disabling account: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@api_router.post("/auth/delete-account")
+async def delete_account(data: dict):
+    """Delete user account and all associated data"""
+    try:
+        user_id = data.get("user_id")
+        if not user_id:
+            raise HTTPException(status_code=400, detail="User ID required")
+        
+        from bson import ObjectId
+        
+        # Delete from all collections
+        await db.users.delete_one({"_id": ObjectId(user_id)})
+        await db.bank_accounts.delete_many({"user_id": user_id})
+        await db.transactions.delete_many({"user_id": user_id})
+        await db.goals.delete_many({"user_id": user_id})
+        await db.insights.delete_many({"user_id": user_id})
+        await db.investment_holdings.delete_many({"user_id": user_id})
+        await db.mutual_funds.delete_many({"user_id": user_id})
+        await db.other_investments.delete_many({"user_id": user_id})
+        
+        # Delete chat conversations and messages
+        conversations = await db.chat_conversations.find({"user_id": user_id}).to_list(None)
+        for conv in conversations:
+            await db.chat_messages.delete_many({"conversation_id": str(conv["_id"])})
+        await db.chat_conversations.delete_many({"user_id": user_id})
+        
+        # Clear from vector DB
+        try:
+            from embedder_service import embedder_agent
+            embedder_agent.clear_user_data(user_id)
+            logger.info(f"Cleared vector DB data for user {user_id}")
+        except Exception as e:
+            logger.error(f"Error clearing vector DB: {e}")
+        
+        return {
+            "status": "success",
+            "message": "Account and all data deleted successfully"
+        }
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error deleting account: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
         raise HTTPException(status_code=500, detail=str(e))
 
 # ============= BANK ACCOUNT ROUTES =============
