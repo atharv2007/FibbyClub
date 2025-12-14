@@ -217,7 +217,7 @@ def generate_mock_transactions(user_id: str, account_id: str, num_months: int = 
         transactions.append({
             "user_id": user_id,
             "account_id": account_id,
-            "amount": 45000.0,
+            "amount": 180000.0,
             "category": "Salary",
             "merchant": "Company Inc",
             "description": "Monthly Salary",
