@@ -36,13 +36,32 @@ export default function ProfileScreen() {
           text: 'Logout',
           style: 'destructive',
           onPress: async () => {
-            setLoggingOut(true);
-            // Show splash for 2 seconds
-            setTimeout(async () => {
-              await logout();
+            try {
+              setLoggingOut(true);
+              console.log('Starting logout process...');
+              
+              // Show splash for 2 seconds then logout
+              setTimeout(async () => {
+                try {
+                  console.log('Clearing auth data...');
+                  await logout();
+                  console.log('Auth data cleared, navigating to auth screen...');
+                  setLoggingOut(false);
+                  
+                  // Force navigation after a small delay
+                  setTimeout(() => {
+                    router.replace('/auth');
+                  }, 100);
+                } catch (error) {
+                  console.error('Logout error:', error);
+                  setLoggingOut(false);
+                  Alert.alert('Error', 'Failed to logout. Please try again.');
+                }
+              }, 2000);
+            } catch (error) {
+              console.error('Error starting logout:', error);
               setLoggingOut(false);
-              router.replace('/auth');
-            }, 2000);
+            }
           },
         },
       ]
