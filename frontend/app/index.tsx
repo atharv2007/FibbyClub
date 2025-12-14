@@ -20,6 +20,37 @@ import { AgentChips } from '../components/home/AgentChips';
 import { CategoryDonutChart } from '../components/home/CategoryDonutChart';
 import { InsightsFeed } from '../components/home/InsightsFeed';
 import { FeatureModal } from '../components/common/FeatureModal';
+import { NotificationDropdown } from '../components/home/NotificationDropdown';
+
+const MOCK_NOTIFICATIONS = [
+  {
+    id: '1',
+    type: 'alert' as const,
+    message: "Woah there! 🛑 You've spent 69% of your monthly budget. Only ₹55,200 left!",
+    timestamp: '2 hours ago',
+    icon: 'warning' as const,
+    iconColor: '#FF6B6B',
+    isRead: false,
+  },
+  {
+    id: '2',
+    type: 'reminder' as const,
+    message: 'Heads up! 📅 Credit card payment due in 3 days (₹18,500)',
+    timestamp: '5 hours ago',
+    icon: 'card' as const,
+    iconColor: '#4ECDC4',
+    isRead: false,
+  },
+  {
+    id: '3',
+    type: 'insight' as const,
+    message: 'Shopping spree detected! 🛍️ 5 transactions at Myntra yesterday',
+    timestamp: '1 day ago',
+    icon: 'cart' as const,
+    iconColor: '#95E1D3',
+    isRead: true,
+  },
+];
 
 const FEATURE_CONTENT = {
   notifications: {
