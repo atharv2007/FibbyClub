@@ -17,6 +17,35 @@ import { AddBankModal } from '../components/home/AddBankModal';
 import { AgentChips } from '../components/home/AgentChips';
 import { CategoryDonutChart } from '../components/home/CategoryDonutChart';
 import { InsightsFeed } from '../components/home/InsightsFeed';
+import { FeatureModal } from '../components/common/FeatureModal';
+
+const FEATURE_CONTENT = {
+  notifications: {
+    title: 'Notifications',
+    icon: 'notifications' as const,
+    description: 'Stay updated with real-time alerts about your spending, bill reminders, and important financial updates. Get notified when you exceed budget limits or when payments are due.',
+  },
+  scan: {
+    title: 'Scan Bill',
+    icon: 'camera' as const,
+    description: 'Quickly capture and digitize your bills by scanning them with your camera. Automatically extract payment details, due dates, and amounts for easy tracking and reminders.',
+  },
+  split: {
+    title: 'Split Expense',
+    icon: 'people' as const,
+    description: 'Easily divide expenses with friends or roommates. Calculate individual shares, track who owes what, and send payment reminders to everyone involved.',
+  },
+  forecast: {
+    title: 'Forecast Balance',
+    icon: 'trending-up' as const,
+    description: 'Predict your future account balance based on recurring expenses, income patterns, and spending habits. Plan ahead and avoid overdrafts with AI-powered forecasting.',
+  },
+  audit: {
+    title: 'Subscription Audit',
+    icon: 'search' as const,
+    description: 'Discover all your active subscriptions and recurring payments in one place. Identify unused subscriptions, track renewal dates, and potentially save hundreds every month.',
+  },
+};
 
 export default function HomeScreen() {
   const {
@@ -30,6 +59,7 @@ export default function HomeScreen() {
   } = useDashboard();
   
   const [showAddBankModal, setShowAddBankModal] = React.useState(false);
+  const [activeFeature, setActiveFeature] = React.useState<keyof typeof FEATURE_CONTENT | null>(null);
 
   if (loading && !user) {
     return (
