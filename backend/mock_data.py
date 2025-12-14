@@ -289,7 +289,12 @@ def generate_mock_goals(user_id: str) -> List[dict]:
             "target_amount": 1500000.0,
             "saved_amount": 320000.0,
             "deadline": datetime.utcnow() + timedelta(days=1095),
-
+            "auto_save_enabled": False,
+            "auto_save_amount": None
+        }
+    ]
+    
+    return goals
 
 # ============= CREDIT SCORE & CARDS DATA =============
 
