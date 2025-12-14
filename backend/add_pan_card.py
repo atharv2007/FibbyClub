@@ -66,6 +66,7 @@ print("STEP 4: Linking PAN Card to all bank accounts")
 print("=" * 60)
 
 # Update all bank accounts with the PAN card
+# Note: bank accounts use user_id as string, not ObjectId
 result = db.bank_accounts.update_many(
     {"user_id": user_id},
     {"$set": {"pan_card": "ABCDE1234F"}}
