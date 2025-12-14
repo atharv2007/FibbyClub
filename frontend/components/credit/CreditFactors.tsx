@@ -31,37 +31,34 @@ export function CreditFactors({ factors }: CreditFactorsProps) {
   };
 
   const getFactorIcon = (name: string) => {
-    if (name.includes('Payment')) return 'calendar-outline';
-    if (name.includes('Utilization')) return 'pie-chart-outline';
-    if (name.includes('Age')) return 'time-outline';
-    if (name.includes('Mix')) return 'layers-outline';
-    if (name.includes('Inquiries')) return 'search-outline';
-    return 'stats-chart-outline';
+    if (name.includes('Payment')) return 'calendar';
+    if (name.includes('Utilization')) return 'pie-chart';
+    if (name.includes('Age')) return 'time';
+    if (name.includes('Mix')) return 'layers';
+    if (name.includes('Inquiries')) return 'search';
+    return 'stats-chart';
   };
 
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <Ionicons name="game-controller" size={20} color={COLORS.primary} />
         <Text style={styles.title}>Credit Factors</Text>
-        <Text style={styles.subtitle}>Your RPG Stats</Text>
+        <Text style={styles.subtitle}>What affects your score</Text>
       </View>
 
       {factors.map((factor, index) => (
         <View key={index} style={styles.factorCard}>
           <View style={styles.factorHeader}>
-            <View style={styles.factorTitleRow}>
-              <View style={[styles.iconContainer, { backgroundColor: getStatusColor(factor.status) + '20' }]}>
-                <Ionicons name={getFactorIcon(factor.name) as any} size={20} color={getStatusColor(factor.status)} />
-              </View>
-              <View style={styles.factorInfo}>
-                <Text style={styles.factorName}>{factor.name}</Text>
-                <View style={styles.impactBadge}>
-                  <View style={[styles.impactDot, { backgroundColor: getImpactColor(factor.impact) }]} />
-                  <Text style={[styles.impactText, { color: getImpactColor(factor.impact) }]}>
-                    {factor.impact} Impact
-                  </Text>
-                </View>
+            <View style={[styles.iconContainer, { backgroundColor: getStatusColor(factor.status) + '15' }]}>
+              <Ionicons name={getFactorIcon(factor.name) as any} size={18} color={getStatusColor(factor.status)} />
+            </View>
+            <View style={styles.factorInfo}>
+              <Text style={styles.factorName}>{factor.name}</Text>
+              <View style={styles.impactRow}>
+                <View style={[styles.impactDot, { backgroundColor: getImpactColor(factor.impact) }]} />
+                <Text style={[styles.impactText, { color: getImpactColor(factor.impact) }]}>
+                  {factor.impact} Impact
+                </Text>
               </View>
             </View>
             <Text style={[styles.factorValue, { color: getStatusColor(factor.status) }]}>
@@ -69,7 +66,6 @@ export function CreditFactors({ factors }: CreditFactorsProps) {
             </Text>
           </View>
 
-          {/* Progress bar - RPG style */}
           <View style={styles.progressBarContainer}>
             <View style={styles.progressBarBg}>
               <View 
@@ -84,12 +80,10 @@ export function CreditFactors({ factors }: CreditFactorsProps) {
             </View>
           </View>
 
-          {/* Description */}
           <Text style={styles.description}>{factor.description}</Text>
           
-          {/* Tip */}
           <View style={styles.tipContainer}>
-            <Ionicons name="bulb-outline" size={14} color={COLORS.primary} />
+            <Ionicons name="bulb" size={12} color={COLORS.primary} />
             <Text style={styles.tip}>{factor.tip}</Text>
           </View>
         </View>
@@ -101,47 +95,38 @@ export function CreditFactors({ factors }: CreditFactorsProps) {
 const styles = StyleSheet.create({
   container: {
     paddingHorizontal: SPACING.md,
-    paddingVertical: SPACING.sm,
+    paddingTop: SPACING.lg,
   },
   header: {
-    flexDirection: 'row',
-    alignItems: 'center',
     marginBottom: SPACING.md,
-    gap: SPACING.xs,
   },
   title: {
     fontSize: 18,
     fontWeight: '600',
     color: COLORS.text,
+    marginBottom: 2,
   },
   subtitle: {
-    fontSize: 12,
-    color: COLORS.textTertiary,
-    marginLeft: 'auto',
+    fontSize: 13,
+    color: COLORS.textSecondary,
   },
   factorCard: {
     backgroundColor: COLORS.surface,
     borderRadius: RADIUS.lg,
     padding: SPACING.md,
-    marginBottom: SPACING.md,
+    marginBottom: SPACING.sm,
     borderWidth: 1,
     borderColor: COLORS.border,
   },
   factorHeader: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'flex-start',
-    marginBottom: SPACING.sm,
-  },
-  factorTitleRow: {
-    flexDirection: 'row',
     alignItems: 'center',
-    flex: 1,
+    marginBottom: SPACING.sm,
     gap: SPACING.sm,
   },
   iconContainer: {
-    width: 40,
-    height: 40,
+    width: 36,
+    height: 36,
     borderRadius: RADIUS.sm,
     justifyContent: 'center',
     alignItems: 'center',
@@ -150,12 +135,12 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   factorName: {
-    fontSize: 15,
+    fontSize: 14,
     fontWeight: '600',
     color: COLORS.text,
-    marginBottom: 4,
+    marginBottom: 3,
   },
-  impactBadge: {
+  impactRow: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 4,
@@ -170,21 +155,21 @@ const styles = StyleSheet.create({
     fontWeight: '500',
   },
   factorValue: {
-    fontSize: 24,
+    fontSize: 20,
     fontWeight: 'bold',
   },
   progressBarContainer: {
     marginBottom: SPACING.sm,
   },
   progressBarBg: {
-    height: 8,
+    height: 6,
     backgroundColor: COLORS.border,
-    borderRadius: 4,
+    borderRadius: 3,
     overflow: 'hidden',
   },
   progressBarFill: {
     height: '100%',
-    borderRadius: 4,
+    borderRadius: 3,
   },
   description: {
     fontSize: 13,
@@ -194,10 +179,11 @@ const styles = StyleSheet.create({
   },
   tipContainer: {
     flexDirection: 'row',
-    alignItems: 'flex-start',
+    alignItems: 'center',
     gap: 6,
     backgroundColor: COLORS.primary + '10',
     padding: SPACING.xs,
+    paddingHorizontal: SPACING.sm,
     borderRadius: RADIUS.sm,
   },
   tip: {

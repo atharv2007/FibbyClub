@@ -41,7 +41,7 @@ export function CreditCards({ cards }: CreditCardsProps) {
     if (diffDays < 0) return 'Overdue';
     if (diffDays === 0) return 'Due Today';
     if (diffDays === 1) return 'Due Tomorrow';
-    return `Due in ${diffDays} days`;
+    return `${diffDays} days left`;
   };
 
   const utilizationPercentage = (card: CreditCard) => {
@@ -54,16 +54,11 @@ export function CreditCards({ cards }: CreditCardsProps) {
     return '#10B981';
   };
 
-  const handleFeatureClick = (feature: CardFeature, card: CreditCard) => {
-    setSelectedFeature(feature);
-    setSelectedCard(card);
-  };
-
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <Ionicons name="card" size={20} color={COLORS.primary} />
-        <Text style={styles.title}>Your Credit Cards</Text>
+        <Text style={styles.title}>Your Cards</Text>
+        <Text style={styles.subtitle}>{cards.length} active card{cards.length !== 1 ? 's' : ''}</Text>
       </View>
 
       {cards.map((card) => {
@@ -72,7 +67,6 @@ export function CreditCards({ cards }: CreditCardsProps) {
 
         return (
           <View key={card._id} style={styles.cardContainer}>
-            {/* Card Header */}
             <View style={styles.cardHeader}>
               <View style={styles.cardLogo}>
                 <Text style={styles.cardLogoText}>{card.bank.charAt(0)}</Text>
@@ -82,31 +76,31 @@ export function CreditCards({ cards }: CreditCardsProps) {
                 <Text style={styles.cardNumber}>•••• {card.last_four}</Text>
               </View>
               <View style={styles.pointsBadge}>
-                <Ionicons name="gift" size={14} color={COLORS.primary} />
-                <Text style={styles.pointsText}>{card.reward_points.toLocaleString()}</Text>
+                <Ionicons name="gift" size={12} color={COLORS.primary} />
+                <Text style={styles.pointsText}>{(card.reward_points / 1000).toFixed(1)}K</Text>
               </View>
             </View>
 
-            {/* Credit Info */}
             <View style={styles.creditInfo}>
-              <View style={styles.creditRow}>
+              <View style={styles.creditItem}>
                 <Text style={styles.creditLabel}>Available</Text>
-                <Text style={styles.creditValue}>₹{card.available_credit.toLocaleString()}</Text>
+                <Text style={styles.creditValue}>₹{(card.available_credit / 1000).toFixed(0)}K</Text>
               </View>
-              <View style={styles.creditRow}>
+              <View style={styles.divider} />
+              <View style={styles.creditItem}>
                 <Text style={styles.creditLabel}>Outstanding</Text>
-                <Text style={[styles.creditValue, { color: '#EF4444' }]}>₹{card.outstanding.toLocaleString()}</Text>
+                <Text style={[styles.creditValue, { color: '#EF4444' }]}>₹{(card.outstanding / 1000).toFixed(0)}K</Text>
               </View>
-              <View style={styles.creditRow}>
+              <View style={styles.divider} />
+              <View style={styles.creditItem}>
                 <Text style={styles.creditLabel}>Limit</Text>
-                <Text style={styles.creditValue}>₹{card.credit_limit.toLocaleString()}</Text>
+                <Text style={styles.creditValue}>₹{(card.credit_limit / 1000).toFixed(0)}K</Text>
               </View>
             </View>
 
-            {/* Utilization Bar */}
             <View style={styles.utilizationContainer}>
               <View style={styles.utilizationHeader}>
-                <Text style={styles.utilizationLabel}>Utilization</Text>
+                <Text style={styles.utilizationLabel}>Credit Used</Text>
                 <Text style={[styles.utilizationValue, { color: utilizationColor }]}>
                   {utilization}%
                 </Text>
@@ -121,29 +115,27 @@ export function CreditCards({ cards }: CreditCardsProps) {
               </View>
             </View>
 
-            {/* Due Date */}
             <View style={styles.dueContainer}>
-              <Ionicons name="calendar-outline" size={16} color={COLORS.textSecondary} />
+              <Ionicons name="time" size={14} color={COLORS.textSecondary} />
               <Text style={styles.dueText}>{formatDueDate(card.due_date)}</Text>
             </View>
 
-            {/* Features */}
             <View style={styles.featuresContainer}>
-              <Text style={styles.featuresTitle}>Rewards & Benefits</Text>
+              <Text style={styles.featuresTitle}>Benefits</Text>
               <View style={styles.featuresGrid}>
                 {card.features.map((feature, index) => (
                   <TouchableOpacity
                     key={index}
                     style={styles.featureChip}
-                    onPress={() => handleFeatureClick(feature, card)}
+                    onPress={() => {
+                      setSelectedFeature(feature);
+                      setSelectedCard(card);
+                    }}
                     activeOpacity={0.7}
                   >
-                    <Ionicons name={feature.icon as any} size={18} color={COLORS.primary} />
-                    <View style={styles.featureInfo}>
-                      <Text style={styles.featureTitle}>{feature.title}</Text>
-                      <Text style={styles.featureValue}>{feature.value}</Text>
-                    </View>
-                    <Ionicons name="chevron-forward" size={16} color={COLORS.textTertiary} />
+                    <Ionicons name={feature.icon as any} size={16} color={COLORS.primary} />
+                    <Text style={styles.featureTitle}>{feature.title}</Text>
+                    <Ionicons name="chevron-forward" size={14} color={COLORS.textTertiary} />
                   </TouchableOpacity>
                 ))}
               </View>
@@ -152,7 +144,6 @@ export function CreditCards({ cards }: CreditCardsProps) {
         );
       })}
 
-      {/* Feature Detail Modal - Bottom Sheet */}
       <Modal
         visible={!!selectedFeature}
         animationType="slide"
@@ -172,7 +163,7 @@ export function CreditCards({ cards }: CreditCardsProps) {
               <>
                 <View style={styles.modalHeader}>
                   <View style={styles.modalIconContainer}>
-                    <Ionicons name={selectedFeature.icon as any} size={32} color={COLORS.primary} />
+                    <Ionicons name={selectedFeature.icon as any} size={28} color={COLORS.primary} />
                   </View>
                   <TouchableOpacity 
                     style={styles.modalClose}
@@ -185,7 +176,7 @@ export function CreditCards({ cards }: CreditCardsProps) {
                 <Text style={styles.modalTitle}>{selectedFeature.title}</Text>
                 <Text style={styles.modalValue}>{selectedFeature.value}</Text>
                 
-                <ScrollView style={styles.modalBody}>
+                <ScrollView style={styles.modalBody} showsVerticalScrollIndicator={false}>
                   <Text style={styles.modalDescription}>{selectedFeature.description}</Text>
                 </ScrollView>
 
@@ -208,24 +199,26 @@ export function CreditCards({ cards }: CreditCardsProps) {
 const styles = StyleSheet.create({
   container: {
     paddingHorizontal: SPACING.md,
-    paddingVertical: SPACING.sm,
+    paddingTop: SPACING.lg,
   },
   header: {
-    flexDirection: 'row',
-    alignItems: 'center',
     marginBottom: SPACING.md,
-    gap: SPACING.xs,
   },
   title: {
     fontSize: 18,
     fontWeight: '600',
     color: COLORS.text,
+    marginBottom: 2,
+  },
+  subtitle: {
+    fontSize: 13,
+    color: COLORS.textSecondary,
   },
   cardContainer: {
     backgroundColor: COLORS.surface,
     borderRadius: RADIUS.lg,
     padding: SPACING.md,
-    marginBottom: SPACING.md,
+    marginBottom: SPACING.sm,
     borderWidth: 1,
     borderColor: COLORS.border,
   },
@@ -236,15 +229,15 @@ const styles = StyleSheet.create({
     gap: SPACING.sm,
   },
   cardLogo: {
-    width: 48,
-    height: 48,
+    width: 40,
+    height: 40,
     borderRadius: RADIUS.sm,
     backgroundColor: COLORS.primary + '20',
     justifyContent: 'center',
     alignItems: 'center',
   },
   cardLogoText: {
-    fontSize: 20,
+    fontSize: 18,
     fontWeight: 'bold',
     color: COLORS.primary,
   },
@@ -252,13 +245,13 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   cardName: {
-    fontSize: 16,
+    fontSize: 15,
     fontWeight: '600',
     color: COLORS.text,
     marginBottom: 2,
   },
   cardNumber: {
-    fontSize: 13,
+    fontSize: 12,
     color: COLORS.textSecondary,
   },
   pointsBadge: {
@@ -266,23 +259,29 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: 4,
     backgroundColor: COLORS.primary + '10',
-    paddingHorizontal: SPACING.sm,
-    paddingVertical: 6,
+    paddingHorizontal: SPACING.xs,
+    paddingVertical: 4,
     borderRadius: RADIUS.sm,
   },
   pointsText: {
-    fontSize: 12,
+    fontSize: 11,
     fontWeight: '600',
     color: COLORS.primary,
   },
   creditInfo: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    alignItems: 'center',
     marginBottom: SPACING.md,
+    paddingVertical: SPACING.xs,
   },
-  creditRow: {
+  creditItem: {
     flex: 1,
     alignItems: 'center',
+  },
+  divider: {
+    width: 1,
+    height: 24,
+    backgroundColor: COLORS.border,
   },
   creditLabel: {
     fontSize: 11,
@@ -325,10 +324,10 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 6,
-    marginBottom: SPACING.md,
+    marginBottom: SPACING.sm,
   },
   dueText: {
-    fontSize: 13,
+    fontSize: 12,
     color: COLORS.textSecondary,
   },
   featuresContainer: {
@@ -337,7 +336,7 @@ const styles = StyleSheet.create({
     paddingTop: SPACING.sm,
   },
   featuresTitle: {
-    fontSize: 13,
+    fontSize: 12,
     fontWeight: '600',
     color: COLORS.text,
     marginBottom: SPACING.xs,
@@ -351,22 +350,14 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.background,
     padding: SPACING.sm,
     borderRadius: RADIUS.md,
-    gap: SPACING.sm,
-  },
-  featureInfo: {
-    flex: 1,
+    gap: SPACING.xs,
   },
   featureTitle: {
+    flex: 1,
     fontSize: 13,
     fontWeight: '500',
     color: COLORS.text,
-    marginBottom: 2,
   },
-  featureValue: {
-    fontSize: 11,
-    color: COLORS.textSecondary,
-  },
-  // Modal Styles
   modalOverlay: {
     flex: 1,
     justifyContent: 'flex-end',
@@ -385,10 +376,10 @@ const styles = StyleSheet.create({
     borderTopRightRadius: RADIUS.xl,
     paddingHorizontal: SPACING.lg,
     paddingBottom: SPACING.xl,
-    maxHeight: '80%',
+    maxHeight: '75%',
   },
   modalHandle: {
-    width: 40,
+    width: 36,
     height: 4,
     backgroundColor: COLORS.border,
     borderRadius: 2,
@@ -402,9 +393,9 @@ const styles = StyleSheet.create({
     marginBottom: SPACING.md,
   },
   modalIconContainer: {
-    width: 64,
-    height: 64,
-    borderRadius: 32,
+    width: 56,
+    height: 56,
+    borderRadius: 28,
     backgroundColor: COLORS.primary + '15',
     justifyContent: 'center',
     alignItems: 'center',
@@ -413,32 +404,32 @@ const styles = StyleSheet.create({
     padding: SPACING.xs,
   },
   modalTitle: {
-    fontSize: 22,
-    fontWeight: 'bold',
+    fontSize: 20,
+    fontWeight: '600',
     color: COLORS.text,
     marginBottom: SPACING.xs,
   },
   modalValue: {
-    fontSize: 18,
+    fontSize: 16,
     fontWeight: '600',
     color: COLORS.primary,
-    marginBottom: SPACING.lg,
+    marginBottom: SPACING.md,
   },
   modalBody: {
-    marginBottom: SPACING.lg,
+    marginBottom: SPACING.md,
   },
   modalDescription: {
-    fontSize: 15,
+    fontSize: 14,
     color: COLORS.textSecondary,
-    lineHeight: 22,
+    lineHeight: 20,
   },
   modalFooter: {
-    paddingTop: SPACING.md,
+    paddingTop: SPACING.sm,
     borderTopWidth: 1,
     borderTopColor: COLORS.border,
   },
   modalCardInfo: {
-    fontSize: 13,
+    fontSize: 12,
     color: COLORS.textSecondary,
     textAlign: 'center',
   },
