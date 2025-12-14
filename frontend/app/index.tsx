@@ -156,11 +156,13 @@ export default function HomeScreen() {
         }}
       />
 
-      {/* Feature Modal */}
+      {/* Feature Modals */}
       {activeFeature && (
         <FeatureModal
           visible={true}
-          feature={FEATURE_CONTENT[activeFeature]}
+          title={FEATURE_CONTENT[activeFeature].title}
+          icon={FEATURE_CONTENT[activeFeature].icon}
+          description={FEATURE_CONTENT[activeFeature].description}
           onClose={() => setActiveFeature(null)}
         />
       )}
