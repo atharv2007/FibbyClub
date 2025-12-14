@@ -31,166 +31,66 @@ interface BankCarouselProps {
 }
 
 export function BankCarousel({ accounts, onAddBank }: BankCarouselProps) {
-  const [currentIndex, setCurrentIndex] = useState(0);
   const [showMenu, setShowMenu] = useState(false);
-  const translateX = useRef(new Animated.Value(0)).current;
-  const rotateAnim = useRef(new Animated.Value(0)).current;
+  const [selectedAccountIndex, setSelectedAccountIndex] = useState(0);
 
-  // Pan responder for swipe gesture
-  const panResponder = useRef(
-    PanResponder.create({
-      onStartShouldSetPanResponder: () => true,
-      onMoveShouldSetPanResponder: (_, gestureState) => {
-        return Math.abs(gestureState.dx) > 10;
-      },
-      onPanResponderMove: (_, gestureState) => {
-        translateX.setValue(gestureState.dx);
-      },
-      onPanResponderRelease: (_, gestureState) => {
-        if (Math.abs(gestureState.dx) > SCREEN_WIDTH / 4) {
-          // Swipe threshold met
-          if (gestureState.dx > 0 && currentIndex > 0) {
-            // Swipe right - go to previous
-            goToCard(currentIndex - 1);
-          } else if (gestureState.dx < 0 && currentIndex < accounts.length - 1) {
-            // Swipe left - go to next
-            goToCard(currentIndex + 1);
-          } else {
-            // Snap back
-            Animated.spring(translateX, {
-              toValue: 0,
-              useNativeDriver: true,
-            }).start();
-          }
-        } else {
-          // Snap back
-          Animated.spring(translateX, {
-            toValue: 0,
-            useNativeDriver: true,
-          }).start();
-        }
-      },
-    })
-  ).current;
-
-  const goToCard = (index: number) => {
-    const direction = index > currentIndex ? -1 : 1;
-    
-    // Rotate animation
-    Animated.timing(rotateAnim, {
-      toValue: direction,
-      duration: 300,
-      useNativeDriver: true,
-    }).start(() => {
-      setCurrentIndex(index);
-      rotateAnim.setValue(0);
-      translateX.setValue(0);
+  const renderBankCard = (account: BankAccount, index: number) => {
+    const lastUpdated = new Date(account.last_updated).toLocaleTimeString('en-IN', {
+      hour: '2-digit',
+      minute: '2-digit',
     });
+
+    return (
+      <View key={account._id} style={styles.cardContainer}>
+        <Card style={styles.mainCard} shadow="md">
+          <View style={styles.header}>
+            <View style={styles.bankInfo}>
+              <View style={styles.bankLogo}>
+                <Text style={styles.bankLogoText}>
+                  {account.bank_name.charAt(0)}
+                </Text>
+              </View>
+              <View>
+                <Text style={styles.bankName}>{account.bank_name}</Text>
+                <Text style={styles.accountNumber}>{account.account_number}</Text>
+              </View>
+            </View>
+            
+            {/* 3-dot menu */}
+            <TouchableOpacity
+              onPress={() => {
+                setSelectedAccountIndex(index);
+                setShowMenu(true);
+              }}
+              style={styles.menuButton}
+              hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+            >
+              <Ionicons name="ellipsis-horizontal" size={24} color={COLORS.textSecondary} />
+            </TouchableOpacity>
+          </View>
+
+          <View style={styles.balanceContainer}>
+            <Text style={styles.balanceLabel}>Available Balance</Text>
+            <Text style={styles.balance}>{formatINRFull(account.balance)}</Text>
+            <Text style={styles.lastUpdated}>Last updated: {lastUpdated}</Text>
+          </View>
+        </Card>
+      </View>
+    );
   };
-
-  const currentAccount = accounts[currentIndex];
-  const lastUpdated = currentAccount
-    ? new Date(currentAccount.last_updated).toLocaleTimeString('en-IN', {
-        hour: '2-digit',
-        minute: '2-digit',
-      })
-    : '';
-
-  const rotation = rotateAnim.interpolate({
-    inputRange: [-1, 0, 1],
-    outputRange: ['-15deg', '0deg', '15deg'],
-  });
-
-  const opacity = rotateAnim.interpolate({
-    inputRange: [-1, -0.5, 0, 0.5, 1],
-    outputRange: [0.3, 0.6, 1, 0.6, 0.3],
-  });
 
   return (
     <View style={styles.container}>
-      {/* Card Carousel */}
-      <View style={styles.carouselContainer} {...panResponder.panHandlers}>
-        {/* Background cards (stacked effect) */}
-        {accounts.length > 1 && (
-          <>
-            {currentIndex < accounts.length - 1 && (
-              <View style={[styles.shadowCard, styles.shadowCardRight]}>
-                <View style={styles.shadowCardInner}>
-                  <Ionicons name="chevron-forward" size={32} color={COLORS.textSecondary} />
-                </View>
-              </View>
-            )}
-            {currentIndex > 0 && (
-              <View style={[styles.shadowCard, styles.shadowCardLeft]}>
-                <View style={styles.shadowCardInner}>
-                  <Ionicons name="chevron-back" size={32} color={COLORS.textSecondary} />
-                </View>
-              </View>
-            )}
-          </>
-        )}
-
-        {/* Main card */}
-        <Animated.View
-          style={[
-            styles.mainCardWrapper,
-            {
-              transform: [
-                { translateX },
-                { perspective: 1000 },
-                { rotateY: rotation },
-              ],
-              opacity,
-            },
-          ]}
-        >
-          <Card style={styles.mainCard} shadow="md">
-            <View style={styles.header}>
-              <View style={styles.bankInfo}>
-                <View style={styles.bankLogo}>
-                  <Text style={styles.bankLogoText}>
-                    {currentAccount.bank_name.charAt(0)}
-                  </Text>
-                </View>
-                <View>
-                  <Text style={styles.bankName}>{currentAccount.bank_name}</Text>
-                  <Text style={styles.accountNumber}>{currentAccount.account_number}</Text>
-                </View>
-              </View>
-              
-              {/* 3-dot menu */}
-              <TouchableOpacity
-                onPress={() => setShowMenu(true)}
-                style={styles.menuButton}
-                hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
-              >
-                <Ionicons name="ellipsis-horizontal" size={24} color={COLORS.textSecondary} />
-              </TouchableOpacity>
-            </View>
-
-            <View style={styles.balanceContainer}>
-              <Text style={styles.balanceLabel}>Available Balance</Text>
-              <Text style={styles.balance}>{formatINRFull(currentAccount.balance)}</Text>
-              <Text style={styles.lastUpdated}>Last updated: {lastUpdated}</Text>
-            </View>
-
-            {/* Carousel indicators */}
-            {accounts.length > 1 && (
-              <View style={styles.indicatorContainer}>
-                {accounts.map((_, index) => (
-                  <View
-                    key={index}
-                    style={[
-                      styles.indicator,
-                      index === currentIndex && styles.indicatorActive,
-                    ]}
-                  />
-                ))}
-              </View>
-            )}
-          </Card>
-        </Animated.View>
-      </View>
+      <ScrollView
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        pagingEnabled
+        snapToInterval={CARD_WIDTH + CARD_SPACING}
+        decelerationRate="fast"
+        contentContainerStyle={styles.scrollContent}
+      >
+        {accounts.map((account, index) => renderBankCard(account, index))}
+      </ScrollView>
 
       {/* 3-dot menu dropdown */}
       <Modal
