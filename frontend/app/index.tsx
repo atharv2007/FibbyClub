@@ -124,6 +124,7 @@ export default function HomeScreen() {
             else if (chipId === 'split') setActiveFeature('split');
             else if (chipId === 'forecast') setActiveFeature('forecast');
             else if (chipId === 'audit') setActiveFeature('audit');
+            else if (chipId === 'budget') router.push('/track?tab=budget');
           }}
         />
 
