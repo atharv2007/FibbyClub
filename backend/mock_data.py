@@ -468,46 +468,6 @@ def generate_credit_transactions(user_id: str):
     return sorted(transactions, key=lambda x: x['date'], reverse=True)
 
 
-def generate_credit_recommendations():
-    """Generate AI recommendations for credit improvement"""
-    return [
-        {
-            "title": "Pay Down High-Utilization Card",
-            "category": "Credit Score",
-            "priority": "high",
-            "description": "Your HDFC MoneyBack+ is at 36% utilization. Paying ₹5,000 extra this month could boost your score by 8-12 points.",
-            "action": "Pay ₹5,000 now",
-            "icon": "trending-up",
-            "color": "#10B981"
-        },
-        {
-            "title": "Upgrade to Premium Card",
-            "category": "Card Suggestion",
-            "priority": "medium",
-            "description": "With your improved score (728), you now qualify for HDFC Regalia with better rewards: 4 reward points per ₹150 and 12 airport lounge visits/year.",
-            "action": "Check eligibility",
-            "icon": "card",
-            "color": "#6366F1"
-        },
-        {
-            "title": "Set Up AutoPay",
-            "category": "Payment",
-            "priority": "medium",
-            "description": "Automate your credit card payments to never miss due dates. This can improve your payment history factor by 15%.",
-            "action": "Enable AutoPay",
-            "icon": "time",
-            "color": "#F59E0B"
-        },
-        {
-            "title": "Consolidate Small EMIs",
-            "category": "Debt Management",
-            "priority": "low",
-            "description": "You have 3 small EMIs totaling ₹8,500/month. Consider a personal loan at 11.5% APR to save ₹1,200/month and simplify payments.",
-            "action": "View offers",
-            "icon": "calculator",
-            "color": "#8B5CF6"
-        }
-    ]
 
     # Recent insights
     insights.append({
