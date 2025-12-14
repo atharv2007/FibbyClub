@@ -52,6 +52,22 @@ function RootLayoutNav() {
 }
 
 export default function RootLayout() {
+  const { fontsLoaded, fontError } = useCustomFonts();
+
+  // Show loading screen while fonts are loading
+  if (!fontsLoaded) {
+    return (
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: COLORS.background }}>
+        <ActivityIndicator size="large" color={COLORS.primary} />
+      </View>
+    );
+  }
+
+  // Log font error if any (but continue rendering)
+  if (fontError) {
+    console.warn('Font loading error:', fontError);
+  }
+
   return (
     <AuthProvider>
       <RootLayoutNav />
